@@ -1,6 +1,8 @@
 package me.pauzen.bukkitcommonpluginapi.commands;
 
+import me.pauzen.bukkitcommonpluginapi.Core;
 import me.pauzen.bukkitcommonpluginapi.utils.Tuple;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
@@ -8,12 +10,12 @@ import java.util.*;
 public class CommandManager {
 
     public Command getCommand(String commandName) {
-        return CommandEnum.getCommand(commandName.toUpperCase());
+        return RegisteredCommand.getCommand(commandName.toUpperCase());
     }
     
-    public void executeCommand(String commandName, CommandSender commandSender, String[] arguments) {
+    public void executeCommand(Command command, CommandSender commandSender, String[] arguments) {
         Tuple<Map<String, String>, String[]> argModifierTuple = getModifiers(arguments);
-        getCommand(commandName).execute(commandSender, argModifierTuple.getB(), argModifierTuple.getA());
+        command.execute(commandSender, argModifierTuple.getB(), argModifierTuple.getA());
     }
     
     private Tuple<Map<String, String>, String[]> getModifiers(String[] args) {
@@ -38,10 +40,15 @@ public class CommandManager {
 
     public static void registerManager() {
         commandManager = new CommandManager();
+        Bukkit.getPluginManager().registerEvents(new CommandRunner(), Core.getCore());
     }
     
     public static CommandManager getCommandManager() {
         return commandManager;
+    }
+    
+    public void registerCommand(Command command) {
+        RegisteredCommand.registerCommand(command);
     }
     
 }

@@ -1,4 +1,4 @@
-package me.pauzen.bukkitcommonpluginapi;
+package me.pauzen.bukkitcommonpluginapi.points;
 
 import me.pauzen.bukkitcommonpluginapi.fake.FakeMyPlayer;
 import me.pauzen.bukkitcommonpluginapi.players.MyPlayer;

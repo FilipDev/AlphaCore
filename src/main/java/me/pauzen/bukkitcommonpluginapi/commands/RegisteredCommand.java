@@ -6,7 +6,7 @@ import me.pauzen.bukkitcommonpluginapi.commands.childcommands.GodCommand;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum CommandEnum {
+public enum RegisteredCommand {
 
     CRASH(new CrashCommand()),
     GOD(new GodCommand()),
@@ -24,7 +24,7 @@ public enum CommandEnum {
 
     private Command command;
 
-    CommandEnum(Command command) {
+    RegisteredCommand(Command command) {
         this.command = command;
         registerCommand(this.getCommand());
     }

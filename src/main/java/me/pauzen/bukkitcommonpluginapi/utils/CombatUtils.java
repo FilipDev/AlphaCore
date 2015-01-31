@@ -1,6 +1,7 @@
 package me.pauzen.bukkitcommonpluginapi.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -27,6 +28,11 @@ public final class CombatUtils {
         }
         
         return entityDamageByEntityEvent.getFinalDamage();
+    }
+    
+    public static void bleedEffect(Entity entity) {
+        entity.getWorld().playEffect(entity.getLocation(), org.bukkit.Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
+        entity.getWorld().playEffect(entity.getLocation(), org.bukkit.Effect.STEP_SOUND, Material.REDSTONE_WIRE);
     }
 
 }

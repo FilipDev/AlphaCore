@@ -3,6 +3,7 @@ package me.pauzen.bukkitcommonpluginapi;
 import me.pauzen.bukkitcommonpluginapi.commands.CommandManager;
 import me.pauzen.bukkitcommonpluginapi.listeners.ListenerImplementation;
 import me.pauzen.bukkitcommonpluginapi.players.PlayerManager;
+import me.pauzen.bukkitcommonpluginapi.points.PointManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Core extends JavaPlugin {

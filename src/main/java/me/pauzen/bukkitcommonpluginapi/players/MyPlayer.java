@@ -1,6 +1,6 @@
 package me.pauzen.bukkitcommonpluginapi.players;
 
-import me.pauzen.bukkitcommonpluginapi.PointManager;
+import me.pauzen.bukkitcommonpluginapi.points.PointManager;
 import me.pauzen.bukkitcommonpluginapi.abilities.Ability;
 import me.pauzen.bukkitcommonpluginapi.playerlogger.PlayerLogger;
 import org.bukkit.entity.Player;
