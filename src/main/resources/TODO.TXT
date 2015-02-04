@@ -1,1 +1,2 @@
-* 
+* Work on team system, listening to damage event, etc.
+* Work on effect system.
