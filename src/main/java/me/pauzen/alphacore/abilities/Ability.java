@@ -30,11 +30,28 @@ public class Ability {
         this.isDefault = isDefault;
         this.effect = new Effect() {
             
+            @Override
+            public void onApply(CorePlayer cPlayer) {
+                cPlayer.activateAbility(this);
+            }
+
+            @Override
+            public void onRemove(CorePlayer cPlayer) {
+                cPlayer.deactivateAbility(this);
+            }
+
+            @Override
+            public void perSecond(CorePlayer cPlayer) {
+            }
         }
     }
 
     public boolean isDefault() {
         return isDefault;
+    }
+
+    public Effect asEffect() {
+        return this.effect;
     }
 
     public static String booleanToState(boolean toggled) {
