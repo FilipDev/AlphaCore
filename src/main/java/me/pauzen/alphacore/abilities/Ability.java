@@ -23,10 +23,14 @@ public class Ability {
     }
 
     private boolean isDefault;
+    private Effect effect;
 
     Ability(boolean isDefault) {
         registeredAbilities.add(this);
         this.isDefault = isDefault;
+        this.effect = new Effect() {
+            
+        }
     }
 
     public boolean isDefault() {
