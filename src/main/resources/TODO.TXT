@@ -18,3 +18,6 @@ isAFK method
 Ability.asEffect() should exist.
 
 setBlocksDistributed method
+
+Manager abstract class
+ALL managers extend this class
