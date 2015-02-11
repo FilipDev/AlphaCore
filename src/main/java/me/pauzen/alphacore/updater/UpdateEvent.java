@@ -4,12 +4,21 @@
 
 package me.pauzen.alphacore.updater;
 
-import org.bukkit.event.Event;
+import me.pauzen.alphacore.events.CallableEvent;
 import org.bukkit.event.HandlerList;
 
-public class UpdateEvent extends Event {
+public class UpdateEvent extends CallableEvent {
 
     private static final HandlerList handlers = new HandlerList();
+
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+    
     private UpdateType updateType;
 
     public UpdateEvent(UpdateType updateType) {
@@ -19,9 +28,4 @@ public class UpdateEvent extends Event {
     public UpdateType getUpdateType() {
         return updateType;
     }
-
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
 }

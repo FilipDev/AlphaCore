@@ -22,12 +22,6 @@ public class Team {
         this.chatColor = chatColor;
     }
 
-    private static final Team defaultTeam = new DefaultTeam();
-
-    public static Team getDefaultTeam() {
-        return defaultTeam;
-    }
-
     public void cleanup() {
         this.players = null;
     }

@@ -6,13 +6,14 @@ package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.effects.Effect;
+import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.playerlogger.PlayTimeLogger;
 import me.pauzen.alphacore.players.data.DefaultTrackers;
 import me.pauzen.alphacore.players.data.PlayerData;
 import me.pauzen.alphacore.players.data.Tracker;
-import me.pauzen.alphacore.points.PointDisplayer;
-import me.pauzen.alphacore.points.PointManager;
+import me.pauzen.alphacore.points.TrackerDisplayer;
 import me.pauzen.alphacore.teams.Team;
+import me.pauzen.alphacore.teams.TeamManager;
 import me.pauzen.alphacore.utils.GeneralUtils;
 import me.pauzen.alphacore.utils.commonnms.ClientVersion;
 import me.pauzen.alphacore.utils.commonnms.EntityPlayer;
@@ -21,7 +22,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class CorePlayer {
 
@@ -31,6 +35,7 @@ public class CorePlayer {
     private PlayTimeLogger playTimeLogger;
     private EntityPlayer   entityPlayer;
     private Team           team;
+    private Place          place;
 
     private PlayerData playerData;
 
@@ -59,20 +64,11 @@ public class CorePlayer {
     }
 
     public void addPointDisplayer() {
-        new PointDisplayer(this);
+        new TrackerDisplayer(getCurrentPlace(), this, getTracker("kills"));
     }
 
     public Tracker getTracker(String trackerName) {
         return trackers.get(trackerName);
-    }
-
-    public int getKills() {
-        return getTracker("kills").getValue();
-    }
-
-    public void setKill(int points) {
-        getTracker("kills").setValue(points);
-        PointManager.getManager().update();
     }
 
     public void activateEffect(Effect effect) {
@@ -138,7 +134,7 @@ public class CorePlayer {
     }
     
     public void load() {
-        this.team = Team.getDefaultTeam();
+        this.team = TeamManager.getDefaultTeam();
         getPlayerData().getYamlReader().getTrackers(this).forEach(tracker -> tracker.addTracker(this));
         registerDefaultAbilities();
         //TODO: Create load function that reads from YAML file.
@@ -149,7 +145,7 @@ public class CorePlayer {
     }
     
     public void defaultLoad() {
-        this.team = Team.getDefaultTeam();
+        this.team = TeamManager.getDefaultTeam();
         new PlayTimeLogger(0).addTracker(this);
         registerDefaultAbilities();
     }
@@ -200,6 +196,10 @@ public class CorePlayer {
 
     public PlayerData getPlayerData() {
         return playerData;
+    }
+
+    public Place getCurrentPlace() {
+        return place;
     }
 }
 

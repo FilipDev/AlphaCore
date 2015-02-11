@@ -1,0 +1,24 @@
+/*
+ *  Created by Filip P. on 2/9/15 5:32 PM.
+ */
+
+package me.pauzen.alphacore.players.data;
+
+public abstract class Milestone {
+    
+    private int value;
+    
+    public Milestone(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+    
+    public abstract void onReach();
+    
+    public void add(Tracker tracker) {
+        tracker.addMilestone(this);
+    }
+}

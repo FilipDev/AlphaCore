@@ -4,14 +4,18 @@
 
 package me.pauzen.alphacore.abilities;
 
+import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.misc.Todo;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Ability {
 
+    @Todo("Find way to nullify this.")
     private static Set<Ability> registeredAbilities = new HashSet<>();
 
     public static void registerAbility(Ability ability) {
@@ -25,25 +29,29 @@ public class Ability {
     private boolean isDefault;
     private Effect effect;
 
-    Ability(boolean isDefault) {
-        registeredAbilities.add(this);
+    public Ability(boolean isDefault) {
         this.isDefault = isDefault;
         this.effect = new Effect() {
             
             @Override
             public void onApply(CorePlayer cPlayer) {
-                cPlayer.activateAbility(this);
+                cPlayer.activateAbility(Ability.this);
             }
 
             @Override
             public void onRemove(CorePlayer cPlayer) {
-                cPlayer.deactivateAbility(this);
+                cPlayer.deactivateAbility(Ability.this);
             }
 
             @Override
             public void perSecond(CorePlayer cPlayer) {
             }
-        }
+        };
+        register();
+    }
+    
+    private void register() {
+        registerAbility(this);
     }
 
     public boolean isDefault() {
@@ -64,6 +72,14 @@ public class Ability {
     
     public void remove(CorePlayer corePlayer) {
         corePlayer.deactivateAbility(this);
+    }
+    
+    public boolean hasActivated(CorePlayer corePlayer) {
+        return corePlayer.hasActivated(this);
+    }
+    
+    public boolean hasActivated(Player player) {
+        return hasActivated(CorePlayer.get(player));
     }
     
 }

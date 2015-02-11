@@ -1,14 +1,15 @@
 /*
- *  Created by Filip P. on 2/6/15 6:31 PM.
+ *  Created by Filip P. on 2/10/15 7:13 PM.
  */
 
-package me.pauzen.alphacore.effects;
+package me.pauzen.alphacore.places.events;
 
 import me.pauzen.alphacore.events.CallablePlayerContainerEvent;
+import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.HandlerList;
 
-public class EffectRemoveEvent extends CallablePlayerContainerEvent {
+public class PlaceJoinEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -20,14 +21,14 @@ public class EffectRemoveEvent extends CallablePlayerContainerEvent {
         return handlers;
     }
 
-    private Effect effect;
+    private Place place;
 
-    public EffectRemoveEvent(CorePlayer CorePlayer, Effect effect) {
-        super(CorePlayer);
-        this.effect = effect;
+    public PlaceJoinEvent(CorePlayer corePlayer, Place place) {
+        super(corePlayer);
+        this.place = place;
     }
 
-    public Effect getEffect() {
-        return effect;
+    public Place getPlace() {
+        return place;
     }
 }

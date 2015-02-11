@@ -5,6 +5,8 @@
 package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.utils.reflection.Nullifiable;
+import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,8 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerManager extends ListenerImplementation {
+public class PlayerManager extends ListenerImplementation implements Nullifiable {
 
+    @Nullify
     private static PlayerManager manager;
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -33,10 +36,6 @@ public class PlayerManager extends ListenerImplementation {
 
     public static void registerManager() {
         manager = new PlayerManager();
-    }
-
-    public static void unregisterManager() {
-        manager = null;
     }
 
     public static PlayerManager getManager() {

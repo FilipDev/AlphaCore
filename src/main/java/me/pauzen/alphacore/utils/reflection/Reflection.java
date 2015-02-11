@@ -94,6 +94,16 @@ public class Reflection<T> {
         }
     }
 
+    public void setValue(Field field, Object object) {
+        check();
+        if (Modifier.isFinal(field.getModifiers())) ReflectionFactory.removeFinal(field);
+        try {
+            field.set(this.object, object);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Gets static field value specified by the name.
      *

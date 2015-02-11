@@ -7,18 +7,11 @@ package me.pauzen.alphacore.events;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
-public class CallableEvent extends Event implements Cancellable {
+public abstract class CallableEvent extends Event implements Cancellable {
 
-    private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
     
-    @Override
-    public HandlerList getHandlers(){
-        return handlers;
-    }
-
     @Override
     public boolean isCancelled(){
         return this.cancelled;
@@ -33,5 +26,4 @@ public class CallableEvent extends Event implements Cancellable {
         Bukkit.getPluginManager().callEvent(this);
         return this;
     }
-    
 }

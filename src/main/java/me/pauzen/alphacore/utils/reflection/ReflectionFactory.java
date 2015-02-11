@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.jar.JarFile;
 
 /*
  * Written by FilipDev on 12/24/14 12:19 AM.
@@ -277,4 +278,5 @@ public final class ReflectionFactory {
         }
         return classes.toArray(new Class[classes.size()]);
     }
+    
 }

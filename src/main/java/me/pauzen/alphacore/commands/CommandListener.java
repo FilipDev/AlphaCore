@@ -4,7 +4,9 @@
 
 package me.pauzen.alphacore.commands;
 
+import me.pauzen.alphacore.abilities.PremadeAbilities;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,14 +32,16 @@ public abstract class CommandListener {
     }
     
     public void onRunPreTests(CommandSender commandSender, String[] args, Map<String, String> modifiers) {
-        if (testForPermissions != null) {
-            for (String testForPermission : testForPermissions) {
-                if (!commandSender.hasPermission(testForPermission)) {
-                    return;
+        if (!PremadeAbilities.BYPASS_RESTRICTIONS.ability().hasActivated((Player) commandSender)) {
+            if (testForPermissions != null) {
+                for (String testForPermission : testForPermissions) {
+                    if (!commandSender.hasPermission(testForPermission)) {
+                        return;
+                    }
                 }
             }
         }
-        
+
         setValues(commandSender, args, modifiers);
         onRun();
         clearValues();

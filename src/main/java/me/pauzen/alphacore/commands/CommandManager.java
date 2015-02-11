@@ -5,11 +5,13 @@
 package me.pauzen.alphacore.commands;
 
 import me.pauzen.alphacore.utils.misc.Tuple;
+import me.pauzen.alphacore.utils.reflection.Nullifiable;
+import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
 
-public class CommandManager {
+public class CommandManager implements Nullifiable {
 
     public Command getCommand(String commandName) {
         return RegisteredCommand.getCommand(commandName.toUpperCase());
@@ -38,15 +40,12 @@ public class CommandManager {
         return new Tuple<>(newArgs.toArray(new String[newArgs.size()]), modifiers);
     }
 
+    @Nullify
     private static CommandManager manager;
 
     public static void registerManager() {
         manager = new CommandManager();
         new CommandRunner();
-    }
-
-    public static void unregisterManager() {
-        manager = null;
     }
 
     public static CommandManager getManager() {

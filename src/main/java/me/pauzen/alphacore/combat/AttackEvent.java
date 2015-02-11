@@ -6,10 +6,21 @@ package me.pauzen.alphacore.combat;
 
 import me.pauzen.alphacore.events.CallableEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 
 public class AttackEvent extends CallableEvent {
+
+    private static final HandlerList handlers = new HandlerList();
+
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
     private AttackType attackType;
     private Player     attacker, defender;

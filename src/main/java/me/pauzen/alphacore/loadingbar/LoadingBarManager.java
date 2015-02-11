@@ -8,6 +8,8 @@ import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.updater.UpdateEvent;
 import me.pauzen.alphacore.updater.UpdateType;
+import me.pauzen.alphacore.utils.reflection.Nullifiable;
+import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerExpChangeEvent;
@@ -15,18 +17,15 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoadingBarManager extends ListenerImplementation {
+public class LoadingBarManager extends ListenerImplementation implements Nullifiable {
 
+    @Nullify
     private static LoadingBarManager manager;
-    
+
     public static void registerManager() {
         manager = new LoadingBarManager();
     }
-    
-    public static void unregisterManager() {
-        manager = null;
-    }
-    
+
     public static LoadingBarManager getManager() {
         return manager;
     }
