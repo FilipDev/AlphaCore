@@ -39,4 +39,8 @@ public final class CombatUtils {
         entity.getWorld().playEffect(entity.getLocation(), org.bukkit.Effect.STEP_SOUND, Material.REDSTONE_WIRE);
     }
 
+    public void damageAOE(Entity damager, Location attackLocation float radius, int targets) {
+        
+}
+
 }
