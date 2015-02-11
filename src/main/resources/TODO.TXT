@@ -16,3 +16,5 @@ InteractableItem abstract class implements Interactable and has item container n
 isAFK method
 
 Ability.asEffect() should exist.
+
+setBlocksDistributed method
