@@ -8,10 +8,10 @@ import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.places.events.PlaceJoinEvent;
 import me.pauzen.alphacore.places.events.PlaceLeaveEvent;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.AllowanceChecker;
 import me.pauzen.alphacore.utils.misc.Todo;
 import org.bukkit.Location;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,30 +21,21 @@ public abstract class Place {
 
     private Set<CorePlayer> players = new HashSet<>();
 
-    private String   name;
+    private String name;
 
-    private Set<String> allowedCommands = new HashSet<>(), disallowedCommands = new HashSet<>();
+    private AllowanceChecker<String>      commandChecker     = new AllowanceChecker<>();
+    private AllowanceChecker<PlaceAction> placeActionChecker = new AllowanceChecker<>();
 
-    @Todo("Put TeamManagers and stuff into a Place, so to separate the place from the entire server." +
-            "Place class should be a complete subsection of AlphaCore.")
     public Place(String name) {
         this.name = name;
     }
+
+    public AllowanceChecker<String> getCommandChecker() {
+        return commandChecker;
+    }
     
-    public void disallowCommands(String... disallowedCommands) {
-        Collections.addAll(this.disallowedCommands, disallowedCommands);
-    }
-
-    public void allowCommands(String... allowedCommands) {
-        Collections.addAll(this.allowedCommands, allowedCommands);
-    }
-
-    public Set<String> getDisallowedCommands() {
-        return disallowedCommands;
-    }
-
-    public Set<String> getAllowedCommands() {
-        return allowedCommands;
+    public boolean shouldRun(Command command) {
+        return commandChecker.isAllowed(command.getName());
     }
 
     public String getName() {
@@ -53,16 +44,6 @@ public abstract class Place {
 
     public Set<CorePlayer> getPlayers() {
         return players;
-    }
-
-    public boolean shouldRun(Command command) {
-        if (!allowedCommands.isEmpty()) {
-            return allowedCommands.contains(command.getName());
-        }
-        if (!disallowedCommands.isEmpty()) {
-            return !disallowedCommands.contains(command.getName());
-        }
-        return true;
     }
 
     public void addPlayer(CorePlayer corePlayer) {
@@ -74,7 +55,14 @@ public abstract class Place {
         new PlaceLeaveEvent(corePlayer, this).call();
         getPlayers().remove(corePlayer);
     }
-    
+
     public abstract boolean contains(Location location);
 
+    public boolean isAllowed(PlaceAction placeAction) {
+        return placeActionChecker.isAllowed(placeAction);
+    }
+
+    public AllowanceChecker<PlaceAction> getPlaceActionChecker() {
+        return placeActionChecker;
+    }
 }

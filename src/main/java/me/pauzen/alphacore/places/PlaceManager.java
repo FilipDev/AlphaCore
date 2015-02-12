@@ -4,11 +4,17 @@
 
 package me.pauzen.alphacore.places;
 
+import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Location;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerMoveEvent;
 
-public class PlaceManager implements Registrable {
+public class PlaceManager extends ListenerImplementation implements Registrable {
 
     @Nullify
     private static Place DEFAULT_PLACE = new Place("DEFAULT") {
@@ -17,6 +23,32 @@ public class PlaceManager implements Registrable {
             return true;
         }
     };
+    
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEvent(Event e) {
+        if (!(e instanceof PlayerMoveEvent) && e instanceof Cancellable) {
+            PlaceAction placeAction = PlaceAction.getPlaceAction(e.getClass());
+            
+            if (placeAction == null) {
+                return;
+            }
+
+            Place place = null;
+            try {
+                place = placeAction.getPlaceGetter().getPlace(new EventContainer<>(e.getClass(), e));
+            } catch (ClassCastException ignored) {
+            }
+            
+            if (place == null) {
+                return;
+            }
+            
+            if (!place.isAllowed(placeAction)) {
+                ((Cancellable) e).setCancelled(true);
+            }
+        }
+    }
+    
     @Nullify
     private static PlaceManager manager;
 
