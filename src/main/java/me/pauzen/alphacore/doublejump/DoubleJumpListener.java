@@ -7,7 +7,6 @@ package me.pauzen.alphacore.doublejump;
 import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.players.PlayerManager;
 import me.pauzen.alphacore.utils.SoundUtils;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -33,13 +32,13 @@ public class DoubleJumpListener extends ListenerImplementation {
     @EventHandler
     public void onFlightToggle(PlayerToggleFlightEvent e) {
 
-        CorePlayer CorePlayer = PlayerManager.getManager().getWrapper(e.getPlayer());
+        CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
 
-        if (CorePlayer.hasActivated(PremadeAbilities.DOUBLE_JUMP.ability())) {
+        if (corePlayer.hasActivated(PremadeAbilities.DOUBLE_JUMP.ability())) {
 
-            if (!new DoubleJumpEvent(CorePlayer).call().isCancelled()) {
+            if (!new DoubleJumpEvent(corePlayer).call().isCancelled()) {
                 this.launchPlayer(e.getPlayer());
-                doubleJumped.add(CorePlayer);
+                doubleJumped.add(corePlayer);
                 e.setCancelled(true);
                 e.getPlayer().setAllowFlight(false);
             }
@@ -49,13 +48,13 @@ public class DoubleJumpListener extends ListenerImplementation {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
 
-        CorePlayer CorePlayer = PlayerManager.getManager().getWrapper(e.getPlayer());
+        CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
 
-        if (CorePlayer.hasActivated(PremadeAbilities.DOUBLE_JUMP.ability())) {
+        if (corePlayer.hasActivated(PremadeAbilities.DOUBLE_JUMP.ability())) {
 
-            if (doubleJumped.contains(CorePlayer)) {
+            if (doubleJumped.contains(corePlayer)) {
                 if (e.getPlayer().isOnGround()) {
-                    doubleJumped.remove(CorePlayer);
+                    doubleJumped.remove(corePlayer);
                     e.getPlayer().setAllowFlight(true);
                 }
             }

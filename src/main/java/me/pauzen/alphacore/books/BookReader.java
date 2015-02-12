@@ -4,6 +4,8 @@
 
 package me.pauzen.alphacore.books;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
@@ -13,6 +15,9 @@ public final class BookReader {
     }
 
     public static String readBook(ItemStack book) {
+        if (!book.hasItemMeta()) {
+            book.setItemMeta(Bukkit.getItemFactory().getItemMeta(Material.WRITTEN_BOOK));
+        }
         return readBook((BookMeta) book.getItemMeta());
     }
 
