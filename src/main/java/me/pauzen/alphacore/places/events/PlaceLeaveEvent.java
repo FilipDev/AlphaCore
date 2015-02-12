@@ -13,7 +13,7 @@ public class PlaceLeaveEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
     private Place place;
-    
+
     public PlaceLeaveEvent(CorePlayer corePlayer, Place place) {
         super(corePlayer);
         this.place = place;
@@ -27,7 +27,7 @@ public class PlaceLeaveEvent extends CallablePlayerContainerEvent {
     public HandlerList getHandlers() {
         return handlers;
     }
-    
+
     public static HandlerList getHandlerList() {
         return handlers;
     }

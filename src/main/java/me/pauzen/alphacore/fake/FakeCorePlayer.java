@@ -8,11 +8,11 @@ import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.entity.Player;
 
 public class FakeCorePlayer extends CorePlayer {
-    
+
     public FakeCorePlayer(Player player) {
         super(player);
     }
-    
+
     @Override
     public void load() {
     }

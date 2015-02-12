@@ -5,16 +5,16 @@
 package me.pauzen.alphacore.updater;
 
 import me.pauzen.alphacore.Core;
-import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Bukkit;
 
-public class UpdateManager implements Nullifiable {
+public class UpdateManager implements Registrable {
 
     @Nullify
     private static UpdateManager updateManager;
-    
-    public static void registerManager() {
+
+    public static void register() {
         updateManager = new UpdateManager();
     }
 

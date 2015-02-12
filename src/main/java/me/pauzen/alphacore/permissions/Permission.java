@@ -7,12 +7,11 @@ package me.pauzen.alphacore.permissions;
 import org.bukkit.entity.Player;
 
 public enum Permission {
-    
-    CRASH("buc.crash"),
-    ;
-    
+
+    CRASH("buc.crash"),;
+
     private String permission;
-    
+
     Permission(String permission) {
         this.permission = permission;
     }
@@ -20,7 +19,7 @@ public enum Permission {
     public String getPermission() {
         return permission;
     }
-    
+
     public boolean hasPermission(Player player) {
         return player.hasPermission(getPermission());
     }

@@ -37,8 +37,6 @@ public class PlayTimeLogger extends Tracker {
     public int getPlayTime() {
         return getValue();
     }
-    
-    
-    
-    
+
+
 }

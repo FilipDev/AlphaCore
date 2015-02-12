@@ -5,8 +5,8 @@
 package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.listeners.ListenerImplementation;
-import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerManager extends ListenerImplementation implements Nullifiable {
+public class PlayerManager extends ListenerImplementation implements Registrable {
 
     @Nullify
     private static PlayerManager manager;

@@ -12,11 +12,11 @@ public final class BlockUtils {
 
     private BlockUtils() {
     }
-    
+
     public static void dropBlock(Block block) {
         FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation(), block.getType(), block.getData());
         block.setType(Material.AIR);
         fallingBlock.teleport(block.getLocation());
     }
-    
+
 }

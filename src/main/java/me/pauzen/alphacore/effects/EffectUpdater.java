@@ -17,5 +17,5 @@ public class EffectUpdater extends ListenerImplementation {
             EffectManager.getManager().getRegisteredEffects().forEach(Effect::update);
         }
     }
-    
+
 }

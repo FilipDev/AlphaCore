@@ -14,18 +14,18 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class AutoRespawnerManager extends ListenerImplementation {
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDamage(EntityDamageEvent e) {
 
         if (!(e.getEntity() instanceof Player)) {
             return;
         }
-        
+
         Player player = (Player) e.getEntity();
 
         CorePlayer corePlayer = CorePlayer.get(player);
-        
+
         if (corePlayer.hasActivated(PremadeAbilities.AUTO_RESPAWN.ability())) {
             double health = player.getHealth();
             if (e.getFinalDamage() >= health) {
@@ -38,5 +38,5 @@ public class AutoRespawnerManager extends ListenerImplementation {
             }
         }
     }
-    
+
 }

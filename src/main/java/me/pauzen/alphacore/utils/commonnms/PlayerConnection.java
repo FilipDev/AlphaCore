@@ -11,10 +11,10 @@ import net.minecraft.util.io.netty.channel.Channel;
 import java.lang.reflect.InvocationTargetException;
 
 public class PlayerConnection {
-    
+
     private EntityPlayer entityPlayer;
-    private Object playerConnection;
-    private Object networkManager;
+    private Object       playerConnection;
+    private Object       networkManager;
 
     public PlayerConnection(EntityPlayer entityPlayer, Object playerConnection) {
         this.entityPlayer = entityPlayer;
@@ -39,7 +39,7 @@ public class PlayerConnection {
     }
 
     /**
-     * Gets client version (4 = 1.7.2, 5 = 1.7.6+, 47 = 1.8) 
+     * Gets client version (4 = 1.7.2, 5 = 1.7.6+, 47 = 1.8)
      *
      * @return int version value.
      */
@@ -51,7 +51,7 @@ public class PlayerConnection {
         }
         return 0;
     }
-    
+
     public Channel getNettyChannel() {
         try {
             return (Channel) ReflectionFactory.getField(UnsafeBukkitClasses.getNMSClass("NetworkManager"), "m").get(networkManager);

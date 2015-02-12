@@ -11,11 +11,11 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.InvocationTargetException;
 
 public class EntityPlayer {
-    
-    private Player player;
-    private Object entityPlayer;
+
+    private Player           player;
+    private Object           entityPlayer;
     private PlayerConnection playerConnection;
-    
+
     public EntityPlayer(Player player) {
         this.player = player;
         if (entityPlayerClass == null) {
@@ -24,17 +24,17 @@ public class EntityPlayer {
             craftPlayerClass = UnsafeBukkitClasses.getOBCClass("entity.CraftPlayer");
         }
         try {
-           this.entityPlayer = ReflectionFactory.getMethod(craftPlayerClass, "getHandle").invoke(player);
+            this.entityPlayer = ReflectionFactory.getMethod(craftPlayerClass, "getHandle").invoke(player);
 
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
-    
+
     public Player getPlayer() {
         return this.player;
     }
-    
+
     public Object getEntityPlayer() {
         return this.entityPlayer;
     }

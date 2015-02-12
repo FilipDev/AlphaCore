@@ -14,11 +14,11 @@ import me.pauzen.alphacore.utils.yaml.YamlWriter;
 import java.io.File;
 
 public class PlayerData {
-    
-    private YamlReader yamlReader;
-    private YamlWriter yamlWriter;
+
+    private YamlReader  yamlReader;
+    private YamlWriter  yamlWriter;
     private YamlBuilder yamlBuilder;
-    
+
     private CorePlayer corePlayer;
 
     public PlayerData(CorePlayer corePlayer) {
@@ -28,9 +28,9 @@ public class PlayerData {
         this.yamlWriter = new YamlWriter(yamlBuilder.getConfiguration());
         this.corePlayer = corePlayer;
     }
-    
+
     private void loadAll() {
-        
+
     }
 
     public YamlReader getYamlReader() {

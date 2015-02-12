@@ -8,8 +8,8 @@ import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.updater.UpdateEvent;
 import me.pauzen.alphacore.updater.UpdateType;
-import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerExpChangeEvent;
@@ -17,19 +17,19 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoadingBarManager extends ListenerImplementation implements Nullifiable {
+public class LoadingBarManager extends ListenerImplementation implements Registrable {
 
     @Nullify
     private static LoadingBarManager manager;
 
-    public static void registerManager() {
+    public static void register() {
         manager = new LoadingBarManager();
     }
 
     public static LoadingBarManager getManager() {
         return manager;
     }
-    
+
     private Map<String, LoadingBar> loadingBars = new HashMap<>();
 
     @EventHandler
@@ -38,13 +38,13 @@ public class LoadingBarManager extends ListenerImplementation implements Nullifi
             loadingBars.entrySet().forEach(entry -> entry.getValue().update());
         }
     }
-    
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onXPEvent(PlayerExpChangeEvent e) {
         CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
 
         LoadingBar loadingBar = loadingBars.get(corePlayer.getUUID());
-        
+
         if (loadingBar == null) {
             return;
         }

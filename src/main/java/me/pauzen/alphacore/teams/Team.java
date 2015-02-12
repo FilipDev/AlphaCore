@@ -25,7 +25,7 @@ public class Team {
     public void cleanup() {
         this.players = null;
     }
-    
+
     public Set<CorePlayer> getAND(CorePlayer... corePlayers) {
         Set<CorePlayer> containing = new HashSet<>();
         for (CorePlayer corePlayer : corePlayers) {
@@ -33,7 +33,7 @@ public class Team {
                 containing.add(corePlayer);
             }
         }
-        
+
         return containing;
     }
 

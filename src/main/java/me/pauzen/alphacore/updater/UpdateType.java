@@ -7,10 +7,9 @@ package me.pauzen.alphacore.updater;
 public enum UpdateType {
 
     TICK(1L),
-    SECOND(20L), 
-    MINUTE(1200L), 
-    TEM_MINUTES(12000),
-    ;
+    SECOND(20L),
+    MINUTE(1200L),
+    TEM_MINUTES(12000),;
 
     private long ticks;
     private long lastTime;

@@ -11,15 +11,15 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 public abstract class ListenerImplementation implements Listener {
-    
+
     public ListenerImplementation() {
         Bukkit.getPluginManager().registerEvents(this, Core.getCore());
     }
-    
+
     public void unregister(HandlerList handlerList) {
         handlerList.unregister(this);
     }
-    
+
     public static void registerListeners() {
         new DamageByEntityListener();
         new BlockListener();
@@ -27,6 +27,6 @@ public abstract class ListenerImplementation implements Listener {
         new DamageListener();
         new AutoSaver();
     }
-    
-    
+
+
 }

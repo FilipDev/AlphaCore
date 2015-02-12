@@ -14,12 +14,12 @@ import javax.script.ScriptException;
 public class ScriptRunner {
 
     private static ScriptEngineManager scriptManager = new ScriptEngineManager();
-    private static ScriptEngine javaScript = scriptManager.getEngineByName("JavaScript");
+    private static ScriptEngine        javaScript    = scriptManager.getEngineByName("JavaScript");
 
     public ScriptRunner() {
         javaScript.put("server", Bukkit.getServer());
     }
-    
+
     public void runScript(Player runner, Script script) {
         javaScript.put("me", runner);
         javaScript.put("world", runner.getWorld());
@@ -29,7 +29,7 @@ public class ScriptRunner {
             e.printStackTrace();
         }
     }
-    
+
     public static double evaluate(String expression, double... varValues) throws ScriptException {
         return Double.valueOf(javaScript.eval(String.format(expression, varValues)).toString());
     }

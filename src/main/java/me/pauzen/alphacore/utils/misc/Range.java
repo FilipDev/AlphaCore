@@ -48,7 +48,7 @@ public class Range {
         float value = ((float) random.nextInt((int) (max * 100000000.0F) - (int) (min * 100000000.0F)) / 100000000.0F + (float) min);
         return value;
     }
-    
+
     public static float random(double min, double max) {
         return new Range(min, max).randomValue();
     }

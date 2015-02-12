@@ -5,26 +5,26 @@
 package me.pauzen.alphacore.commands;
 
 import me.pauzen.alphacore.utils.misc.Tuple;
-import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
 
-public class CommandManager implements Nullifiable {
+public class CommandManager implements Registrable {
 
     public Command getCommand(String commandName) {
         return RegisteredCommand.getCommand(commandName.toUpperCase());
     }
-    
+
     public void executeCommand(Command command, CommandSender commandSender, String[] arguments) {
         Tuple<Map<String, String>, String[]> argModifierTuple = getModifiers(arguments);
         command.execute(commandSender, argModifierTuple.getB(), argModifierTuple.getA());
     }
-    
+
     private Tuple<Map<String, String>, String[]> getModifiers(String[] args) {
         Map<String, String> modifiers = new HashMap<>();
-        List<String> newArgs =  new ArrayList<>();
+        List<String> newArgs = new ArrayList<>();
         Collections.addAll(newArgs, args);
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
@@ -36,14 +36,14 @@ public class CommandManager implements Nullifiable {
                 newArgs.remove(value);
             }
         }
-        
+
         return new Tuple<>(newArgs.toArray(new String[newArgs.size()]), modifiers);
     }
 
     @Nullify
     private static CommandManager manager;
 
-    public static void registerManager() {
+    public static void register() {
         manager = new CommandManager();
         new CommandRunner();
     }

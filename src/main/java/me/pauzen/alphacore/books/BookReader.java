@@ -8,10 +8,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
 public final class BookReader {
-    
+
     private BookReader() {
     }
-    
+
     public static String readBook(ItemStack book) {
         return readBook((BookMeta) book.getItemMeta());
     }
@@ -23,5 +23,5 @@ public final class BookReader {
         }
         return pages.toString();
     }
-    
+
 }

@@ -52,7 +52,7 @@ public class DoubleJumpListener extends ListenerImplementation {
         CorePlayer CorePlayer = PlayerManager.getManager().getWrapper(e.getPlayer());
 
         if (CorePlayer.hasActivated(PremadeAbilities.DOUBLE_JUMP.ability())) {
-            
+
             if (doubleJumped.contains(CorePlayer)) {
                 if (e.getPlayer().isOnGround()) {
                     doubleJumped.remove(CorePlayer);
@@ -61,12 +61,12 @@ public class DoubleJumpListener extends ListenerImplementation {
             }
         }
     }
-    
+
     private void launchPlayer(Player player) {
         Location location = player.getLocation();
         player.setVelocity(location.getDirection().multiply(multiplier));
     }
-    
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onDoubleJump(DoubleJumpEvent e) {
         SoundUtils.playSound(e.getPlayer(), Sound.ENDERDRAGON_WINGS, 5, 4);

@@ -24,7 +24,7 @@ public abstract class Effect {
         this.effectLength = effectLength * 50;
         EffectManager.getManager().registerEffect(this);
     }
-    
+
     public Effect() {
         this.effectLength = -1;
         EffectManager.getManager().registerEffect(this);
@@ -35,9 +35,9 @@ public abstract class Effect {
     }
 
     public abstract void onApply(CorePlayer corePlayer);
-    
+
     public abstract void onRemove(CorePlayer corePlayer);
-    
+
     public abstract void perSecond(CorePlayer corePlayer);
 
     public void apply(CorePlayer corePlayer) {
@@ -55,7 +55,7 @@ public abstract class Effect {
         new EffectRemoveEvent(corePlayer, this).call();
         onRemove(corePlayer);
     }
-    
+
     public void update() {
         for (Map.Entry<CorePlayer, Long> entry : this.affectedPlayers.entrySet()) {
             perSecond(entry.getKey());
@@ -64,7 +64,7 @@ public abstract class Effect {
             }
         }
     }
-    
+
     public long getTimeLeft(CorePlayer corePlayer) {
         return getEffectLength() == -1 ? 1 : getEffectLength() - (System.currentTimeMillis() - affectedPlayers.get(corePlayer));
     }

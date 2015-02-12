@@ -5,7 +5,7 @@
 package me.pauzen.alphacore.utils.misc;
 
 public class Tuple<A, B> {
-    
+
     private A a;
     private B b;
 

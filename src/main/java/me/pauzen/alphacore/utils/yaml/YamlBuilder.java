@@ -6,18 +6,18 @@ import java.io.File;
 import java.io.IOException;
 
 public class YamlBuilder {
-    
-    private File file;
+
+    private File              file;
     private YamlConfiguration yamlConfiguration;
-    
+
     public YamlBuilder(String containingFolder, String name) {
         this.file = new File(containingFolder + File.pathSeparator + name + ".yml");
     }
-    
+
     public YamlBuilder(File file) {
         this.file = file;
     }
-    
+
     public YamlConfiguration getConfiguration() {
         if (this.yamlConfiguration != null) {
             return this.yamlConfiguration;
@@ -33,7 +33,7 @@ public class YamlBuilder {
         }
         return this.yamlConfiguration = YamlConfiguration.loadConfiguration(this.file);
     }
-    
+
     public File getFile() {
         return this.file;
     }

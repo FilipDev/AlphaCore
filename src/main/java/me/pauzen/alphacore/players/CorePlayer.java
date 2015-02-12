@@ -7,6 +7,7 @@ package me.pauzen.alphacore.players;
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.places.Place;
+import me.pauzen.alphacore.places.events.PlaceMoveEvent;
 import me.pauzen.alphacore.playerlogger.PlayTimeLogger;
 import me.pauzen.alphacore.players.data.DefaultTrackers;
 import me.pauzen.alphacore.players.data.PlayerData;
@@ -49,8 +50,8 @@ public class CorePlayer {
     public CorePlayer(Player player) {
         this.playerName = player.getName();
         this.entityPlayer = new EntityPlayer(player);
-        for (DefaultTrackers tracker : DefaultTrackers.values()) {
-            tracker.tracker().addTracker(this);
+        for (Tracker tracker : DefaultTrackers.getDefaultTrackers()) {
+            tracker.copy().addTracker(this);
         }
         load();
     }
@@ -82,7 +83,7 @@ public class CorePlayer {
     public boolean hasActivated(Effect effect) {
         return this.activeEffects.contains(effect);
     }
-    
+
     public Set<Effect> getActiveEffects() {
         return this.activeEffects;
     }
@@ -98,11 +99,11 @@ public class CorePlayer {
     public void registerDefaultAbilities() {
         Ability.getRegisteredAbilities().stream().filter(Ability::isDefault).forEach(this::activateAbility);
     }
-    
+
     public void assignTeam(Team team) {
         this.team = team;
     }
-    
+
     public Player getPlayer() {
         return Bukkit.getPlayer(playerName);
     }
@@ -111,12 +112,12 @@ public class CorePlayer {
         activatedAbilities.remove(ability);
         return false;
     }
-    
+
     public boolean activateAbility(Ability ability) {
         activatedAbilities.add(ability);
         return true;
-    }  
-    
+    }
+
     public boolean hasActivated(Ability ability) {
         return activatedAbilities.contains(ability);
     }
@@ -124,7 +125,7 @@ public class CorePlayer {
     public Set<Ability> getActivatedAbilities() {
         return activatedAbilities;
     }
-    
+
     public boolean setAbilityState(Ability ability, boolean newState) {
         return GeneralUtils.setContainment(activatedAbilities, ability, newState);
     }
@@ -132,18 +133,18 @@ public class CorePlayer {
     public boolean toggleAbilityState(Ability ability) {
         return GeneralUtils.toggleContainment(activatedAbilities, ability);
     }
-    
+
     public void load() {
         this.team = TeamManager.getDefaultTeam();
         getPlayerData().getYamlReader().getTrackers(this).forEach(tracker -> tracker.addTracker(this));
         registerDefaultAbilities();
         //TODO: Create load function that reads from YAML file.
     }
-    
+
     public String getUUID() {
         return getPlayer().getUniqueId().toString();
     }
-    
+
     public void defaultLoad() {
         this.team = TeamManager.getDefaultTeam();
         new PlayTimeLogger(0).addTracker(this);
@@ -152,15 +153,15 @@ public class CorePlayer {
 
     public void save() {
         this.trackers.entrySet().forEach(entry -> getPlayerData().getYamlWriter().saveTracker(this, entry.getValue()));
-        
+
         getPlayerData().getYamlBuilder().save();
         //TODO: Create save function that saves to YAML file. Do not save abilities.
     }
-    
+
     public boolean isOnGround() {
         return getPlayer().getLocation().subtract(0, 1, 0).getBlock().getType() != Material.AIR;
     }
-    
+
     public Channel getNettyChannel() {
         return this.getEntityPlayer().getPlayerConnection().getNettyChannel();
     }
@@ -168,29 +169,29 @@ public class CorePlayer {
     public Team getTeam() {
         return team;
     }
-    
+
     public static CorePlayer get(Player player) {
         return PlayerManager.getManager().getWrapper(player);
     }
-    
+
     public void setHealthPercentage(double percentage) {
         getPlayer().setHealth((getPlayer().getMaxHealth() * (percentage / 100)));
     }
-    
+
     public void healFully() {
         setHealthPercentage(100);
     }
-    
+
     public void clearChat() {
         String[] spamMessage = new String[]{" ", "  ", "   ", "==CLEARING CHAT=="};
-            for (int n = 0; n < 50; n++) {
-                for (String aSpamMessage : spamMessage) {
-                    getPlayer().sendMessage(aSpamMessage);
-                }
+        for (int n = 0; n < 50; n++) {
+            for (String aSpamMessage : spamMessage) {
+                getPlayer().sendMessage(aSpamMessage);
+            }
         }
     }
 
-    public Map<String,Tracker> getTrackers() {
+    public Map<String, Tracker> getTrackers() {
         return trackers;
     }
 
@@ -200,6 +201,13 @@ public class CorePlayer {
 
     public Place getCurrentPlace() {
         return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place.removePlayer(this);
+        place.addPlayer(this);
+        new PlaceMoveEvent(this, this.place, place);
+        this.place = place;
     }
 }
 

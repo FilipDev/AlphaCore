@@ -15,6 +15,7 @@ public class Tracker {
 
     private int value = 0;
     private String id;
+    private CorePlayer corePlayer;
 
     private Map<Integer, List<Milestone>> mileStones = new HashMap<>();
 
@@ -22,36 +23,42 @@ public class Tracker {
         this.id = id;
         this.value = initialValue;
     }
+    
+    public Tracker(CorePlayer corePlayer, String id, int initialValue) {
+        this(id, initialValue);
+        this.corePlayer = corePlayer;
+    }
 
     public void setValue(int value) {
+        updateValue(value);
         this.value = value;
     }
 
     public void addValue(int value) {
-        this.value += value;
+        setValue(getValue() + value);
     }
 
-    public void subtractValue(int points) {
-        value -= points;
+    public void subtractValue(int value) {
+        setValue(getValue() - value);
     }
 
     public int getValue() {
         return this.value;
     }
-    
+
     public void updateValue(int newValue) {
         List<Milestone> milestones = getMilestones(newValue);
-        
+
         if (milestones == null) {
             return;
         }
-        
-        milestones.forEach(Milestone::onReach);
+
+        milestones.forEach(milestone -> milestone.onReach(this.corePlayer, this));
     }
-    
+
     public List<Milestone> checkAndGetMilestones(int value) {
         checkMilestoneListExists(value);
-        
+
         return getMilestones(value);
     }
 
@@ -62,16 +69,22 @@ public class Tracker {
     public void addTracker(CorePlayer corePlayer) {
         corePlayer.getTrackers().put(id, this);
     }
-    
+
     private void checkMilestoneListExists(int milestone) {
         if (mileStones.get(milestone) == null) {
             mileStones.put(milestone, new ArrayList<>());
         }
     }
-    
+
     public void addMilestone(Milestone milestone) {
         checkAndGetMilestones(milestone.getValue()).add(milestone);
     }
     
-    
+    public Tracker copy() {
+        Tracker newTracker = new Tracker(this.corePlayer, this.id, this.value);
+        newTracker.mileStones = this.mileStones;
+        return newTracker;
+    }
+
+
 }

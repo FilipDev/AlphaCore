@@ -11,9 +11,9 @@ public final class VectorUtils {
 
     private VectorUtils() {
     }
-    
+
     public static Vector getRequiredVector(Location a, Location b) {
         return b.toVector().subtract(a.toVector());
     }
-    
+
 }

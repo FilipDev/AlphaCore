@@ -8,7 +8,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.jar.JarFile;
 
 /*
  * Written by FilipDev on 12/24/14 12:19 AM.
@@ -44,7 +43,7 @@ public final class ReflectionFactory {
         CLASS_NAMES.put(name, clazz);
         return clazz;
     }
-    
+
     /**
      * Removes final modifier from a Field object.
      *
@@ -279,4 +278,13 @@ public final class ReflectionFactory {
         return classes.toArray(new Class[classes.size()]);
     }
     
+    public static boolean implementsInterface(Class clazz, Class interfaceType) {
+        for (Class anInterface : clazz.getInterfaces()) {
+            if (interfaceType == anInterface) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

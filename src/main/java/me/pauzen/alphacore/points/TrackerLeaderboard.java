@@ -12,7 +12,8 @@ import me.pauzen.alphacore.utils.reflection.Nullify;
 
 import java.util.TreeSet;
 
-@Todo("Allow use for any Tracker.")
+@Todo("Allow use for any Tracker." +
+        "Revise.")
 public class TrackerLeaderboard implements Nullifiable {
 
     @Nullify

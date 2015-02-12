@@ -10,8 +10,7 @@ public enum PremadeEffects {
 
     NO_BLOCK_BREAK(),
     NO_BLOCK_PLACE(),
-    NO_SHOOT_BOW(15),
-    ;
+    NO_SHOOT_BOW(15),;
 
     private Effect effect;
 
@@ -30,16 +29,16 @@ public enum PremadeEffects {
             }
         };
     }
-    
+
     PremadeEffects(Effect effect) {
         this.effect = effect;
     }
-    
-    
+
+
     PremadeEffects() {
         this(-1);
     }
-    
+
     public Effect effect() {
         return this.effect;
     }

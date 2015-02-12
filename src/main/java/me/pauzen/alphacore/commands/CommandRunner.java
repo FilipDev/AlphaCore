@@ -19,12 +19,12 @@ public class CommandRunner extends ListenerImplementation {
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         process(event.getMessage(), event.getPlayer());
     }
-    
+
     @EventHandler
     public void onConsoleCommand(ServerCommandEvent event) {
         process(event.getCommand(), event.getSender());
     }
-    
+
     private void process(String message, CommandSender commandSender) {
         String[] parts = message.split(" ");
         String commandString = parts[0].substring(1);
@@ -34,6 +34,6 @@ public class CommandRunner extends ListenerImplementation {
             CommandManager.getManager().executeCommand(command, commandSender, args);
         }
     }
-    
+
 
 }

@@ -13,8 +13,7 @@ import java.util.Map;
 public enum RegisteredCommand {
 
     CRASH(new CrashCommand()),
-    GOD(new GodCommand()),
-    ;
+    GOD(new GodCommand()),;
 
     private static Map<String, Command> commandMap = new HashMap<>();
 
@@ -32,7 +31,7 @@ public enum RegisteredCommand {
         this.command = command;
         registerCommand(this.getCommand());
     }
-    
+
     public Command getCommand() {
         return command;
     }

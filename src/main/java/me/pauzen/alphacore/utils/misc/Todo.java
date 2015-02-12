@@ -5,7 +5,7 @@
 package me.pauzen.alphacore.utils.misc;
 
 public @interface Todo {
-    
+
     String value();
-    
+
 }

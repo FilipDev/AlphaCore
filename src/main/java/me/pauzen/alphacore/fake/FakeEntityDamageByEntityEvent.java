@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import java.util.Map;
 
 public class FakeEntityDamageByEntityEvent extends EntityDamageByEntityEvent {
-    
+
     public FakeEntityDamageByEntityEvent(Entity damager, Entity damagee, DamageCause cause, int damage) {
         super(damager, damagee, cause, damage);
     }

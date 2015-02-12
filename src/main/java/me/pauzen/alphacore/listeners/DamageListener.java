@@ -26,7 +26,7 @@ public class DamageListener extends ListenerImplementation {
             e.setCancelled(true);
             return;
         }
-        
+
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
             if (corePlayer.hasActivated(PremadeAbilities.NO_FALL.ability())) {
                 e.setCancelled(true);
@@ -35,5 +35,5 @@ public class DamageListener extends ListenerImplementation {
         }
 
     }
-    
+
 }

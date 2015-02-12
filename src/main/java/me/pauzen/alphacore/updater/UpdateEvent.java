@@ -18,13 +18,13 @@ public class UpdateEvent extends CallableEvent {
     public static HandlerList getHandlerList() {
         return handlers;
     }
-    
+
     private UpdateType updateType;
 
     public UpdateEvent(UpdateType updateType) {
         this.updateType = updateType;
-    }    
-    
+    }
+
     public UpdateType getUpdateType() {
         return updateType;
     }

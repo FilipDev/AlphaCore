@@ -4,10 +4,12 @@
 
 package me.pauzen.alphacore.players.data;
 
+import me.pauzen.alphacore.players.CorePlayer;
+
 public abstract class Milestone {
-    
+
     private int value;
-    
+
     public Milestone(int value) {
         this.value = value;
     }
@@ -15,9 +17,9 @@ public abstract class Milestone {
     public int getValue() {
         return value;
     }
-    
-    public abstract void onReach();
-    
+
+    public abstract void onReach(CorePlayer corePlayer, Tracker tracker);
+
     public void add(Tracker tracker) {
         tracker.addMilestone(this);
     }

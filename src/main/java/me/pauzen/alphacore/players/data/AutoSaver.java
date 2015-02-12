@@ -13,16 +13,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
 public class AutoSaver extends ListenerImplementation {
-    
+
     @EventHandler
     public void onUpdate(UpdateEvent e) {
         if (e.getUpdateType() == UpdateType.TEM_MINUTES) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 CorePlayer corePlayer = CorePlayer.get(player);
-                
+
                 corePlayer.save();
             }
         }
     }
-    
+
 }

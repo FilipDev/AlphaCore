@@ -12,7 +12,7 @@ public interface Message {
     String getPrefix();
 
     String getRawMessage();
-    
+
     default String getMessage() {
         return getPrefix() + getRawMessage();
     }
@@ -20,7 +20,7 @@ public interface Message {
     default void sendMessage(CommandSender commandSender, Object... objects) {
         commandSender.sendMessage(String.format(this.toString(), objects));
     }
-    
+
     default void sendMessage(CorePlayer CorePlayer, Object... objects) {
         sendMessage(CorePlayer.getPlayer(), objects);
     }

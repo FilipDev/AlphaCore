@@ -7,10 +7,10 @@ package me.pauzen.alphacore.utils;
 import me.pauzen.alphacore.utils.misc.Range;
 
 public final class ExperienceUtils {
-    
+
     private ExperienceUtils() {
     }
-    
+
     public static int getRequiredExperience(int level) {
         if (middleRange.isWithinInclusive(level)) {
             return 2 * level + 7;

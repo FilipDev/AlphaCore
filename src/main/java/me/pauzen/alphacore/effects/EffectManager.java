@@ -4,18 +4,18 @@
 
 package me.pauzen.alphacore.effects;
 
-import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import me.pauzen.alphacore.utils.reflection.Registrable;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class EffectManager implements Nullifiable {
-    
+public class EffectManager implements Registrable {
+
     @Nullify
     private static EffectManager manager;
-    
-    public static void registerManager() {
+
+    public static void register() {
         manager = new EffectManager();
         new EffectUpdater();
     }
@@ -25,11 +25,11 @@ public class EffectManager implements Nullifiable {
     }
 
     private Set<Effect> registeredEffects = new HashSet<>();
-    
+
     public void registerEffect(Effect effect) {
         registeredEffects.add(effect);
     }
-    
+
     public Set<Effect> getRegisteredEffects() {
         return registeredEffects;
     }

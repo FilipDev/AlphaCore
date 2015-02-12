@@ -13,7 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class CrashCommand extends Command {
-    
+
     @Override
     public String getName() {
         return "crash";
@@ -34,9 +34,9 @@ public class CrashCommand extends Command {
                 try {
                     entityPlayer.getPlayerConnection().sendPacket(
                             new Packet("PacketPlayOutSpawnEntityLiving")
-                            .initPacket(
-                                    new Class[]{UnsafeBukkitClasses.getNMSClass("EntityLiving")},
-                                    new Object[]{entityPlayer.getEntityPlayer()}));
+                                    .initPacket(
+                                            new Class[]{UnsafeBukkitClasses.getNMSClass("EntityLiving")},
+                                            new Object[]{entityPlayer.getEntityPlayer()}));
                 } catch (IllegalAccessException | InstantiationException e) {
                     e.printStackTrace();
                 }

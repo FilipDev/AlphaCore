@@ -15,7 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class GodCommand extends Command {
-    
+
     @Override
     public String getName() {
         return "god";
@@ -24,7 +24,7 @@ public class GodCommand extends Command {
     @Override
     public CommandListener defaultListener() {
         return new CommandListener(false, "buc.godmode") {
-            
+
             @Override
             public void onRun() {
                 Player target = args.length == 0 ? (Player) commandSender : Bukkit.getPlayer(args[0]);
@@ -42,7 +42,7 @@ public class GodCommand extends Command {
     private void setGod(CorePlayer CorePlayer, boolean newState) {
         ChatMessage.SET.sendMessage(CorePlayer, Ability.booleanToState(CorePlayer.setAbilityState(PremadeAbilities.GOD.ability(), newState)));
     }
-    
+
     private void toggleGod(CorePlayer CorePlayer) {
         ChatMessage.TOGGLED.sendMessage(CorePlayer, Ability.booleanToState(CorePlayer.toggleAbilityState(PremadeAbilities.GOD.ability())));
     }

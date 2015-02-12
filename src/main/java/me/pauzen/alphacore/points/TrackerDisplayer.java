@@ -16,9 +16,9 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 public class TrackerDisplayer extends ListenerImplementation {
 
     private CorePlayer corePlayer;
-    private Tracker tracker;
-    private Place place;
-    private int oldLevel;
+    private Tracker    tracker;
+    private Place      place;
+    private int        oldLevel;
 
     public TrackerDisplayer(Place place, CorePlayer corePlayer, Tracker tracker) {
         super();
@@ -36,7 +36,7 @@ public class TrackerDisplayer extends ListenerImplementation {
         }
         corePlayer.getPlayer().setLevel(tracker.getValue());
     }
-    
+
     public void revert() {
         unregister(PlayerExpChangeEvent.getHandlerList());
         unregister(UpdateEvent.getHandlerList());

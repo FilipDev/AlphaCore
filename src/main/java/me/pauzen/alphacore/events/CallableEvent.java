@@ -11,17 +11,17 @@ import org.bukkit.event.Event;
 public abstract class CallableEvent extends Event implements Cancellable {
 
     private boolean cancelled = false;
-    
+
     @Override
-    public boolean isCancelled(){
+    public boolean isCancelled() {
         return this.cancelled;
     }
 
     @Override
-    public void setCancelled(boolean set){
+    public void setCancelled(boolean set) {
         this.cancelled = set;
     }
-    
+
     public CallableEvent call() {
         Bukkit.getPluginManager().callEvent(this);
         return this;

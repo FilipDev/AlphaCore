@@ -31,11 +31,11 @@ public class LoadingBar {
         displaying = true;
         corePlayer.getPlayer().setExp(0);
     }
-    
+
     public float getCurrent() {
         return this.current;
     }
-    
+
     public void update() {
         if (displaying) {
             corePlayer.getPlayer().setExp(current = (corePlayer.getPlayer().getExp() + xpPerTick));
@@ -45,15 +45,15 @@ public class LoadingBar {
             }
         }
     }
-    
+
     public void setPreviousXP(float value) {
         this.previousXP = value;
-    } 
-    
+    }
+
     public float getPreviousXP() {
         return this.previousXP;
     }
-    
+
     public void revert() {
         displaying = false;
         corePlayer.getPlayer().setExp(previousXP);

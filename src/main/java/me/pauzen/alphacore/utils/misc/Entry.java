@@ -27,12 +27,10 @@ public class Entry<K, V> extends AbstractMap.SimpleEntry<K, V> {
     }
 
     /**
-     *
-     *
-     * @param map Map to insert entry into.
+     * @param map   Map to insert entry into.
      * @param entry Entry object to insert into map.
-     * @param <K> Key.
-     * @param <V> Value.
+     * @param <K>   Key.
+     * @param <V>   Value.
      */
     public static <K, V> void insert(Map<K, V> map, Entry<K, V> entry) {
         map.put(entry.getKey(), entry.getValue());

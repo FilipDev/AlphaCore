@@ -14,16 +14,14 @@ public final class UnsafeBukkitClasses {
 
     private static final String VERSION = Bukkit.getServer().getClass().getName().split("\\.")[3];
 
-    public static Class getNMSClass(String className)
-    {
+    public static Class getNMSClass(String className) {
         return getTheClass("net.minecraft.server.", className);
     }
 
-    public static Class getOBCClass(String className)
-    {
+    public static Class getOBCClass(String className) {
         return getTheClass("org.bukkit.craftbukkit.", className);
     }
-    
+
     private static Class getTheClass(String path, String name) {
         return ReflectionFactory.classFromName(path + VERSION + "." + name);
     }

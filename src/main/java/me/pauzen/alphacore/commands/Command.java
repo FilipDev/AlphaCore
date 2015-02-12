@@ -24,20 +24,20 @@ public abstract class Command {
                     return;
                 }
             }
-            commandListener.onRunPreTests(commandSender, args, modifiers);
+            commandListener.preRun(commandSender, args, modifiers);
         }
     }
-    
+
     public Command() {
         addListener(defaultListener());
     }
-    
+
     public void addListener(CommandListener commandListener) {
         this.commandListeners.add(commandListener);
     }
 
     public abstract String getName();
-    
+
     public abstract CommandListener defaultListener();
-    
+
 }

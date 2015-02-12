@@ -10,9 +10,8 @@ public enum ChatMessage implements Message {
 
     TOGGLED("Ability %s has been %s."),
     SET("Ability %s has been set to %s."),
-    JOINED_TEAM("You have been added to the team %s"),
-    ;
-    
+    JOINED_TEAM("You have been added to the team %s"),;
+
     private String message;
 
     private ChatMessage(String message) {

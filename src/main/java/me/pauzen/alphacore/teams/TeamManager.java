@@ -5,18 +5,18 @@
 package me.pauzen.alphacore.teams;
 
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import me.pauzen.alphacore.utils.reflection.Registrable;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class TeamManager implements Nullifiable {
+public class TeamManager implements Registrable {
 
     @Nullify
     private static TeamManager manager;
-    
-    public static void registerManager() {
+
+    public static void register() {
         manager = new TeamManager();
     }
 
@@ -35,13 +35,13 @@ public class TeamManager implements Nullifiable {
     public Team getTeam(CorePlayer corePlayer) {
         return corePlayer.getTeam();
     }
-    
+
     public static Team getDefaultTeam() {
         return DEFAULT_TEAM;
     }
 
     public void nullify() {
-        Nullifiable.super.nullify();
+        Registrable.super.nullify();
         manager.teams.forEach(Team::cleanup);
     }
 }
