@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class DamageListener extends ListenerImplementation {
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDamage(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) {
             return;
@@ -21,19 +21,17 @@ public class DamageListener extends ListenerImplementation {
 
         Player player = (Player) e.getEntity();
         CorePlayer corePlayer = CorePlayer.get(player);
-
+        
         if (corePlayer.hasActivated(PremadeAbilities.GOD.ability())) {
             e.setCancelled(true);
-            return;
         }
 
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
             if (corePlayer.hasActivated(PremadeAbilities.NO_FALL.ability())) {
                 e.setCancelled(true);
-                return;
             }
         }
 
     }
-
+    
 }

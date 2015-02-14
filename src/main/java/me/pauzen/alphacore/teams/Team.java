@@ -6,11 +6,13 @@ package me.pauzen.alphacore.teams;
 
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.misc.Todo;
 import org.bukkit.ChatColor;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Todo("Load teams from file.")
 public class Team {
 
     private String    name;

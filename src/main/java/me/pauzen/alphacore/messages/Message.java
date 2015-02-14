@@ -18,7 +18,9 @@ public interface Message {
     }
 
     default void sendMessage(CommandSender commandSender, Object... objects) {
-        commandSender.sendMessage(String.format(this.toString(), objects));
+        if (!new MessageSendEvent(commandSender).call().isCancelled()) {
+            commandSender.sendMessage(String.format(this.toString(), objects));
+        }
     }
 
     default void sendMessage(CorePlayer CorePlayer, Object... objects) {

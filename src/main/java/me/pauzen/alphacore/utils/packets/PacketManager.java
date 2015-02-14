@@ -9,9 +9,11 @@ import me.pauzen.alphacore.players.PlayerManager;
 import me.pauzen.alphacore.utils.commonnms.Packet;
 import me.pauzen.alphacore.utils.packets.event.PacketReceiveEvent;
 import me.pauzen.alphacore.utils.packets.event.PacketSendEvent;
+import me.pauzen.alphacore.utils.reflection.Registrable;
 import net.minecraft.util.io.netty.channel.Channel;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -21,18 +23,18 @@ import java.util.List;
 /**
  * Programmed by DevRo_ on 22/12/14.
  */
-public class PacketManager extends ListenerImplementation {
+public class PacketManager extends ListenerImplementation implements Registrable {
 
-    private static PacketManager instance;
+    private static PacketManager manager;
 
     private List<PacketListener> listeners = new ArrayList<>(); //Should this be a SynchronizedList?
 
-    public static PacketManager getInstance() {
-        if (instance == null) {
-            instance = new PacketManager();
-        }
+    public static void register() {
+        manager = new PacketManager();
+    }
 
-        return instance;
+    public static PacketManager getManager() {
+        return manager;
     }
 
     public void registerListener(PacketListener listener) {
@@ -41,18 +43,14 @@ public class PacketManager extends ListenerImplementation {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent event) {
         inject(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event) {
         uninject(event.getPlayer());
-    }
-
-    public static void nullify() {
-        instance = null;
     }
 
     public boolean canIncome(Player player, Packet packet) {
@@ -77,17 +75,16 @@ public class PacketManager extends ListenerImplementation {
     }
 
     public void inject(Player player) {
+        System.out.println(PlayerManager.getManager());
+        System.out.println(PlayerManager.getManager().getWrapper(player));
         Channel channel = PlayerManager.getManager().getWrapper(player).getNettyChannel();
-        channel.pipeline().addBefore("packet_handler", "christmas", new PacketInterceptor(player));
+        channel.pipeline().addBefore("packet_handler", "alphacore", new PacketInterceptor(player));
     }
 
     public void uninject(Player player) {
         final Channel channel = PlayerManager.getManager().getWrapper(player).getNettyChannel();
-        channel.eventLoop().submit(new Runnable() {
-            @Override
-            public void run() {
-                channel.pipeline().remove("christmas");
-            }
+        channel.eventLoop().submit(() -> {
+            channel.pipeline().remove("christmas");
         });
     }
 }

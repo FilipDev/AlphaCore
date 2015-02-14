@@ -22,7 +22,7 @@ public class PlayerManager extends ListenerImplementation implements Registrable
     @Nullify
     private static PlayerManager manager;
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (getWrapper(e.getPlayer()) == null) {
             registerPlayer(e.getPlayer());
@@ -34,7 +34,7 @@ public class PlayerManager extends ListenerImplementation implements Registrable
         destroyWrapper(e.getPlayer());
     }
 
-    public static void registerManager() {
+    public static void register() {
         manager = new PlayerManager();
     }
 

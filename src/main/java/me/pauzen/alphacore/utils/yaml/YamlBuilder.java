@@ -24,9 +24,7 @@ public class YamlBuilder {
         }
         if (!this.file.exists()) {
             try {
-                if (!this.file.createNewFile()) {
-                    throw new IOException("Failed to create file.");
-                }
+                tryCreate(this.file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -44,5 +42,21 @@ public class YamlBuilder {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void tryCreate(File file) throws IOException {
+        if (file.exists()) {
+            return;
+        }
+        
+        if (!file.getParentFile().exists()) {
+            if (!file.getParentFile().mkdirs()) {
+                throw new IOException("Cannot create directories");
+            }
+        }
+        if (!file.createNewFile()) {
+            throw new IOException("Cannot create file");
+        }
+        
     }
 }

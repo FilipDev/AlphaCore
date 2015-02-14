@@ -5,7 +5,6 @@
 package me.pauzen.alphacore.listeners;
 
 import me.pauzen.alphacore.Core;
-import me.pauzen.alphacore.players.data.AutoSaver;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -19,14 +18,5 @@ public abstract class ListenerImplementation implements Listener {
     public void unregister(HandlerList handlerList) {
         handlerList.unregister(this);
     }
-
-    public static void registerListeners() {
-        new DamageByEntityListener();
-        new BlockListener();
-        new AttackListener();
-        new DamageListener();
-        new AutoSaver();
-    }
-
 
 }

@@ -24,7 +24,7 @@ public abstract class Command {
                     return;
                 }
             }
-            commandListener.preRun(commandSender, args, modifiers);
+            commandListener.preRun(this, commandSender, args, modifiers);
         }
     }
 

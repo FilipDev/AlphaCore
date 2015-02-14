@@ -46,6 +46,7 @@ public class CommandManager implements Registrable {
     public static void register() {
         manager = new CommandManager();
         new CommandRunner();
+        RegisteredCommand.values();
     }
 
     public static CommandManager getManager() {

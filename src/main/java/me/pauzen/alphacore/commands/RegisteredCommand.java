@@ -15,13 +15,16 @@ public enum RegisteredCommand {
     CRASH(new CrashCommand()),
     GOD(new GodCommand()),;
 
-    private static Map<String, Command> commandMap = new HashMap<>();
+    private static Map<String, Command> commandMap;
 
     public static Command getCommand(String name) {
         return commandMap.get(name);
     }
 
     public static void registerCommand(Command command) {
+        if (commandMap == null) {
+            commandMap = new HashMap<>();
+        }
         commandMap.put(command.getName(), command);
     }
 

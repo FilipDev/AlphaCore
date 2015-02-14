@@ -4,13 +4,9 @@
 
 package me.pauzen.alphacore.points;
 
-import me.pauzen.alphacore.fake.FakeCorePlayer;
-import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-
-import java.util.TreeSet;
 
 @Todo("Allow use for any Tracker." +
         "Revise.")
@@ -27,7 +23,7 @@ public class TrackerLeaderboard implements Nullifiable {
         return manager;
     }
 
-    private TreeSet<CorePlayer> sortedPoints = new TreeSet<>((o1, o2) -> {
+    /*private TreeSet<CorePlayer> sortedPoints = new TreeSet<>((o1, o2) -> {
         int difference = o1 - o2.getPoints();
         return difference == 0 ? 1 : difference;
     }
@@ -45,5 +41,5 @@ public class TrackerLeaderboard implements Nullifiable {
         sortedPoints.add(fakeMyPlayer);
         sortedPoints.remove(fakeMyPlayer);
     }
-
+*/
 }

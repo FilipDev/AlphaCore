@@ -1,3 +1,7 @@
+/*
+ *  Created by Filip P. on 2/13/15 11:35 PM.
+ */
+
 package me.pauzen.alphacore.utils.reflection;
 
 import java.lang.reflect.Field;
@@ -95,7 +99,6 @@ public class Reflection<T> {
     }
 
     public void setValue(Field field, Object object) {
-        check();
         if (Modifier.isFinal(field.getModifiers())) ReflectionFactory.removeFinal(field);
         try {
             field.set(this.object, object);

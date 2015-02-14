@@ -10,7 +10,9 @@ public enum PremadeAbilities {
     DOUBLE_JUMP(true),
     AUTO_RESPAWN(false),
     NO_FALL(false),
-    BYPASS_RESTRICTIONS(false),;
+    BYPASS_RESTRICTIONS(false),
+    CHAT(true)
+    ;
 
     private Ability ability;
 

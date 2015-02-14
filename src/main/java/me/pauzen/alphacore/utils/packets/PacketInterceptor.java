@@ -23,14 +23,14 @@ public class PacketInterceptor extends ChannelDuplexHandler {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        if (PacketManager.getInstance().willSend(player, new Packet(msg))) {
+        if (PacketManager.getManager().willSend(player, new Packet(msg))) {
             super.write(ctx, msg, promise);
         }
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (PacketManager.getInstance().canIncome(player, new Packet(msg))) {
+        if (PacketManager.getManager().canIncome(player, new Packet(msg))) {
             super.channelRead(ctx, msg);
         }
     }

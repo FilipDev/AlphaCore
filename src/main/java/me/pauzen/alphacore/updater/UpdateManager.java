@@ -12,14 +12,14 @@ import org.bukkit.Bukkit;
 public class UpdateManager implements Registrable {
 
     @Nullify
-    private static UpdateManager updateManager;
+    private static UpdateManager manager;
 
     public static void register() {
-        updateManager = new UpdateManager();
+        manager = new UpdateManager();
     }
 
-    public static UpdateManager getUpdateManager() {
-        return updateManager;
+    public static UpdateManager getManager() {
+        return manager;
     }
 
     public UpdateManager() {

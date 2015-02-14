@@ -1,12 +1,10 @@
+import me.pauzen.alphacore.Core;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FallingBlockDropper {
     
@@ -72,7 +70,7 @@ public class FallingBlockDropper {
                     orginLocation.getWorld().spawnFallingBlock(setBlock.getLocation(), setBlock.getMaterial(), (byte) 0);
                 }
             }
-        }.runTaskTimer(/* Core plugin Object */, 10, 0);
+        }.runTaskTimer(Core.getCore(), 10, 0);
     }
 
 }

@@ -7,6 +7,7 @@ package me.pauzen.alphacore.players;
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.places.Place;
+import me.pauzen.alphacore.places.PlaceManager;
 import me.pauzen.alphacore.places.events.PlaceMoveEvent;
 import me.pauzen.alphacore.playerlogger.PlayTimeLogger;
 import me.pauzen.alphacore.players.data.DefaultTrackers;
@@ -18,15 +19,12 @@ import me.pauzen.alphacore.teams.TeamManager;
 import me.pauzen.alphacore.utils.GeneralUtils;
 import me.pauzen.alphacore.utils.commonnms.ClientVersion;
 import me.pauzen.alphacore.utils.commonnms.EntityPlayer;
+import me.pauzen.alphacore.utils.misc.Todo;
 import net.minecraft.util.io.netty.channel.Channel;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CorePlayer {
 
@@ -50,9 +48,6 @@ public class CorePlayer {
     public CorePlayer(Player player) {
         this.playerName = player.getName();
         this.entityPlayer = new EntityPlayer(player);
-        for (Tracker tracker : DefaultTrackers.getDefaultTrackers()) {
-            tracker.copy().addTracker(this);
-        }
         load();
     }
 
@@ -134,15 +129,25 @@ public class CorePlayer {
         return GeneralUtils.toggleContainment(activatedAbilities, ability);
     }
 
-    public void load() {
-        this.team = TeamManager.getDefaultTeam();
-        getPlayerData().getYamlReader().getTrackers(this).forEach(tracker -> tracker.addTracker(this));
-        registerDefaultAbilities();
-        //TODO: Create load function that reads from YAML file.
-    }
-
     public String getUUID() {
         return getPlayer().getUniqueId().toString();
+    }
+
+    @Todo("Create loading/saving system.")
+    public void load() {
+        this.playerData = new PlayerData(this);
+        this.team = playerData.getYamlReader().getTeam(this);
+        if (this.team == null) {
+            this.team = TeamManager.getDefaultTeam();
+        }
+        List<Tracker> trackers = getPlayerData().getYamlReader().getTrackers(this);
+        if (trackers == null) {
+            DefaultTrackers.getDefaultTrackers().forEach(tracker -> tracker.copy().addTracker(this));
+        } else {
+            getPlayerData().getYamlReader().getTrackers(this).forEach(tracker -> tracker.addTracker(this));
+        }
+        this.place = PlaceManager.getDefaultPlace();
+        registerDefaultAbilities();
     }
 
     public void defaultLoad() {
@@ -159,7 +164,7 @@ public class CorePlayer {
     }
 
     public boolean isOnGround() {
-        return getPlayer().getLocation().subtract(0, 1, 0).getBlock().getType() != Material.AIR;
+        return getPlayer().getLocation().subtract(0, 0.0001D, 0).getBlock().getType().isSolid();
     }
 
     public Channel getNettyChannel() {

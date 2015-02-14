@@ -4,9 +4,13 @@
 
 package me.pauzen.alphacore;
 
+import me.pauzen.alphacore.abilities.PremadeAbilities;
+import me.pauzen.alphacore.effects.PremadeEffects;
+import me.pauzen.alphacore.listeners.ListenerRegisterer;
+import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
-import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
 import me.pauzen.alphacore.utils.reflection.Registrable;
+import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -25,38 +29,30 @@ public class Core extends JavaPlugin {
     }
 
     private List<Registrable> registrables = new ArrayList<>();
-    private List<Class>       nullifiables = new ArrayList<>();
 
+    @Todo("Fix support for reloading")
     @Override
     public void onEnable() {
         core = this;
-        Set<Class> tempRegisterables = new HashSet<>();
-        getClasses().stream().forEach(clazz -> {
+        Set<Class> tempRegistrables = new HashSet<>();
+        getRegistrables().stream().forEach(clazz -> {
 
-            if (ReflectionFactory.implementsInterface(clazz, Nullifiable.class)) {
-                nullifiables.add(clazz);
-            } else if (ReflectionFactory.implementsInterface(clazz, Registrable.class)) {
-                tempRegisterables.add(clazz);
-                nullifiables.add(clazz);
+            if (ReflectionFactory.implementsInterface(clazz, Registrable.class)) {
+                tempRegistrables.add(clazz);
             }
         });
 
-        tempRegisterables.forEach(clazz -> {
-            try {
-                this.registrables.add((Registrable) clazz.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        });
-        
-        registerManagers(tempRegisterables);
+        registerManagers(tempRegistrables);
+        PremadeEffects.values();
+        PremadeAbilities.values();
+        ListenerRegisterer.register();
     }
 
-    public void registerManagers(Set<Class> registerables) {
-        registerables.forEach(this::registerManager);
+    public void registerManagers(Set<Class> registrables) {
+        registrables.forEach(this::registerManager);
     }
 
-    public Set<Class> getClasses() {
+    public Set<Class> getRegistrables() {
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
@@ -73,24 +69,39 @@ public class Core extends JavaPlugin {
         Set<Class> classes = new HashSet<>();
 
         JarEntry currentEntry;
-        while ((currentEntry = entries.nextElement()) != null) {
+        while (true) {
+
             try {
-                Class clazz = Class.forName(currentEntry.getName());
+                currentEntry = entries.nextElement();
+            } catch (NoSuchElementException e) {
+                break;
+            }
+
+            try {
+                if (!currentEntry.getName().endsWith(".class")) {
+                    continue;
+                }
+
+                String className = currentEntry.getName().substring(0, currentEntry.getName().length() - 6);
+                className = className.replace("/", ".");
+                
+                Class clazz = this.getClass().getClassLoader().loadClass(className);
+                clazz.getDeclaredFields();
 
                 classes.add(clazz);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            } catch (ClassNotFoundException ignored) {
             }
         }
-
         return classes;
     }
 
-    public void registerManager(Class<? extends Registrable> registerableClass) {
+    public void registerManager(Class<? extends Registrable> registrableClass) {
         try {
-            ReflectionFactory.getMethod(registerableClass, "register").invoke(null);
-            Registrable registrable = (Registrable) ReflectionFactory.getField(registerableClass, "manager").get(null);
-            registrables.add(registrable);
+            ReflectionFactory.getMethod(registrableClass, "register").invoke(null);
+            Registrable registrable = (Registrable) ReflectionFactory.getField(registrableClass, "manager").get(null);
+            if (registrable != null) {
+                registrables.add(registrable);
+            }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

@@ -1,3 +1,7 @@
+/*
+ *  Created by Filip P. on 2/13/15 11:35 PM.
+ */
+
 package me.pauzen.alphacore.utils.reflection;
 
 import me.pauzen.alphacore.utils.misc.Entry;
@@ -277,7 +281,7 @@ public final class ReflectionFactory {
         }
         return classes.toArray(new Class[classes.size()]);
     }
-    
+
     public static boolean implementsInterface(Class clazz, Class interfaceType) {
         for (Class anInterface : clazz.getInterfaces()) {
             if (interfaceType == anInterface) {
@@ -286,5 +290,4 @@ public final class ReflectionFactory {
         }
         return false;
     }
-
 }

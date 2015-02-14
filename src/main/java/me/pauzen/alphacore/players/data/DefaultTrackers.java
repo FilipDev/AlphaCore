@@ -4,10 +4,12 @@
 
 package me.pauzen.alphacore.players.data;
 
+import me.pauzen.alphacore.utils.reflection.Registrable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public enum DefaultTrackers {
+public enum DefaultTrackers implements Registrable {
 
     KILLS("kills", 0),
     ;
@@ -18,25 +20,29 @@ public enum DefaultTrackers {
     DefaultTrackers(String id, int defaultValue) {
         this.id = id;
         this.defaultValue = defaultValue;
-        register();
+        registerTracker();
     }
     
-    private void register() {
+    private void registerTracker() {
+        if (DEFAULT_TRACKERS == null) {
+            DEFAULT_TRACKERS = new ArrayList<>();
+        }
         DEFAULT_TRACKERS.add(this.tracker());
     }
-
+    
+    public static DefaultTrackers manager = null;
+    
+    public static void register() {
+    }
+    
     public Tracker tracker() {
         return new Tracker(id, defaultValue);
     }
-
-    private static List<Tracker> DEFAULT_TRACKERS = new ArrayList<>();
+    
+    private static List<Tracker> DEFAULT_TRACKERS;
     
     public static List<Tracker> getDefaultTrackers() {
         return DEFAULT_TRACKERS;
     }
     
-    public static void addDefaultTracker(Tracker tracker) {
-        DEFAULT_TRACKERS.add(tracker);
-    }
-
 }

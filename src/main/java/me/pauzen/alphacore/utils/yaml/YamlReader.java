@@ -2,9 +2,12 @@ package me.pauzen.alphacore.utils.yaml;
 
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.players.data.Tracker;
+import me.pauzen.alphacore.teams.Team;
+import me.pauzen.alphacore.teams.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.ArrayList;
@@ -28,6 +31,10 @@ public class YamlReader {
 
     public Tracker getTracker(CorePlayer corePlayer, String trackerName) {
         return new Tracker(trackerName, getInt(corePlayer.getUUID(), "trackers", trackerName));
+    }
+    
+    public Team getTeam(CorePlayer corePlayer) {
+        return TeamManager.getManager().getTeam(getString(corePlayer.getUUID(), "team"));
     }
 
     //TODO: Add more premade getter methods for Bukkit API parts.
@@ -60,7 +67,14 @@ public class YamlReader {
     }
 
     public List<Tracker> getTrackers(CorePlayer corePlayer) {
-        Set<String> trackerNames = getYamlConfiguration().getConfigurationSection(corePlayer.getUUID() + ".trackers").getKeys(false);
+        ConfigurationSection configurationSection = getYamlConfiguration().getConfigurationSection(corePlayer.getUUID() + ".trackers");
+        if (configurationSection == null) {
+            return null;
+        }
+        Set<String> trackerNames = configurationSection.getKeys(false);
+        if (trackerNames == null) {
+            return null;
+        }
         List<Tracker> trackerList = new ArrayList<>(trackerNames.size());
         for (String name : trackerNames) {
             trackerList.add(getTracker(corePlayer, name));

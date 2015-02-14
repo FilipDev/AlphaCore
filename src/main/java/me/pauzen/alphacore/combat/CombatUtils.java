@@ -5,6 +5,7 @@
 package me.pauzen.alphacore.combat;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public final class CombatUtils {
         entity.getWorld().playEffect(entity.getLocation(), org.bukkit.Effect.STEP_SOUND, Material.REDSTONE_WIRE);
     }
 
-    public void damageAOE(Entity damager, Location attackLocation float radius, int targets) {
+    public void damageAOE(Entity damager, Location attackLocation, float radius, int targets) {
 
     }
 

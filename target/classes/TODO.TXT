@@ -1,0 +1,23 @@
+* Work more on Team system.
+Add cooldown system
+- ID
+- In ticks
+- Make onEnd event
+
+Add tracker system
+- Milestone system
+
+Add Interactable interface which contains an onClick(ClickType) method.
+
+InteractableInHandItem
+InteractableInventoryItem
+InteractableItem abstract class implements Interactable and has item container n stuff
+
+isAFK method
+
+Ability.asEffect() should exist.
+
+setBlocksDistributed method
+
+Manager abstract class
+ALL managers extend this class

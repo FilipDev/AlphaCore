@@ -17,13 +17,16 @@ import java.util.Set;
 public class Ability implements Nullifiable {
 
     @Nullify
-    private static Set<Ability> registeredAbilities = new HashSet<>();
+    private static Set<Ability> registeredAbilities;
 
     public static void registerAbility(Ability ability) {
-        registeredAbilities.add(ability);
+        getRegisteredAbilities().add(ability);
     }
 
     public static Set<Ability> getRegisteredAbilities() {
+        if (registeredAbilities == null) {
+            registeredAbilities = new HashSet<>();
+        }
         return registeredAbilities;
     }
 

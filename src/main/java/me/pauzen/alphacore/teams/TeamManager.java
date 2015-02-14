@@ -8,8 +8,8 @@ import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TeamManager implements Registrable {
 
@@ -20,20 +20,28 @@ public class TeamManager implements Registrable {
         manager = new TeamManager();
     }
 
-    private Set<Team> teams = new HashSet<>();
+    private Map<String, Team> teams = new HashMap<>();
 
     private static final Team DEFAULT_TEAM = new DefaultTeam();
 
+    public static TeamManager getManager() {
+        return manager;
+    }
+
     public void addTeam(Team team) {
-        this.teams.add(team);
+        this.teams.put(team.getName(), team);
     }
 
     public void deleteTeam(Team team) {
-        this.teams.remove(team);
+        this.teams.remove(team.getName());
     }
 
     public Team getTeam(CorePlayer corePlayer) {
         return corePlayer.getTeam();
+    }
+    
+    public Team getTeam(String teamName) {
+        return this.teams.get(teamName);
     }
 
     public static Team getDefaultTeam() {
@@ -42,6 +50,6 @@ public class TeamManager implements Registrable {
 
     public void nullify() {
         Registrable.super.nullify();
-        manager.teams.forEach(Team::cleanup);
+        manager.teams.values().forEach(Team::cleanup);
     }
 }
