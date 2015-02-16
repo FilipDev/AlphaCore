@@ -6,6 +6,7 @@ package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.effects.Effect;
+import me.pauzen.alphacore.loadingbar.LoadingBar;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.places.PlaceManager;
 import me.pauzen.alphacore.places.events.PlaceMoveEvent;
@@ -28,13 +29,14 @@ import java.util.*;
 
 public class CorePlayer {
 
-    private Set<Ability> activatedAbilities = new HashSet<>();
 
     private String         playerName;
     private PlayTimeLogger playTimeLogger;
     private EntityPlayer   entityPlayer;
     private Team           team;
     private Place          place;
+    private TrackerDisplayer trackerDisplayer;
+    private LoadingBar loadingBar;
 
     private PlayerData playerData;
 
@@ -44,6 +46,7 @@ public class CorePlayer {
     private Map<String, Tracker> trackers = new HashMap<>();
 
     private Set<Effect> activeEffects = new HashSet<>();
+    private Set<Ability> activatedAbilities = new HashSet<>();
 
     public CorePlayer(Player player) {
         this.playerName = player.getName();
@@ -59,8 +62,20 @@ public class CorePlayer {
         return ClientVersion.valueOf(entityPlayer.getPlayerConnection().getVersion());
     }
 
-    public void addPointDisplayer() {
-        new TrackerDisplayer(getCurrentPlace(), this, getTracker("kills"));
+    public TrackerDisplayer getTrackerDisplayer() {
+        return trackerDisplayer;
+    }
+
+    public LoadingBar getLoadingBar() {
+        return loadingBar;
+    }
+
+    public void setLoadingBar(LoadingBar loadingBar) {
+        this.loadingBar = loadingBar;
+    }
+
+    public void setTrackerDisplayer(TrackerDisplayer trackerDisplayer) {
+        this.trackerDisplayer = trackerDisplayer;
     }
 
     public Tracker getTracker(String trackerName) {
@@ -76,7 +91,7 @@ public class CorePlayer {
     }
 
     public boolean hasActivated(Effect effect) {
-        return this.activeEffects.contains(effect);
+        return this.activeEffects.contains(effect) || place.hasActivated(effect);
     }
 
     public Set<Effect> getActiveEffects() {
@@ -114,7 +129,7 @@ public class CorePlayer {
     }
 
     public boolean hasActivated(Ability ability) {
-        return activatedAbilities.contains(ability);
+        return activatedAbilities.contains(ability) || place.hasActivated(ability);
     }
 
     public Set<Ability> getActivatedAbilities() {
@@ -213,6 +228,15 @@ public class CorePlayer {
         place.addPlayer(this);
         new PlaceMoveEvent(this, this.place, place);
         this.place = place;
+    }
+
+    public void feed() {
+        getPlayer().setFoodLevel(20);
+        getPlayer().setSaturation(20);
+    }
+    
+    public boolean hasLeft() {
+        return getPlayer() == null;
     }
 }
 

@@ -8,6 +8,7 @@ import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.combat.AttackEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.misc.Todo;
+import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -24,13 +25,16 @@ import org.bukkit.plugin.EventExecutor;
 public enum PlaceAction {
 
     //COMBAT
-    PVP(AttackEvent.class, e -> CorePlayer.get(e.getEvent().getAttacker()).getCurrentPlace()),
-    PVE(EntityDamageByEntityEvent.class, e -> CorePlayer.get((Player) e.getEvent().getDamager()).getCurrentPlace()),
+    PVP(AttackEvent.class, e -> e.event().getAttacker()),
+    PVE(EntityDamageByEntityEvent.class, e -> (Player) e.event().getDamager()),
 
     //BLOCK MANIPULATION
-    BLOCK_PLACE(BlockPlaceEvent.class, e -> CorePlayer.get(e.getEvent().getPlayer()).getCurrentPlace()),
-    BLOCK_BREAK(BlockBreakEvent.class, e -> CorePlayer.get(e.getEvent().getPlayer()).getCurrentPlace()),
-    CHAT(AsyncPlayerChatEvent.class, e -> CorePlayer.get(e.getEvent().getPlayer()).getCurrentPlace());
+    BLOCK_PLACE(BlockPlaceEvent.class, e -> e.event().getPlayer()),
+    BLOCK_BREAK(BlockBreakEvent.class, e -> e.event().getPlayer()),
+    
+    //CHAT
+    CHAT(AsyncPlayerChatEvent.class, e -> e.event().getPlayer()),
+    ;
 
     public static PlaceAction getPlaceAction(Class<? extends Event> eventClass) {
         for (PlaceAction placeAction : PlaceAction.values()) {
@@ -47,22 +51,21 @@ public enum PlaceAction {
         return eventClass;
     }
 
-    private PlaceGetter placeGetter;
+    private PlayerGetter playerGetter;
 
-    public PlaceGetter getPlaceGetter() {
-        return placeGetter;
+    public PlayerGetter getPlayerGetter() {
+        return playerGetter;
     }
 
-    <E> PlaceAction(Class<E> eventClass, PlaceGetter<E> placeGetter) {
+    <E> PlaceAction(Class<E> eventClass, PlayerGetter<E> playerGetter) {
         this.eventClass = eventClass;
-        this.placeGetter = placeGetter;
-        Bukkit.getPluginManager().registerEvent((Class<? extends Event>) eventClass, PlaceManager.getManager(), EventPriority.HIGHEST, new EventExecutor() {
-            @Override
-            public void execute(Listener listener, Event event) throws EventException {
-                System.out.println(event.getClass());
-                PlaceManager.getManager().onEvent(event);
-            }
+        this.playerGetter = playerGetter;
+        Bukkit.getPluginManager().registerEvent((Class<? extends Event>) eventClass, PlaceManager.getManager(), EventPriority.HIGHEST, (listener, event) -> {
+            PlaceManager.getManager().onEvent(event);
         }, Core.getCore());
-
     }
+    
+    public static Place getPlace(Player player) {
+        return CorePlayer.get(player).getCurrentPlace();
+    }    
 }

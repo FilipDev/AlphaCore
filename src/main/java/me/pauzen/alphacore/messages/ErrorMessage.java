@@ -9,7 +9,8 @@ import org.bukkit.ChatColor;
 public enum ErrorMessage implements Message {
 
     CONSOLESENDER("Command can only be sent by a player."),
-    SAME_TEAM("Player is on the same team as you."),;
+    SAME_TEAM("Player is on the same team as you."), 
+    NO_PERMS("No permissions for %s.");
 
     private String errorMessage;
 

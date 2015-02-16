@@ -4,16 +4,23 @@
 
 package me.pauzen.alphacore.commands;
 
-import me.pauzen.alphacore.commands.childcommands.CrashCommand;
-import me.pauzen.alphacore.commands.childcommands.GodCommand;
+import me.pauzen.alphacore.commands.childcommands.*;
+import me.pauzen.alphacore.utils.misc.Todo;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public enum RegisteredCommand {
 
+    @Todo("Make Effects command")
     CRASH(new CrashCommand()),
-    GOD(new GodCommand()),;
+    GOD(new GodCommand()),
+    HGOD(new HungerGodCommand()),
+    HEAL(new HealCommand()),
+    FEED(new FeedCommand()),
+    CLEAR_SCREEN(new ClearScreenCommand()),
+    ABILITIES(new AbilitiesCommand()),
+    ;
 
     private static Map<String, Command> commandMap;
 
@@ -25,7 +32,7 @@ public enum RegisteredCommand {
         if (commandMap == null) {
             commandMap = new HashMap<>();
         }
-        commandMap.put(command.getName(), command);
+        commandMap.put(command.getName().toUpperCase(), command);
     }
 
     private Command command;

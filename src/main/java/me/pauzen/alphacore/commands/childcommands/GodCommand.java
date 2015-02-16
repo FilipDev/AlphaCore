@@ -4,11 +4,9 @@
 
 package me.pauzen.alphacore.commands.childcommands;
 
-import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
-import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.players.PlayerManager;
 import org.bukkit.Bukkit;
@@ -23,14 +21,14 @@ public class GodCommand extends Command {
 
     @Override
     public CommandListener defaultListener() {
-        return new CommandListener(false, "buc.godmode") {
+        return new CommandListener(false, "core.godmode") {
 
             @Override
             public void onRun() {
                 Player target = args.length == 0 ? (Player) commandSender : Bukkit.getPlayer(args[0]);
                 CorePlayer myTargetPlayer = PlayerManager.getManager().getWrapper(target);
                 if (modifiers.containsKey("set")) {
-                    boolean setState = Boolean.getBoolean(modifiers.get("set"));
+                    boolean setState = Boolean.parseBoolean(modifiers.get("set"));
                     setGod(myTargetPlayer, setState);
                     return;
                 }
@@ -39,11 +37,11 @@ public class GodCommand extends Command {
         };
     }
 
-    private void setGod(CorePlayer CorePlayer, boolean newState) {
-        ChatMessage.SET.sendMessage(CorePlayer, Ability.booleanToState(CorePlayer.setAbilityState(PremadeAbilities.GOD.ability(), newState)));
+    private void setGod(CorePlayer corePlayer, boolean newState) {
+        PremadeAbilities.GOD.ability().setAbilityState(getName(), corePlayer, newState);
     }
 
-    private void toggleGod(CorePlayer CorePlayer) {
-        ChatMessage.TOGGLED.sendMessage(CorePlayer, Ability.booleanToState(CorePlayer.toggleAbilityState(PremadeAbilities.GOD.ability())));
+    private void toggleGod(CorePlayer corePlayer) {
+        PremadeAbilities.GOD.ability().toggleAbilityState(corePlayer);
     }
 }

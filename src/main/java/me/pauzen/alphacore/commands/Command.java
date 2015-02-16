@@ -21,7 +21,7 @@ public abstract class Command {
             if (!commandListener.canConsoleSend()) {
                 if (!(commandSender instanceof Player)) {
                     ErrorMessage.CONSOLESENDER.sendMessage(commandSender);
-                    return;
+                    continue;
                 }
             }
             commandListener.preRun(this, commandSender, args, modifiers);

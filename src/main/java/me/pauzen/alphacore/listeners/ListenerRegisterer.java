@@ -18,8 +18,11 @@ public class ListenerRegisterer {
         new PlayerMoveListener();
         new EntitySpawnListener();
         new AutoSaver();
+        new HungerListener();
+        new EntityDeathListener();
+        new DisplayListener();
         
-        new DoubleJumpListener(3.0);
+        new DoubleJumpListener(1.0);
     }
     
 }

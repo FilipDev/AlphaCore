@@ -50,7 +50,7 @@ public class YamlReader {
     private String getString(String... locations) {
         return this.yamlConfiguration.getString(combine(locations));
     }
-
+    
     private String combine(String... locations) {
         StringBuilder locationBuilder = new StringBuilder();
 

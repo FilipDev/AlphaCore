@@ -9,8 +9,8 @@ import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.listeners.ListenerRegisterer;
 import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
+import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -46,6 +46,12 @@ public class Core extends JavaPlugin {
         PremadeEffects.values();
         PremadeAbilities.values();
         ListenerRegisterer.register();
+    }
+
+    @Override
+    public void onDisable() {
+        core = null;
+        registrables.forEach(Nullifiable::nullify);
     }
 
     public void registerManagers(Set<Class> registrables) {
@@ -84,7 +90,7 @@ public class Core extends JavaPlugin {
 
                 String className = currentEntry.getName().substring(0, currentEntry.getName().length() - 6);
                 className = className.replace("/", ".");
-                
+
                 Class clazz = this.getClass().getClassLoader().loadClass(className);
                 clazz.getDeclaredFields();
 
@@ -105,12 +111,6 @@ public class Core extends JavaPlugin {
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onDisable() {
-        core = null;
-        registrables.forEach(Nullifiable::nullify);
     }
 
 }

@@ -101,6 +101,7 @@ public class Reflection<T> {
     public void setValue(Field field, Object object) {
         if (Modifier.isFinal(field.getModifiers())) ReflectionFactory.removeFinal(field);
         try {
+            field.setAccessible(true);
             field.set(this.object, object);
         } catch (IllegalAccessException e) {
             e.printStackTrace();

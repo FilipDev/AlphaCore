@@ -75,8 +75,6 @@ public class PacketManager extends ListenerImplementation implements Registrable
     }
 
     public void inject(Player player) {
-        System.out.println(PlayerManager.getManager());
-        System.out.println(PlayerManager.getManager().getWrapper(player));
         Channel channel = PlayerManager.getManager().getWrapper(player).getNettyChannel();
         channel.pipeline().addBefore("packet_handler", "alphacore", new PacketInterceptor(player));
     }
@@ -84,7 +82,7 @@ public class PacketManager extends ListenerImplementation implements Registrable
     public void uninject(Player player) {
         final Channel channel = PlayerManager.getManager().getWrapper(player).getNettyChannel();
         channel.eventLoop().submit(() -> {
-            channel.pipeline().remove("christmas");
+            channel.pipeline().remove("alphacore");
         });
     }
 }

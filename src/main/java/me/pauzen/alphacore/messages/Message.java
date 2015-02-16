@@ -17,13 +17,23 @@ public interface Message {
         return getPrefix() + getRawMessage();
     }
 
-    default void sendMessage(CommandSender commandSender, Object... objects) {
+    default void sendMessage(CommandSender commandSender, String... strings) {
         if (!new MessageSendEvent(commandSender).call().isCancelled()) {
-            commandSender.sendMessage(String.format(this.toString(), objects));
+            commandSender.sendMessage(String.format(this.getMessage(), strings));
         }
     }
 
-    default void sendMessage(CorePlayer CorePlayer, Object... objects) {
-        sendMessage(CorePlayer.getPlayer(), objects);
+    default void sendMessage(CorePlayer corePlayer, String... strings) {
+        sendMessage(corePlayer.getPlayer(), strings);
+    }
+    
+    default void sendRawMessage(CommandSender commandSender, String... strings) {
+        if (!new MessageSendEvent(commandSender).call().isCancelled()) {
+            commandSender.sendMessage(String.format(this.getRawMessage(), strings));
+        }
+    }
+    
+    default void sendRawMessage(CorePlayer corePlayer, String... strings) {
+        sendRawMessage(corePlayer.getPlayer(), strings);
     }
 }

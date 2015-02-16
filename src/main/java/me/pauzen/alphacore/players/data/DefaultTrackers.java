@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.players.data;
 
+import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 
 import java.util.ArrayList;
@@ -43,6 +44,10 @@ public enum DefaultTrackers implements Registrable {
     
     public static List<Tracker> getDefaultTrackers() {
         return DEFAULT_TRACKERS;
+    }
+    
+    public Tracker getTracker(CorePlayer corePlayer) {
+        return corePlayer.getTracker(this.id);
     }
     
 }

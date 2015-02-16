@@ -5,6 +5,8 @@
 package me.pauzen.alphacore.players.data;
 
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.players.data.events.TrackerValueChangeEvent;
+import me.pauzen.alphacore.points.TrackerDisplayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,8 +32,9 @@ public class Tracker {
     }
 
     public void setValue(int value) {
-        updateValue(value);
-        this.value = value;
+        if (updateValue(value)) {
+            this.value = value;
+        }
     }
 
     public void addValue(int value) {
@@ -46,14 +49,19 @@ public class Tracker {
         return this.value;
     }
 
-    public void updateValue(int newValue) {
+    public boolean updateValue(int newValue) {
+        if (new TrackerValueChangeEvent(value, newValue, this).call().isCancelled()) {
+            return false;
+        }
         List<Milestone> milestones = getMilestones(newValue);
 
         if (milestones == null) {
-            return;
+            return true;
         }
 
         milestones.forEach(milestone -> milestone.onReach(this.corePlayer, this));
+        
+        return true;
     }
 
     public List<Milestone> checkAndGetMilestones(int value) {
@@ -84,6 +92,10 @@ public class Tracker {
         Tracker newTracker = new Tracker(this.corePlayer, this.id, this.value);
         newTracker.mileStones = this.mileStones;
         return newTracker;
+    }
+    
+    public void display(CorePlayer corePlayer) {
+        corePlayer.setTrackerDisplayer(new TrackerDisplayer(corePlayer.getCurrentPlace(), corePlayer, this));
     }
 
 

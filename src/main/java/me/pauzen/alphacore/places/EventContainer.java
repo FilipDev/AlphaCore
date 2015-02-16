@@ -16,7 +16,7 @@ public class EventContainer<E> {
         this.e = e;
     }
 
-    public E getEvent() {
+    public E event() {
         return eventType.cast(e);
         
     }

@@ -14,8 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoadingBarManager extends ListenerImplementation implements Registrable {
 
@@ -30,12 +30,14 @@ public class LoadingBarManager extends ListenerImplementation implements Registr
         return manager;
     }
 
-    private Map<String, LoadingBar> loadingBars = new HashMap<>();
+    private List<LoadingBar> loadingBars = new ArrayList<>();
 
     @EventHandler
     public void onUpdate(UpdateEvent e) {
         if (e.getUpdateType() == UpdateType.TICK) {
-            loadingBars.entrySet().forEach(entry -> entry.getValue().update());
+            List<LoadingBar> loadingBars = new ArrayList<>();
+            loadingBars.addAll(this.loadingBars);
+            loadingBars.forEach(LoadingBar::update);
         }
     }
 
@@ -43,7 +45,7 @@ public class LoadingBarManager extends ListenerImplementation implements Registr
     public void onXPEvent(PlayerExpChangeEvent e) {
         CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
 
-        LoadingBar loadingBar = loadingBars.get(corePlayer.getUUID());
+        LoadingBar loadingBar = corePlayer.getLoadingBar();
 
         if (loadingBar == null) {
             return;
@@ -51,13 +53,13 @@ public class LoadingBarManager extends ListenerImplementation implements Registr
 
         loadingBar.setPreviousXP(loadingBar.getPreviousXP() + e.getAmount());
     }
-
+    
     public void registerBar(LoadingBar loadingBar) {
-        this.loadingBars.put(loadingBar.getPlayer().getUUID(), loadingBar);
+        this.loadingBars.add(loadingBar);
     }
 
     public void deregisterBar(LoadingBar loadingBar) {
-        this.loadingBars.remove(loadingBar.getPlayer().getUUID());
+        this.loadingBars.remove(loadingBar);
     }
 
 }

@@ -17,21 +17,43 @@ public class CommandRunner extends ListenerImplementation {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        process(event.getMessage(), event.getPlayer());
+        Canceller canceller = new Canceller();
+        process(canceller, event.getMessage(), event.getPlayer());
+        if (canceller.isCancelled()) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
     public void onConsoleCommand(ServerCommandEvent event) {
-        process(event.getCommand(), event.getSender());
+        Canceller canceller = new Canceller();
+        process(canceller, event.getCommand(), event.getSender());
+        if (canceller.isCancelled()) {
+            event.setCommand("");
+        }
     }
 
-    private void process(String message, CommandSender commandSender) {
+    private void process(Canceller canceller, String message, CommandSender commandSender) {
         String[] parts = message.split(" ");
         String commandString = parts[0].substring(1);
         String[] args = Arrays.copyOfRange(parts, 1, parts.length);
         Command command = CommandManager.getManager().getCommand(commandString);
         if (command != null) {
             CommandManager.getManager().executeCommand(command, commandSender, args);
+            canceller.setCancelled(true);
+        }
+    }
+    
+    private static class Canceller {
+        
+        private boolean cancelled;
+
+        public boolean isCancelled() {
+            return cancelled;
+        }
+
+        public void setCancelled(boolean cancelled) {
+            this.cancelled = cancelled;
         }
     }
 

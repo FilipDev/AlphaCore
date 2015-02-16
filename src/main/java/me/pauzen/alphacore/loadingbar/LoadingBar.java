@@ -9,27 +9,34 @@ import me.pauzen.alphacore.utils.ExperienceUtils;
 
 public class LoadingBar {
 
-    private float current = 0;
+    private float current = 0F;
     private CorePlayer corePlayer;
 
     private int   previousLevel;
     private float previousXP;
+    
+    private float requiredXP;
 
-    public LoadingBar(CorePlayer CorePlayer) {
-        this.corePlayer = CorePlayer;
-        previousLevel = CorePlayer.getPlayer().getLevel();
-        previousXP = CorePlayer.getPlayer().getExp();
+    public LoadingBar(CorePlayer corePlayer) {
+        this.corePlayer = corePlayer;
+        previousLevel = corePlayer.getPlayer().getLevel();
+        previousXP = corePlayer.getPlayer().getExp();
     }
 
     private float xpPerTick;
 
     private boolean displaying = false;
 
-    public void display(int ticks) {
-        int requiredXP = ExperienceUtils.getRequiredExperience(corePlayer.getPlayer().getLevel());
-        xpPerTick = requiredXP / ticks;
+    public LoadingBar display(int ticks) {
+        requiredXP = (float) ExperienceUtils.getRequiredExperience(corePlayer.getPlayer().getLevel());
+        xpPerTick = 1 / requiredXP / ticks * requiredXP;
+        
         displaying = true;
-        corePlayer.getPlayer().setExp(0);
+        corePlayer.getPlayer().setExp(0.0F);
+        
+        LoadingBarManager.getManager().registerBar(this);
+        corePlayer.setLoadingBar(this);
+        return this;
     }
 
     public float getCurrent() {
@@ -38,9 +45,10 @@ public class LoadingBar {
 
     public void update() {
         if (displaying) {
-            corePlayer.getPlayer().setExp(current = (corePlayer.getPlayer().getExp() + xpPerTick));
 
-            if (corePlayer.getPlayer().getExpToLevel() < xpPerTick) {
+            corePlayer.getPlayer().setExp(current += xpPerTick);
+
+            if (1 - current < xpPerTick) {
                 revert();
             }
         }
@@ -59,9 +67,15 @@ public class LoadingBar {
         corePlayer.getPlayer().setExp(previousXP);
         corePlayer.getPlayer().setLevel(previousLevel);
         new LoadedEvent(corePlayer).call();
+        corePlayer.setLoadingBar(null);
+        LoadingBarManager.getManager().deregisterBar(this);
     }
 
     public CorePlayer getPlayer() {
         return corePlayer;
+    }
+    
+    public static LoadingBar displayLoadingBar(CorePlayer corePlayer, int ticks) {
+        return new LoadingBar(corePlayer).display(ticks);
     }
 }

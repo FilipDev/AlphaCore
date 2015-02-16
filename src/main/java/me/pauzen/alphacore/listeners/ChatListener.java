@@ -20,7 +20,9 @@ public class ChatListener extends ListenerImplementation {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerChatSync(AsyncPlayerChatEvent e) {
         CorePlayer cPlayer = CorePlayer.get(e.getPlayer());
-        
+
+        System.out.println(cPlayer.getCurrentPlace().getActiveAbilities());
+
         if (!cPlayer.hasActivated(PremadeAbilities.CHAT.ability())) {
             e.setCancelled(true);
         }

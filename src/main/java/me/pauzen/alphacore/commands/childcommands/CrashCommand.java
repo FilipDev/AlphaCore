@@ -21,7 +21,7 @@ public class CrashCommand extends Command {
 
     @Override
     public CommandListener defaultListener() {
-        return new CommandListener("buc.crash") {
+        return new CommandListener("core.crash") {
 
             @Override
             public void onRun() {

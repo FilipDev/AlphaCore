@@ -4,10 +4,10 @@
 
 package me.pauzen.alphacore.places;
 
+import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
-import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -28,7 +28,7 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
 
             Place place = null;
             try {
-                place = placeAction.getPlaceGetter().getPlace(new EventContainer<>(e.getClass(), e));
+                place = PlaceAction.getPlace(placeAction.getPlayerGetter().getPlayer(new EventContainer<>(e.getClass(), e)));
             } catch (ClassCastException ignored) {
             }
 
@@ -36,8 +36,6 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
                 return;
             }
 
-            
-            
             if (!place.isAllowed(placeAction)) {
                 ((Cancellable) e).setCancelled(true);
             }
@@ -53,13 +51,10 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
 
     public static void register() {
         manager = new PlaceManager();
-        DEFAULT_PLACE = new Place("DEFAULT") {
-            @Override
-            public boolean contains(Location location) {
-                return true;
-            }
-        };
-        DEFAULT_PLACE.getPlaceActionChecker().disallow(PlaceAction.CHAT);
+        DEFAULT_PLACE = new Place("DEFAULT");
+        DEFAULT_PLACE.getPlaceActionChecker().disallow(PlaceAction.BLOCK_BREAK);
+        DEFAULT_PLACE.activateAbility(PremadeAbilities.CHAT.ability());
+        PlaceAction.values();
     }
 
     public static Place getDefaultPlace() {

@@ -12,10 +12,10 @@ public final class ExperienceUtils {
     }
 
     public static int getRequiredExperience(int level) {
-        if (middleRange.isWithinInclusive(level)) {
+        if (initialRange.isWithinInclusive(level)) {
             return 2 * level + 7;
         }
-        if (initialRange.isWithinInclusive(level)) {
+        if (middleRange.isWithinInclusive(level)) {
             return 5 * level - 38;
         }
         return 9 * level - 158;

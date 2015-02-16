@@ -11,8 +11,8 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="craftbukkit" level="project" />
     <orderEntry type="library" name="Maven: org.bukkit:bukkit:1.7.10-R0.1" level="project" />
+    <orderEntry type="library" name="craftbukkit" level="project" />
     <orderEntry type="library" name="Maven: org.spigotmc:spigot:1649_Patch20141001a" level="project" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
