@@ -43,8 +43,8 @@ public class Core extends JavaPlugin {
         });
 
         registerManagers(tempRegistrables);
-        PremadeEffects.values();
         PremadeAbilities.values();
+        PremadeEffects.values();
         ListenerRegisterer.register();
     }
 

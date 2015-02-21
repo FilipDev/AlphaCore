@@ -21,6 +21,7 @@ public class ListenerRegisterer {
         new HungerListener();
         new EntityDeathListener();
         new DisplayListener();
+        new InventoryClickListener();
         
         new DoubleJumpListener(1.0);
     }

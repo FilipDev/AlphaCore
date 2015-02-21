@@ -6,6 +6,6 @@ package me.pauzen.alphacore.entities;
 
 public enum ClickType {
 
-    LEFT, RIGHT, MIDDLE;
+    LEFT, RIGHT;
 
 }
