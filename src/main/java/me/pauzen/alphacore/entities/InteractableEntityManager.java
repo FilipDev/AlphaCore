@@ -21,26 +21,26 @@ import java.util.Map;
 public class InteractableEntityManager extends ListenerImplementation implements Registrable {
 
     private Map<String, InteractableEntity> interactableEntities = new HashMap<>();
-    
+
     public void registerInteractableEntity(InteractableEntity interactableEntity) {
         interactableEntities.put(interactableEntity.getEntity().getUniqueId().toString(), interactableEntity);
     }
-    
+
     public InteractableEntity getInteractableEntity(String UUID) {
         return interactableEntities.get(UUID);
     }
-    
+
     @Nullify
     private static InteractableEntityManager manager;
-    
+
     public static void register() {
         manager = new InteractableEntityManager();
     }
-    
+
     public static InteractableEntityManager getManager() {
         return manager;
     }
-    
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEntityInteract(PlayerInteractEntityEvent e) {
         if (e.getRightClicked() instanceof LivingEntity) {
@@ -59,7 +59,7 @@ public class InteractableEntityManager extends ListenerImplementation implements
     public void onEntityAttack(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player) {
             Player attacker = (Player) e.getDamager();
-            
+
             if (e.getEntity() instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) e.getEntity();
 
@@ -67,7 +67,7 @@ public class InteractableEntityManager extends ListenerImplementation implements
 
                 if (interactableEntity != null) {
                     interactableEntity.onClick(ClickType.LEFT, CorePlayer.get(attacker));
-                    
+
                     e.setCancelled(true);
                 }
             }

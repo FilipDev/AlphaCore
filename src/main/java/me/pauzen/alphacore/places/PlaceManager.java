@@ -4,7 +4,6 @@
 
 package me.pauzen.alphacore.places;
 
-import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
@@ -17,7 +16,7 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
 
     @Nullify
     private static Place DEFAULT_PLACE;
-    
+
     public void onEvent(Event e) {
         if (!(e instanceof PlayerMoveEvent) && !(e instanceof BlockFromToEvent) && e instanceof Cancellable) {
             PlaceAction placeAction = PlaceAction.getPlaceAction(e.getClass());
@@ -41,7 +40,7 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
             }
         }
     }
-    
+
     @Nullify
     private static PlaceManager manager;
 
@@ -52,8 +51,6 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
     public static void register() {
         manager = new PlaceManager();
         DEFAULT_PLACE = new Place("DEFAULT");
-        DEFAULT_PLACE.getPlaceActionChecker().disallow(PlaceAction.BLOCK_BREAK);
-        DEFAULT_PLACE.activateAbility(PremadeAbilities.CHAT.ability());
         PlaceAction.values();
     }
 

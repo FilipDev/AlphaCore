@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class InventoryClickListener extends ListenerImplementation {
-    
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         InventoryMenu menu = InventoryManager.getManager().getMenu(e.getInventory());
@@ -18,5 +18,5 @@ public class InventoryClickListener extends ListenerImplementation {
             menu.process(e);
         }
     }
-    
+
 }

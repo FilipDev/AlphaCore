@@ -30,13 +30,13 @@ import java.util.*;
 public class CorePlayer {
 
 
-    private String         playerName;
-    private PlayTimeLogger playTimeLogger;
-    private EntityPlayer   entityPlayer;
-    private Team           team;
-    private Place          place;
+    private String           playerName;
+    private PlayTimeLogger   playTimeLogger;
+    private EntityPlayer     entityPlayer;
+    private Team             team;
+    private Place            place;
     private TrackerDisplayer trackerDisplayer;
-    private LoadingBar loadingBar;
+    private LoadingBar       loadingBar;
 
     private PlayerData playerData;
 
@@ -45,7 +45,7 @@ public class CorePlayer {
      */
     private Map<String, Tracker> trackers = new HashMap<>();
 
-    private Set<Effect> activeEffects = new HashSet<>();
+    private Set<Effect>  activeEffects      = new HashSet<>();
     private Set<Ability> activatedAbilities = new HashSet<>();
 
     public CorePlayer(Player player) {
@@ -158,7 +158,8 @@ public class CorePlayer {
         List<Tracker> trackers = getPlayerData().getYamlReader().getTrackers(this);
         if (trackers == null) {
             DefaultTrackers.getDefaultTrackers().forEach(tracker -> tracker.copy().addTracker(this));
-        } else {
+        }
+        else {
             getPlayerData().getYamlReader().getTrackers(this).forEach(tracker -> tracker.addTracker(this));
         }
         this.place = PlaceManager.getDefaultPlace();
@@ -234,7 +235,7 @@ public class CorePlayer {
         getPlayer().setFoodLevel(20);
         getPlayer().setSaturation(20);
     }
-    
+
     public boolean hasLeft() {
         return getPlayer() == null;
     }

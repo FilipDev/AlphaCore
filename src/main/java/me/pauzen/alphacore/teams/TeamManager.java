@@ -39,7 +39,7 @@ public class TeamManager implements Registrable {
     public Team getTeam(CorePlayer corePlayer) {
         return corePlayer.getTeam();
     }
-    
+
     public Team getTeam(String teamName) {
         return this.teams.get(teamName);
     }

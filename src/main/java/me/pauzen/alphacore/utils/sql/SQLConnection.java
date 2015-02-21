@@ -1,49 +1,138 @@
 /*
+ *  Created by Filip P. on 2/21/15 12:25 PM.
+ */
+
+/*
+ *  Created by Filip P. on 2/17/15 4:31 PM.
+ */
+
+/*
  *  Created by Filip P. on 2/17/15 4:22 PM.
  */
 
 package me.pauzen.alphacore.utils.sql;
 
+import me.pauzen.alphacore.messages.ErrorMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.sql.*;
+import java.util.Iterator;
+import java.util.Map;
 
 public class SQLConnection {
-    
+
     private String username, password, host, database;
-    private int port;
+    private int        port;
     private Connection connection;
-    
-    public SQLConnection(String username, String password, String host, String database, int port) {
+    private JavaPlugin plugin;
+
+    public SQLConnection(JavaPlugin javaPlugin, String username, String password, String host, String database, int port) {
         this.username = username;
         this.password = password;
         this.host = host;
         this.database = database;
         this.port = port;
+        this.plugin = javaPlugin;
     }
-    
-    public void tryConnecting() {
-        String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
-        try {
-            this.connection = DriverManager.getConnection(url, username, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+    @Override
+    public String toString() {
+        return "SQLConnection{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", host='" + host + '\'' +
+                ", database='" + database + '\'' +
+                ", port=" + port +
+                ", connection=" + connection +
+                '}';
     }
-    
+
+    /**
+     * Called to connect to the MySQL database.
+     *
+     * @param table The table to use.
+     */
+    public void tryConnecting(Table table) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            String url = "jdbc:mysql://" + host + "/" + database + "?connectTimeout=5000";
+            try {
+                SQLConnection.this.connection = DriverManager.getConnection(url, "root", "");
+                if (table != null) {
+                    table.create(this);
+                }
+            } catch (SQLException e) {
+                ErrorMessage.SQL.sendConsole();
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * USE FROM ASYNC CONTEXT
+     */
     public ResultSet query(String query) {
         if (!hasConnected()) {
             return null;
         }
-        
+
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            return preparedStatement.executeQuery();
+            ResultSet ret = preparedStatement.executeQuery();
+            return ret;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return null;
     }
-    
+
+    public void execute(String executable) {
+        if (!hasConnected()) {
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                PreparedStatement preparedStatement = connection.prepareStatement(executable);
+                preparedStatement.execute();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void createTable(Table table) {
+        if (!hasConnected()) {
+            return;
+        }
+
+        execute("CREATE TABLE IF NOT EXISTS " + table.getName() + " " + toFormat(table.getTypes()) + ";");
+    }
+
+    public static String toFormat(Map<String, String> dataTypes) {
+        StringBuilder types = new StringBuilder();
+
+        types.append("(");
+
+        Iterator<Map.Entry<String, String>> iterator = dataTypes.entrySet().iterator();
+        Map.Entry<String, String> currentElement;
+        while ((currentElement = iterator.next()) != null) {
+            types.append(currentElement.getKey() + " " + currentElement.getValue());
+            if (iterator.hasNext()) {
+                types.append(", ");
+            }
+        }
+        types.append(")");
+
+        return types.toString();
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
     public boolean hasConnected() {
         return connection != null;
     }

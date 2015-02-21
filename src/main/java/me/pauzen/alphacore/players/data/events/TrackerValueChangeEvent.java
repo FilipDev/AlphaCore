@@ -23,10 +23,10 @@ public class TrackerValueChangeEvent extends CallableEvent {
     public static HandlerList getHandlerList() {
         return handlers;
     }
-    
+
     private int oldValue;
     private int newValue;
-    
+
     private Tracker tracker;
 
     public TrackerValueChangeEvent(int oldValue, int newValue, Tracker tracker) {

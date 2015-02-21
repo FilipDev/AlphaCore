@@ -10,13 +10,12 @@ public enum ChatMessage implements Message {
 
     TOGGLED("Ability %s has been %s."),
     SET("Ability %s has been set to %s."),
-    JOINED_TEAM("You have been added to the team %s"), 
+    JOINED_TEAM("You have been added to the team %s"),
     FED(ChatColor.GOLD + "Your apetite has been sated."),
     HEALED(ChatColor.RED + "You have been fully healed."),
     LINE_SPACER(ChatColor.DARK_GRAY + "------------------------"),
     SPACER(ChatColor.GRAY + "=====" + " %s " + ChatColor.GRAY + "====="),
-    ABILITY_LIST_ELEMENT(ChatColor.GRAY + "Ability: " + "%s"),
-    ;
+    ABILITY_LIST_ELEMENT(ChatColor.GRAY + "Ability: " + "%s"),;
 
     private String message;
 

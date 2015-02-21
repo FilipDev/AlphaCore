@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 public class EntityDeathListener extends ListenerImplementation {
-    
+
     @EventHandler
     public void onEntityDeath(EntityDeathEvent e) {
         if (e.getEntity().getKiller() != null) {
@@ -18,5 +18,5 @@ public class EntityDeathListener extends ListenerImplementation {
             DefaultTrackers.KILLS.getTracker(corePlayer).addValue(1);
         }
     }
-    
+
 }

@@ -5,12 +5,9 @@
 package me.pauzen.alphacore.inventory.misc;
 
 public enum ClickType {
-    
+
     INVENTORY_LEFT,
     INVENTORY_RIGHT,
-    INGAME_LEFT,
-    INGAME_RIGHT,
-    OTHER,
-    ;
-    
+    OTHER,;
+
 }

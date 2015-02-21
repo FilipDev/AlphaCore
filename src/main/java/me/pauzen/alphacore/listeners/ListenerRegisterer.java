@@ -8,7 +8,7 @@ import me.pauzen.alphacore.doublejump.DoubleJumpListener;
 import me.pauzen.alphacore.players.data.AutoSaver;
 
 public class ListenerRegisterer {
-    
+
     public static void register() {
         new DamageByEntityListener();
         new BlockListener();
@@ -22,8 +22,8 @@ public class ListenerRegisterer {
         new EntityDeathListener();
         new DisplayListener();
         new InventoryClickListener();
-        
+
         new DoubleJumpListener(1.0);
     }
-    
+
 }

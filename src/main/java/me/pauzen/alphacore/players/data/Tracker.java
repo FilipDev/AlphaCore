@@ -16,7 +16,7 @@ import java.util.Map;
 public class Tracker {
 
     private int value = 0;
-    private String id;
+    private String     id;
     private CorePlayer corePlayer;
 
     private Map<Integer, List<Milestone>> mileStones = new HashMap<>();
@@ -25,7 +25,7 @@ public class Tracker {
         this.id = id;
         this.value = initialValue;
     }
-    
+
     public Tracker(CorePlayer corePlayer, String id, int initialValue) {
         this(id, initialValue);
         this.corePlayer = corePlayer;
@@ -60,7 +60,7 @@ public class Tracker {
         }
 
         milestones.forEach(milestone -> milestone.onReach(this.corePlayer, this));
-        
+
         return true;
     }
 
@@ -87,13 +87,13 @@ public class Tracker {
     public void addMilestone(Milestone milestone) {
         checkAndGetMilestones(milestone.getValue()).add(milestone);
     }
-    
+
     public Tracker copy() {
         Tracker newTracker = new Tracker(this.corePlayer, this.id, this.value);
         newTracker.mileStones = this.mileStones;
         return newTracker;
     }
-    
+
     public void display(CorePlayer corePlayer) {
         corePlayer.setTrackerDisplayer(new TrackerDisplayer(corePlayer.getCurrentPlace(), corePlayer, this));
     }

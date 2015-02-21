@@ -9,7 +9,7 @@ import org.bukkit.event.Event;
 public class EventContainer<E> {
 
     private Class<E> eventType;
-    private Event e;
+    private Event    e;
 
     public EventContainer(Class<E> eventType, Event e) {
         this.eventType = eventType;
@@ -18,6 +18,6 @@ public class EventContainer<E> {
 
     public E event() {
         return eventType.cast(e);
-        
+
     }
 }

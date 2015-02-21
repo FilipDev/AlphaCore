@@ -10,7 +10,7 @@ import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.entity.Player;
 
 public class ClearScreenCommand extends Command {
-    
+
     @Override
     public String getName() {
         return "cls";
@@ -22,7 +22,7 @@ public class ClearScreenCommand extends Command {
             @Override
             public void onRun() {
                 CorePlayer corePlayer = CorePlayer.get((Player) commandSender);
-                
+
                 corePlayer.clearChat();
             }
         };

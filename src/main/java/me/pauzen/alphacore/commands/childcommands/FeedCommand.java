@@ -16,7 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class FeedCommand extends Command {
-    
+
     @Override
     public String getName() {
         return "feed";

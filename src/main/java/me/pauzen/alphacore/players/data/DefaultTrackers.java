@@ -12,42 +12,41 @@ import java.util.List;
 
 public enum DefaultTrackers implements Registrable {
 
-    KILLS("kills", 0),
-    ;
+    KILLS("kills", 0),;
 
     private String id;
-    private int defaultValue;
+    private int    defaultValue;
 
     DefaultTrackers(String id, int defaultValue) {
         this.id = id;
         this.defaultValue = defaultValue;
         registerTracker();
     }
-    
+
     private void registerTracker() {
         if (DEFAULT_TRACKERS == null) {
             DEFAULT_TRACKERS = new ArrayList<>();
         }
         DEFAULT_TRACKERS.add(this.tracker());
     }
-    
+
     public static DefaultTrackers manager = null;
-    
+
     public static void register() {
     }
-    
+
     public Tracker tracker() {
         return new Tracker(id, defaultValue);
     }
-    
+
     private static List<Tracker> DEFAULT_TRACKERS;
-    
+
     public static List<Tracker> getDefaultTrackers() {
         return DEFAULT_TRACKERS;
     }
-    
+
     public Tracker getTracker(CorePlayer corePlayer) {
         return corePlayer.getTracker(this.id);
     }
-    
+
 }

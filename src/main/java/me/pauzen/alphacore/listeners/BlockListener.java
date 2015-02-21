@@ -34,10 +34,10 @@ public class BlockListener extends ListenerImplementation {
         }
 
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent e) {
-        if (e.getAction() == Action.LEFT_CLICK_BLOCK) { 
+        if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
             e.setCancelled(leftClickBlock(e));
         }
         if (e.getAction() == Action.LEFT_CLICK_AIR) {
@@ -50,26 +50,26 @@ public class BlockListener extends ListenerImplementation {
             e.setCancelled(rightClickBlock(e));
         }
     }
-    
+
     public boolean leftClickBlock(PlayerInteractEvent e) {
         CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
-        
+
         if (corePlayer.hasActivated(PremadeAbilities.INSTANT_BREAK.ability())) {
             e.getClickedBlock().setType(Material.AIR);
             return true;
         }
-        
+
         return false;
     }
-    
+
     public boolean rightClickBlock(PlayerInteractEvent e) {
         return false;
     }
-    
+
     public boolean leftClickAir(PlayerInteractEvent e) {
         return false;
     }
-    
+
     public boolean rightClickAir(PlayerInteractEvent e) {
         return false;
     }

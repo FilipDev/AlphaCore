@@ -9,5 +9,5 @@ import org.bukkit.entity.Player;
 public interface PlayerGetter<E> {
 
     public Player getPlayer(EventContainer<E> eventContainer);
-    
+
 }

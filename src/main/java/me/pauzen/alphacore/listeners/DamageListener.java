@@ -21,7 +21,7 @@ public class DamageListener extends ListenerImplementation {
 
         Player player = (Player) e.getEntity();
         CorePlayer corePlayer = CorePlayer.get(player);
-        
+
         if (corePlayer.hasActivated(PremadeAbilities.GOD.ability())) {
             e.setCancelled(true);
         }
@@ -33,5 +33,5 @@ public class DamageListener extends ListenerImplementation {
         }
 
     }
-    
+
 }

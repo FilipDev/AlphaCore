@@ -24,7 +24,7 @@ public abstract class Effect {
         this.effectLength = effectLength * 50;
         EffectManager.getManager().registerEffect(this);
     }
-    
+
     public Effect() {
         this.effectLength = -1;
         EffectManager.getManager().registerEffect(this);
@@ -48,7 +48,7 @@ public abstract class Effect {
         affectedPlayers.put(corePlayer, System.currentTimeMillis() + effectLength);
         onApply(corePlayer);
     }
-    
+
     public void apply(CorePlayer corePlayer) {
         apply(corePlayer, this.effectLength);
     }

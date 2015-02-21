@@ -29,7 +29,7 @@ public class AllowanceChecker<T> {
     public Set<T> getAllowed() {
         return allowed;
     }
-    
+
     public boolean isAllowed(T object) {
         if (!allowed.isEmpty()) {
             return allowed.contains(object);
@@ -37,8 +37,8 @@ public class AllowanceChecker<T> {
         if (!disallowed.isEmpty()) {
             return !disallowed.contains(object);
         }
-        
+
         return true;
     }
-    
+
 }

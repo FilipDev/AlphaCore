@@ -68,7 +68,7 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
             }
         }
     }
-    
+
     private void launchPlayer(Player player) {
         Location location = player.getLocation();
         player.setVelocity(location.getDirection().multiply(multiplier));

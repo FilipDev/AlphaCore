@@ -30,43 +30,43 @@ public class Place {
     public Place(String name) {
         this.name = name;
     }
-    
+
     public void activateAbility(Ability ability) {
         placeAbilities.add(ability);
     }
-    
+
     public void deactivateAbility(Ability ability) {
         placeAbilities.remove(ability);
     }
-    
+
     public void activateEffect(Effect effect) {
         placeEffects.add(effect);
     }
-    
+
     public void deactivateEffect(Effect effect) {
         placeEffects.remove(effect);
     }
-    
+
     public boolean hasActivated(Ability ability) {
         return placeAbilities.contains(ability);
     }
-    
+
     public boolean hasActivated(Effect effect) {
         return placeEffects.contains(effect);
     }
-    
+
     public void applyEffect(Effect effect, int length) {
         for (CorePlayer player : this.players) {
             effect.apply(player, length);
         }
     }
-    
+
     public void removeEffect(Effect effect) {
         for (CorePlayer player : this.players) {
             effect.remove(player);
-        }    
+        }
     }
-    
+
     public Set<Ability> getActiveAbilities() {
         return placeAbilities;
     }

@@ -19,7 +19,7 @@ public class MessageSendEvent extends CallableEvent {
     public static HandlerList getHandlerList() {
         return handlers;
     }
-    
+
     private CommandSender commandSender;
 
     public MessageSendEvent(CommandSender commandSender) {

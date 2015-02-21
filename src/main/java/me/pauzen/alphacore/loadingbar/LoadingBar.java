@@ -14,8 +14,6 @@ public class LoadingBar {
 
     private int   previousLevel;
     private float previousXP;
-    
-    private float requiredXP;
 
     public LoadingBar(CorePlayer corePlayer) {
         this.corePlayer = corePlayer;
@@ -28,12 +26,12 @@ public class LoadingBar {
     private boolean displaying = false;
 
     public LoadingBar display(int ticks) {
-        requiredXP = (float) ExperienceUtils.getRequiredExperience(corePlayer.getPlayer().getLevel());
+        float requiredXP = (float) ExperienceUtils.getRequiredExperience(corePlayer.getPlayer().getLevel());
         xpPerTick = 1 / requiredXP / ticks * requiredXP;
-        
+
         displaying = true;
         corePlayer.getPlayer().setExp(0.0F);
-        
+
         LoadingBarManager.getManager().registerBar(this);
         corePlayer.setLoadingBar(this);
         return this;
@@ -74,7 +72,7 @@ public class LoadingBar {
     public CorePlayer getPlayer() {
         return corePlayer;
     }
-    
+
     public static LoadingBar displayLoadingBar(CorePlayer corePlayer, int ticks) {
         return new LoadingBar(corePlayer).display(ticks);
     }

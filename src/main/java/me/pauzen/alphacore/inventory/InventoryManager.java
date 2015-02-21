@@ -31,7 +31,7 @@ public class InventoryManager implements Registrable {
         if (InvisibleID.hasInvisibleID(inventory.getName())) {
             return menus.get(InvisibleID.getIDFrom(inventory.getName()));
         }
-        
+
         return null;
     }
 

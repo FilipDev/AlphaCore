@@ -32,7 +32,7 @@ public class YamlReader {
     public Tracker getTracker(CorePlayer corePlayer, String trackerName) {
         return new Tracker(trackerName, getInt(corePlayer.getUUID(), "trackers", trackerName));
     }
-    
+
     public Team getTeam(CorePlayer corePlayer) {
         return TeamManager.getManager().getTeam(getString(corePlayer.getUUID(), "team"));
     }
@@ -50,7 +50,7 @@ public class YamlReader {
     private String getString(String... locations) {
         return this.yamlConfiguration.getString(combine(locations));
     }
-    
+
     private String combine(String... locations) {
         StringBuilder locationBuilder = new StringBuilder();
 

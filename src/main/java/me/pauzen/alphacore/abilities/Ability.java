@@ -33,7 +33,7 @@ public class Ability implements Nullifiable {
 
     private boolean isDefault;
     private Effect  effect;
-    private String abilityName;
+    private String  abilityName;
 
     public Ability(String abilityName, boolean isDefault) {
         this.isDefault = isDefault;
@@ -56,11 +56,11 @@ public class Ability implements Nullifiable {
         };
         register();
     }
-    
+
     public String getName() {
         return abilityName;
     }
-    
+
     private void register() {
         registerAbility(this);
     }
@@ -100,11 +100,11 @@ public class Ability implements Nullifiable {
     public static void toggleAbilityState(Ability ability, CorePlayer corePlayer) {
         ChatMessage.TOGGLED.sendMessage(corePlayer, ability.getName(), Ability.booleanToState(corePlayer.toggleAbilityState(ability)));
     }
-    
+
     public void setAbilityState(String abilityName, CorePlayer corePlayer, boolean newState) {
         setAbilityState(this, corePlayer, newState);
     }
-    
+
     public void toggleAbilityState(CorePlayer corePlayer) {
         toggleAbilityState(this, corePlayer);
     }

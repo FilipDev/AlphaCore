@@ -18,7 +18,7 @@ public abstract class InteractableElement extends Element {
     public InteractableElement(ItemStack itemStack) {
         super(itemStack);
     }
-    
+
     public abstract void onClick(Player clicker, ClickType clickType);
-    
+
 }

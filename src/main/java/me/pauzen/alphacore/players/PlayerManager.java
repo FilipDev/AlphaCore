@@ -6,7 +6,6 @@ package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.loadingbar.LoadingBar;
-import me.pauzen.alphacore.players.data.DefaultTrackers;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.entity.Player;
@@ -33,9 +32,6 @@ public class PlayerManager extends ListenerImplementation implements Registrable
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (getWrapper(e.getPlayer()) == null) {
             registerPlayer(e.getPlayer());
-            CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
-            LoadingBar.displayLoadingBar(corePlayer, 400);
-            DefaultTrackers.KILLS.getTracker(corePlayer).display(corePlayer);
         }
     }
 

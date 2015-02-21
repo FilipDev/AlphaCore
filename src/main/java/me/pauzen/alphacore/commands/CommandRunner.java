@@ -43,9 +43,9 @@ public class CommandRunner extends ListenerImplementation {
             canceller.setCancelled(true);
         }
     }
-    
+
     private static class Canceller {
-        
+
         private boolean cancelled;
 
         public boolean isCancelled() {

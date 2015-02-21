@@ -20,9 +20,9 @@ public class EfficientMoveEvent extends CallablePlayerContainerEvent {
     public static HandlerList getHandlerList() {
         return handlers;
     }
-    
+
     private PlayerMoveEvent event;
-    
+
     public EfficientMoveEvent(PlayerMoveEvent event, CorePlayer corePlayer) {
         super(corePlayer);
         this.event = event;

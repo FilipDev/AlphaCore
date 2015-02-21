@@ -5,5 +5,5 @@
 package me.pauzen.alphacore.entities;
 
 public class EntityUtils {
-    
+
 }

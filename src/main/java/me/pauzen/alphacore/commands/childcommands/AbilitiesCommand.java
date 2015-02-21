@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AbilitiesCommand extends Command {
-    
+
     @Override
     public String getName() {
         return "abilities";
@@ -35,7 +35,7 @@ public class AbilitiesCommand extends Command {
                 Set<Ability> totalAbilities = new HashSet<>();
                 totalAbilities.addAll(corePlayer.getActivatedAbilities());
                 totalAbilities.addAll(corePlayer.getCurrentPlace().getActiveAbilities());
-                
+
                 for (Ability ability : totalAbilities) {
                     ChatMessage.ABILITY_LIST_ELEMENT.sendRawMessage(corePlayer, (corePlayer.getActivatedAbilities().contains(ability) ? ChatColor.GREEN : ChatColor.YELLOW) + ability.getName());
                 }

@@ -19,8 +19,7 @@ public enum RegisteredCommand {
     HEAL(new HealCommand()),
     FEED(new FeedCommand()),
     CLEAR_SCREEN(new ClearScreenCommand()),
-    ABILITIES(new AbilitiesCommand()),
-    ;
+    ABILITIES(new AbilitiesCommand()),;
 
     private static Map<String, Command> commandMap;
 

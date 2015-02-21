@@ -4,9 +4,9 @@
 
 package me.pauzen.alphacore.inventory;
 
-import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.inventory.elements.Element;
 import me.pauzen.alphacore.inventory.elements.InteractableElement;
+import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.InvisibleID;
@@ -33,6 +33,7 @@ public abstract class InventoryMenu {
 
     /**
      * Creates new Inventory with null holder, size and name as specified with the name getting an invisible unique ID appended to the end of it.
+     *
      * @param name The desired name of the inventory.
      * @param size The desired size of the inventory, must be a multiple of 9. (size % 9 == 0) condition must be met.
      */
@@ -45,10 +46,11 @@ public abstract class InventoryMenu {
 
     /**
      * Processes InventoryClickEvent and looks for any interactable elements that the player clicked.
+     *
      * @param event InventoryClickEvent to process.
      */
     public final void process(InventoryClickEvent event) {
-        
+
         Coordinate clicked = toCoordinate(event.getRawSlot());
 
         Element clickedElement = elementMap.get(clicked);
@@ -58,7 +60,8 @@ public abstract class InventoryMenu {
 
             interactableElement.onClick((Player) event.getWhoClicked(), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.INVENTORY_LEFT :
                     event.getAction() == InventoryAction.PICKUP_HALF ? ClickType.INVENTORY_RIGHT : ClickType.OTHER);
-        } else {
+        }
+        else {
             if (!shouldAllowClick(event)) {
                 event.setCancelled(true);
                 event.setResult(Event.Result.DENY);
@@ -68,6 +71,7 @@ public abstract class InventoryMenu {
 
     /**
      * Returns whether the InventoryClickEvent should be cancelled or not.
+     *
      * @param e The InventoryClickEvent to get the outcome of.
      * @return Whether or not to cancel the event.
      */
@@ -92,15 +96,16 @@ public abstract class InventoryMenu {
      */
     public void fillRemaining() {
         for (int i = 0; i < inventory.getContents().length; i++) {
-            
+
             Coordinate coordinate = toCoordinate(i);
-            
+
             elementMap.putIfAbsent(coordinate, Element.BLANK_ELEMENT);
         }
     }
 
     /**
      * Shows the inventory to a player.
+     *
      * @param player Player to show the inventory to.
      */
     public void show(Player player) {
@@ -109,6 +114,7 @@ public abstract class InventoryMenu {
 
     /**
      * Shows the inventory to a player.
+     *
      * @param corePlayer Player to show the inventory to.
      */
     public void show(CorePlayer corePlayer) {
@@ -117,8 +123,9 @@ public abstract class InventoryMenu {
 
     /**
      * Updates an element in an already open inventory.
+     *
      * @param coordinate Where to execute the update.
-     * @param item What to update the item to.
+     * @param item       What to update the item to.
      */
     public void updateElement(Coordinate coordinate, ItemStack item) {
         inventory.setItem(coordinate.toSlot(), item);
@@ -126,6 +133,7 @@ public abstract class InventoryMenu {
 
     /**
      * Updates an element in an already open inventory.
+     *
      * @param coordinate Where to execute the update.
      */
     public void updateElement(Coordinate coordinate) {
@@ -134,8 +142,9 @@ public abstract class InventoryMenu {
 
     /**
      * Creates a condition that must be met if shouldAllowClick were to return true.
+     *
      * @param inventoryCoordinate The coordinates where the allowance condition should be checking.
-     * @param predicate The condition that must be met.
+     * @param predicate           The condition that must be met.
      */
     public void createAllowanceConditionForClickingAt(Coordinate inventoryCoordinate, Predicate<InventoryClickEvent> predicate) {
         allowedClicking.put(inventoryCoordinate, predicate);
@@ -143,16 +152,31 @@ public abstract class InventoryMenu {
 
     /**
      * Creates a condition that must be met if shouldAllowClick were to return true.
+     *
      * @param predicate The condition that must be met.
      */
     public void createAllowanceConditionForClickingAt(int x, int y, Predicate<InventoryClickEvent> predicate) {
         createAllowanceConditionForClickingAt(new Coordinate(x, y), predicate);
     }
 
+    /**
+     * Gets all elements surrounding a coordinate.
+     *
+     * @param coordinate The coordinate to get the elements around.
+     * @return The found elements.
+     */
+    public Element[] getElementsAround(Coordinate coordinate) {
+        Element[] foundElements = new Element[8];
+        for (int i = 0; i < Coordinate.Direction.values().length; i++) {
+            foundElements[i] = getElementAt(Coordinate.Direction.values()[i].getRelative(coordinate));
+        }
+        return foundElements;
+    }
+
     private static Coordinate toCoordinate(int x, int y) {
         return Coordinate.coordinate(x, y);
     }
-    
+
     private static Coordinate toCoordinate(int inventorySlot) {
         return Coordinate.fromSlot(inventorySlot);
     }
@@ -168,7 +192,7 @@ public abstract class InventoryMenu {
     public Element getElementAt(Coordinate coordinate) {
         return elementMap.get(coordinate);
     }
-    
+
     public Element getElementAt(int x, int y) {
         return elementMap.get(new Coordinate(x, y));
     }

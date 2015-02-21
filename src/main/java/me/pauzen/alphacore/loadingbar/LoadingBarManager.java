@@ -53,7 +53,7 @@ public class LoadingBarManager extends ListenerImplementation implements Registr
 
         loadingBar.setPreviousXP(loadingBar.getPreviousXP() + e.getAmount());
     }
-    
+
     public void registerBar(LoadingBar loadingBar) {
         this.loadingBars.add(loadingBar);
     }

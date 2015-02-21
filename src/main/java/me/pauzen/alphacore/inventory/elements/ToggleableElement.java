@@ -4,9 +4,9 @@
 
 package me.pauzen.alphacore.inventory.elements;
 
-import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.inventory.InventoryMenu;
 import me.pauzen.alphacore.inventory.items.ItemBuilder;
+import me.pauzen.alphacore.inventory.misc.Coordinate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,8 +23,8 @@ public abstract class ToggleableElement extends Element {
     private InventoryMenu menu;
 
     /**
-     * @param menu InventoryMenu instance which to apply modifications to (toggles)
-     * @param coordinate Coordinate where to modify the ItemStack.
+     * @param menu         InventoryMenu instance which to apply modifications to (toggles)
+     * @param coordinate   Coordinate where to modify the ItemStack.
      * @param defaultState The default state of the element.
      */
     public ToggleableElement(InventoryMenu menu, Coordinate coordinate, boolean defaultState) {
@@ -36,6 +36,7 @@ public abstract class ToggleableElement extends Element {
 
     /**
      * Gets the Element which represents the on or off state.
+     *
      * @param state Toggle status
      * @return Pre-made on or off element.
      */
@@ -45,6 +46,7 @@ public abstract class ToggleableElement extends Element {
 
     /**
      * Invoke this method to toggle element state
+     *
      * @param player Player that toggled the element.
      */
     public void toggle(Player player) {
@@ -55,18 +57,19 @@ public abstract class ToggleableElement extends Element {
 
     /**
      * Called when the element is toggled to allow further processing.
-     * @param player Player that toggled element state.
+     *
+     * @param player   Player that toggled element state.
      * @param newState New element state.
      */
     public abstract void onToggle(Player player, boolean newState);
-    
+
     public static void toggleAt(InventoryMenu menu, Coordinate coordinate, Player player) {
-        
+
         Element element = menu.getElementAt(coordinate);
-        
+
         if (element instanceof ToggleableElement) {
             ToggleableElement toggleable = (ToggleableElement) element;
-            
+
             toggleable.toggle(player);
         }
     }

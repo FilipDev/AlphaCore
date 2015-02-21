@@ -13,8 +13,7 @@ public enum PremadeEffects {
     NO_BLOCK_BREAK(),
     NO_BLOCK_PLACE(),
     NO_SHOOT_BOW(15),
-    MUTE(PremadeAbilities.CHAT.ability()),
-    ;
+    MUTE(PremadeAbilities.CHAT.ability()),;
 
     private Effect effect;
 

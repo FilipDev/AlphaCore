@@ -40,7 +40,7 @@ public class EntitySpawnListener extends ListenerImplementation {
             }
         });
     }
-    
+
     public LivingEntity getLivingEntity(String id) {
         return loggedEntities.get(id);
     }

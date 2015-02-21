@@ -43,12 +43,12 @@ public class YamlBuilder {
             e.printStackTrace();
         }
     }
-    
+
     public void tryCreate(File file) throws IOException {
         if (file.exists()) {
             return;
         }
-        
+
         if (!file.getParentFile().exists()) {
             if (!file.getParentFile().mkdirs()) {
                 throw new IOException("Cannot create directories");
@@ -57,6 +57,6 @@ public class YamlBuilder {
         if (!file.createNewFile()) {
             throw new IOException("Cannot create file");
         }
-        
+
     }
 }

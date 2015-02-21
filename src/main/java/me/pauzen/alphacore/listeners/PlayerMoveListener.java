@@ -30,9 +30,9 @@ public class PlayerMoveListener extends ListenerImplementation {
             e.setCancelled(new EfficientMoveEvent(e, CorePlayer.get(e.getPlayer())).call().isCancelled());
         }
     }
-    
+
     public boolean areSimilar(Location location1, Location location2) {
         return location1.getBlockY() == location2.getBlockY() && location1.getBlockX() == location2.getBlockX() && location1.getBlockZ() == location2.getBlockZ();
     }
-    
+
 }

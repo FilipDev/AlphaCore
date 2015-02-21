@@ -41,7 +41,7 @@ public abstract class CommandListener {
                     if (testForPermissions != null) {
                         for (String testForPermission : testForPermissions) {
                             if (!commandSender.hasPermission(testForPermission)) {
-                                ErrorMessage.NO_PERMS.sendMessage(commandSender, "this command");
+                                ErrorMessage.PERMISSIONS.sendMessage(commandSender, "this command");
                                 return false;
                             }
                         }
