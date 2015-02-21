@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
 public class InvisibleEncoder {
 
     /**
-     * Max value of ASCII character is 255 (2^8), this means that two hex values (2^4)
+     * Max value of ASCII character is 255 (2^8 - 1), this means that two hex values (2^4)
      * can represent any possible character in ASCII.
      * This is useful because Minecraft uses a single hexadecimal value for a chat color, (0x0 = BLACK, 0x6 = GOLD, 0xA = LIGHT GREEN, 0xF = WHITE).
      * In Minecraft chat colors are invisible and their existence is only know of to the player when they see the effects it has on text.
