@@ -12,6 +12,7 @@ import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.InvisibleID;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryAction;
@@ -211,7 +212,7 @@ public abstract class InventoryMenu {
     }
 
     public String getName() {
-        return getName();
+        return name;
     }
 
     public String getID() {
@@ -224,6 +225,14 @@ public abstract class InventoryMenu {
 
     public Element getElementAt(int x, int y) {
         return elementMap.get(new Coordinate(x, y));
+    }
+    
+    public void setTypeAt(int x, int y, Material type) {
+        setElementAt(x, y, new Element(type));
+    }
+    
+    public void setItemAt(int x, int y, ItemStack itemStack) {
+        setElementAt(x, y, new Element(itemStack));
     }
 
     public void setElementAt(Coordinate coordinate, Element element) {
