@@ -7,18 +7,26 @@ package me.pauzen.alphacore.inventory.elements;
 import me.pauzen.alphacore.inventory.InventoryMenu;
 import me.pauzen.alphacore.inventory.items.ItemBuilder;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
+import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.misc.Tuple;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.function.Predicate;
 
 public abstract class ToggleableElement extends Element {
 
-    private Coordinate inventoryCoordinate;
+    private       Coordinate inventoryCoordinate;
 
     public static Element ON_ELEMENT  = new Element(ItemBuilder.from(Material.INK_SACK).durability(10).name("%s%sEnabled", ChatColor.GREEN, ChatColor.BOLD).build());
     public static Element OFF_ELEMENT = new Element(ItemBuilder.from(Material.INK_SACK).durability(8).name("%s%sDisabled", ChatColor.RED, ChatColor.BOLD).build());
 
     private boolean currentState;
+    private Predicate<Tuple<CorePlayer, Inventory>>  predicate;
+
 
     private InventoryMenu menu;
 
@@ -32,6 +40,13 @@ public abstract class ToggleableElement extends Element {
         currentState = defaultState;
         inventoryCoordinate = coordinate;
         this.menu = menu;
+    }
+
+    public ToggleableElement(InventoryMenu menu, Coordinate coordinate, Predicate<Tuple<CorePlayer, Inventory>> predicate) {
+        super(Material.AIR);
+        inventoryCoordinate = coordinate;
+        this.menu = menu;
+        this.predicate = predicate;
     }
 
     /**
@@ -49,10 +64,21 @@ public abstract class ToggleableElement extends Element {
      *
      * @param player Player that toggled the element.
      */
-    public void toggle(Player player) {
+    public void toggle(Player player, Inventory inventory) {
         currentState = !currentState;
-        menu.updateElement(inventoryCoordinate, currentState ? ON_ELEMENT.getRepresentation().clone() : OFF_ELEMENT.getRepresentation().clone());
+        menu.updateElement(inventory, inventoryCoordinate, toState(currentState));
         onToggle(player, currentState);
+    }
+    
+    public ItemStack toState(boolean state) {
+        return state ? ON_ELEMENT.getRepresentation().clone() : OFF_ELEMENT.getRepresentation().clone();
+    }
+    
+    public void testPredicate(CorePlayer corePlayer, Inventory inventory) {
+        if (predicate != null) {
+            currentState = predicate.test(new Tuple<>(corePlayer, inventory));
+            setRepresentation(toState(currentState));
+        }
     }
 
     /**
@@ -63,14 +89,14 @@ public abstract class ToggleableElement extends Element {
      */
     public abstract void onToggle(Player player, boolean newState);
 
-    public static void toggleAt(InventoryMenu menu, Coordinate coordinate, Player player) {
+    public static void toggleAt(InventoryMenu menu, Coordinate coordinate, Player player, Inventory inventory) {
 
         Element element = menu.getElementAt(coordinate);
 
         if (element instanceof ToggleableElement) {
             ToggleableElement toggleable = (ToggleableElement) element;
 
-            toggleable.toggle(player);
+            toggleable.toggle(player, inventory);
         }
     }
 }

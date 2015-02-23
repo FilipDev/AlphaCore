@@ -15,6 +15,7 @@ import me.pauzen.alphacore.listeners.EfficientMoveEvent;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.SoundUtils;
+import me.pauzen.alphacore.utils.misc.Tuple;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.Material;
@@ -23,9 +24,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.inventory.Inventory;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class DoubleJumpListener extends ListenerImplementation implements Nullifiable {
 
@@ -38,7 +41,12 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
             @Override
             public void registerElements() {
                 
-                ToggleableElement godToggled = new ToggleableElement(this, Coordinate.coordinate(0, 1), false) {
+                ToggleableElement godToggled = new ToggleableElement(this, Coordinate.coordinate(0, 1), new Predicate<Tuple<CorePlayer, Inventory>>(){
+                    @Override
+                    public boolean test(Tuple<CorePlayer, Inventory> values) {
+                        return values.getA().hasActivated(PremadeAbilities.GOD.ability());
+                    }
+                }) {
                     @Override
                     public void onToggle(Player player, boolean newState) {
                         PremadeAbilities.GOD.ability().setAbilityState(CorePlayer.get(player), newState);
@@ -50,8 +58,8 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
 
                 setElementAt(0, 0, new InteractableElement(Material.IRON_HELMET) {
                     @Override
-                    public void onClick(Player clicker, ClickType clickType) {
-                        godToggled.toggle(clicker);
+                    public void onClick(Player clicker, ClickType clickType, Inventory inventory) {
+                        godToggled.toggle(clicker, inventory);
                     }
                 });
             }

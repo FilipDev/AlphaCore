@@ -6,6 +6,7 @@ package me.pauzen.alphacore.inventory;
 
 import me.pauzen.alphacore.inventory.elements.Element;
 import me.pauzen.alphacore.inventory.elements.InteractableElement;
+import me.pauzen.alphacore.inventory.elements.ToggleableElement;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.players.CorePlayer;
@@ -30,8 +31,10 @@ public abstract class InventoryMenu {
 
     private Map<Coordinate, Predicate<InventoryClickEvent>> allowedClicking = new HashMap<>();
 
-    private Inventory   inventory;
     private InvisibleID inventoryID;
+
+    private String name;
+    private int size;
 
     /**
      * Creates new Inventory with null holder, size and name as specified with the name getting an invisible unique ID appended to the end of it.
@@ -40,13 +43,28 @@ public abstract class InventoryMenu {
      * @param size The desired size of the inventory, must be a multiple of 9. (size % 9 == 0) condition must be met.
      */
     public InventoryMenu(String name, int size) {
-        this.inventory = Bukkit.createInventory(null, size, name + (inventoryID = InvisibleID.generate()).getId());
+        inventoryID = InvisibleID.generate();
         registerElements();
         fillRemaining();
+        InventoryManager.getManager().registerMenu(this);
+        this.name = name;
+        this.size = size;
+    }
+    
+    public Inventory generateInventory(Player player) {
+
+        Inventory inventory = Bukkit.createInventory(null, size, name + inventoryID.getId());
+
         elementMap.entrySet().forEach(entry -> {
+            if (entry.getValue() instanceof ToggleableElement) {
+                ToggleableElement toggleableElement = (ToggleableElement) entry.getValue();
+
+                toggleableElement.testPredicate(CorePlayer.get(player), inventory);
+            }
             inventory.setItem(entry.getKey().toSlot(), entry.getValue().getRepresentation());
         });
-        InventoryManager.getManager().registerMenu(this);
+        
+        return inventory;
     }
 
     /**
@@ -64,7 +82,7 @@ public abstract class InventoryMenu {
             InteractableElement interactableElement = (InteractableElement) clickedElement;
 
             interactableElement.onClick((Player) event.getWhoClicked(), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.INVENTORY_LEFT :
-                    event.getAction() == InventoryAction.PICKUP_HALF ? ClickType.INVENTORY_RIGHT : ClickType.OTHER);
+                    event.getAction() == InventoryAction.PICKUP_HALF ? ClickType.INVENTORY_RIGHT : ClickType.OTHER, event.getInventory());
         }
         if (!shouldAllowClick(event)) {
             event.setCancelled(true);
@@ -80,7 +98,7 @@ public abstract class InventoryMenu {
      */
     public boolean shouldAllowClick(InventoryClickEvent e) {
 
-        if (e.getRawSlot() >= inventory.getSize()) {
+        if (e.getRawSlot() >= size) {
             return true;
         }
 
@@ -106,7 +124,7 @@ public abstract class InventoryMenu {
      * Fills unregistered element slots with blank elements.
      */
     public void fillRemaining() {
-        for (int i = 0; i < inventory.getSize(); i++) {
+        for (int i = 0; i < size; i++) {
 
             Coordinate coordinate = toCoordinate(i);
 
@@ -120,7 +138,7 @@ public abstract class InventoryMenu {
      * @param player Player to show the inventory to.
      */
     public void show(Player player) {
-        player.openInventory(inventory);
+        player.openInventory(generateInventory(player));
     }
 
     /**
@@ -138,7 +156,7 @@ public abstract class InventoryMenu {
      * @param coordinate Where to execute the update.
      * @param item       What to update the item to.
      */
-    public void updateElement(Coordinate coordinate, ItemStack item) {
+    public void updateElement(Inventory inventory, Coordinate coordinate, ItemStack item) {
         inventory.setItem(coordinate.toSlot(), item);
     }
 
@@ -147,8 +165,8 @@ public abstract class InventoryMenu {
      *
      * @param coordinate Where to execute the update.
      */
-    public void updateElement(Coordinate coordinate) {
-        updateElement(coordinate, elementMap.get(coordinate).getRepresentation());
+    public void updateElement(Inventory inventory, Coordinate coordinate) {
+        updateElement(inventory, coordinate, elementMap.get(coordinate).getRepresentation());
     }
 
     /**
@@ -193,7 +211,7 @@ public abstract class InventoryMenu {
     }
 
     public String getName() {
-        return inventory.getTitle();
+        return getName();
     }
 
     public String getID() {

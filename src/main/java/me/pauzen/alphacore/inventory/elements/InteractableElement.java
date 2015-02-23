@@ -7,6 +7,7 @@ package me.pauzen.alphacore.inventory.elements;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class InteractableElement extends Element {
@@ -19,6 +20,6 @@ public abstract class InteractableElement extends Element {
         super(itemStack);
     }
 
-    public abstract void onClick(Player clicker, ClickType clickType);
+    public abstract void onClick(Player clicker, ClickType clickType, Inventory inventory);
 
 }

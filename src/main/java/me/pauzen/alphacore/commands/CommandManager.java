@@ -37,7 +37,7 @@ public class CommandManager implements Registrable {
             }
         }
 
-        return new Tuple<>(newArgs.toArray(new String[newArgs.size()]), modifiers);
+        return new Tuple<>(modifiers, newArgs.toArray(new String[newArgs.size()]));
     }
 
     @Nullify
