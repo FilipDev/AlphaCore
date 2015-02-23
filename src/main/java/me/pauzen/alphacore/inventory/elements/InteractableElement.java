@@ -4,22 +4,28 @@
 
 package me.pauzen.alphacore.inventory.elements;
 
+import me.pauzen.alphacore.inventory.elements.listeners.ClickListener;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class InteractableElement extends Element {
+public class InteractableElement extends Element {
 
-    public InteractableElement(Material material) {
+    private ClickListener clickListener;
+
+    public InteractableElement(ClickListener clickListener, Material material) {
         super(material);
+        this.clickListener = clickListener;
+    }
+
+    public void onClick(Player clicker, ClickType clickType, Inventory inventory) {
+        clickListener.onClick(clicker, clickType, inventory);
     }
 
     public InteractableElement(ItemStack itemStack) {
         super(itemStack);
     }
-
-    public abstract void onClick(Player clicker, ClickType clickType, Inventory inventory);
 
 }

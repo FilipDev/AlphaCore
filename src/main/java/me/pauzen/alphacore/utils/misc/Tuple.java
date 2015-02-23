@@ -14,11 +14,11 @@ public class Tuple<A, B> {
         this.b = b;
     }
 
-    public A getA() {
+    public A getFirst() {
         return a;
     }
 
-    public B getB() {
+    public B getSecond() {
         return b;
     }
 }

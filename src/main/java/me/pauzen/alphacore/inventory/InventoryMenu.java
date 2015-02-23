@@ -118,7 +118,7 @@ public abstract class InventoryMenu {
      * Triggered when a player opens an inventory.
      * @param corePlayer Player that opened the inventory.
      */
-    public abstract void onOpen(CorePlayer corePlayer);
+    public void onOpen(CorePlayer corePlayer) {}
 
     /**
      * Fills unregistered element slots with blank elements.

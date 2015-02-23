@@ -19,7 +19,7 @@ public class CommandManager implements Registrable {
 
     public void executeCommand(Command command, CommandSender commandSender, String[] arguments) {
         Tuple<Map<String, String>, String[]> argModifierTuple = getModifiers(arguments);
-        command.execute(commandSender, argModifierTuple.getB(), argModifierTuple.getA());
+        command.execute(commandSender, argModifierTuple.getSecond(), argModifierTuple.getFirst());
     }
 
     private Tuple<Map<String, String>, String[]> getModifiers(String[] args) {

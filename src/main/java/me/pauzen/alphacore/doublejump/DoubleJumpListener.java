@@ -9,13 +9,11 @@ import me.pauzen.alphacore.inventory.InventoryMenu;
 import me.pauzen.alphacore.inventory.elements.Element;
 import me.pauzen.alphacore.inventory.elements.InteractableElement;
 import me.pauzen.alphacore.inventory.elements.ToggleableElement;
-import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.listeners.EfficientMoveEvent;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.SoundUtils;
-import me.pauzen.alphacore.utils.misc.Tuple;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.Material;
@@ -24,11 +22,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
-import org.bukkit.inventory.Inventory;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Predicate;
 
 public class DoubleJumpListener extends ListenerImplementation implements Nullifiable {
 
@@ -41,32 +37,14 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
             @Override
             public void registerElements() {
                 
-                ToggleableElement godToggled = new ToggleableElement(this, Coordinate.coordinate(0, 1), new Predicate<Tuple<CorePlayer, Inventory>>(){
-                    @Override
-                    public boolean test(Tuple<CorePlayer, Inventory> values) {
-                        return values.getA().hasActivated(PremadeAbilities.GOD.ability());
-                    }
-                }) {
-                    @Override
-                    public void onToggle(Player player, boolean newState) {
-                        PremadeAbilities.GOD.ability().setAbilityState(CorePlayer.get(player), newState);
-                    }
-                };
-                
+                ToggleableElement godToggled = new ToggleableElement((player, newState) -> { 
+                    PremadeAbilities.GOD.ability().setAbilityState(CorePlayer.get(player), newState);
+                }, this, Coordinate.coordinate(0, 1), (values) -> values.getFirst().hasActivated(PremadeAbilities.GOD.ability()));
+
                 setElementAt(0, 1, godToggled);
                 setElementAt(0, 2, new Element(Material.LEASH));
 
-                setElementAt(0, 0, new InteractableElement(Material.IRON_HELMET) {
-                    @Override
-                    public void onClick(Player clicker, ClickType clickType, Inventory inventory) {
-                        godToggled.toggle(clicker, inventory);
-                    }
-                });
-            }
-
-            @Override
-            public void onOpen(CorePlayer corePlayer) {
-
+                setElementAt(0, 0, new InteractableElement((player, clickType, inventory) -> godToggled.toggle(player, inventory), Material.INK_SACK));
             }
         };
     }
