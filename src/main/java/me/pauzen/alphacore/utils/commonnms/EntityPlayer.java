@@ -42,8 +42,6 @@ public class EntityPlayer {
     protected static Class entityPlayerClass, playerConnectionClass, craftPlayerClass;
 
     public PlayerConnection getPlayerConnection() {
-        System.out.println(this.entityPlayer);
-        System.out.println(playerConnectionClass);
         if (playerConnection == null) {
             try {
                 this.playerConnection = new PlayerConnection(this, ReflectionFactory.getField(entityPlayerClass, "playerConnection").get(entityPlayer));
@@ -51,7 +49,6 @@ public class EntityPlayer {
                 e.printStackTrace();
             }
         }
-        System.out.println(this.playerConnection);
         return this.playerConnection;
     }
 

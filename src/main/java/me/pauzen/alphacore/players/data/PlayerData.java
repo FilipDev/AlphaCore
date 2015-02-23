@@ -23,7 +23,6 @@ public class PlayerData {
 
     public PlayerData(CorePlayer corePlayer) {
         File playerData = new File(Core.getCore().getDataFolder(), GeneralUtils.toFileName("player_data", corePlayer.getPlayer().getUniqueId().toString() + ".dat"));
-        System.out.println(playerData.getPath());
         this.yamlBuilder = new YamlBuilder(playerData);
         this.yamlReader = new YamlReader(yamlBuilder.getConfiguration());
         this.yamlWriter = new YamlWriter(yamlBuilder.getConfiguration());

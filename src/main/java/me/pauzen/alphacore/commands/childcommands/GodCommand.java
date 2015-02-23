@@ -38,7 +38,7 @@ public class GodCommand extends Command {
     }
 
     private void setGod(CorePlayer corePlayer, boolean newState) {
-        PremadeAbilities.GOD.ability().setAbilityState(getName(), corePlayer, newState);
+        PremadeAbilities.GOD.ability().setAbilityState(corePlayer, newState);
     }
 
     private void toggleGod(CorePlayer corePlayer) {

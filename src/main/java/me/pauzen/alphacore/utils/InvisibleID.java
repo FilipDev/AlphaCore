@@ -20,7 +20,7 @@ public class InvisibleID {
 
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 8; i++) {
             ChatColor generatedColor = ChatColor.getByChar(Integer.toHexString(random.nextInt(16)));
 
             idBuilder.append(generatedColor.toString());
@@ -31,7 +31,7 @@ public class InvisibleID {
     }
 
     public static boolean hasInvisibleID(String string) {
-        return string.startsWith(HEADER);
+        return string.contains(HEADER);
     }
 
     public static String getIDFrom(String string) {

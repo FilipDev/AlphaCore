@@ -101,7 +101,7 @@ public class Ability implements Nullifiable {
         ChatMessage.TOGGLED.sendMessage(corePlayer, ability.getName(), Ability.booleanToState(corePlayer.toggleAbilityState(ability)));
     }
 
-    public void setAbilityState(String abilityName, CorePlayer corePlayer, boolean newState) {
+    public void setAbilityState(CorePlayer corePlayer, boolean newState) {
         setAbilityState(this, corePlayer, newState);
     }
 

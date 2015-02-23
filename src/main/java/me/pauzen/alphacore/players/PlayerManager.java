@@ -28,10 +28,12 @@ public class PlayerManager extends ListenerImplementation implements Registrable
         return manager.players.values();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (getWrapper(e.getPlayer()) == null) {
             registerPlayer(e.getPlayer());
+            CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
+            corePlayer.setLoadingBar(new LoadingBar(corePlayer).display(400));
         }
     }
 

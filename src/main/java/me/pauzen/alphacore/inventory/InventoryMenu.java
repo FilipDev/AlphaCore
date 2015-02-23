@@ -18,7 +18,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -38,9 +40,12 @@ public abstract class InventoryMenu {
      * @param size The desired size of the inventory, must be a multiple of 9. (size % 9 == 0) condition must be met.
      */
     public InventoryMenu(String name, int size) {
+        this.inventory = Bukkit.createInventory(null, size, name + (inventoryID = InvisibleID.generate()).getId());
         registerElements();
         fillRemaining();
-        this.inventory = Bukkit.createInventory(null, size, name + (inventoryID = InvisibleID.generate()).getId());
+        elementMap.entrySet().forEach(entry -> {
+            inventory.setItem(entry.getKey().toSlot(), entry.getValue().getRepresentation());
+        });
         InventoryManager.getManager().registerMenu(this);
     }
 
@@ -61,11 +66,9 @@ public abstract class InventoryMenu {
             interactableElement.onClick((Player) event.getWhoClicked(), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.INVENTORY_LEFT :
                     event.getAction() == InventoryAction.PICKUP_HALF ? ClickType.INVENTORY_RIGHT : ClickType.OTHER);
         }
-        else {
-            if (!shouldAllowClick(event)) {
-                event.setCancelled(true);
-                event.setResult(Event.Result.DENY);
-            }
+        if (!shouldAllowClick(event)) {
+            event.setCancelled(true);
+            event.setResult(Event.Result.DENY);
         }
     }
 
@@ -83,7 +86,9 @@ public abstract class InventoryMenu {
 
         Coordinate inventoryCoordinate = toCoordinate(e.getRawSlot());
 
-        return allowedClicking.get(inventoryCoordinate).test(e);
+        Predicate<InventoryClickEvent> inventoryClickEventPredicate = allowedClicking.get(inventoryCoordinate);
+
+        return inventoryClickEventPredicate != null && inventoryClickEventPredicate.test(e);
     }
 
     /**
@@ -92,10 +97,16 @@ public abstract class InventoryMenu {
     public abstract void registerElements();
 
     /**
+     * Triggered when a player opens an inventory.
+     * @param corePlayer Player that opened the inventory.
+     */
+    public abstract void onOpen(CorePlayer corePlayer);
+
+    /**
      * Fills unregistered element slots with blank elements.
      */
     public void fillRemaining() {
-        for (int i = 0; i < inventory.getContents().length; i++) {
+        for (int i = 0; i < inventory.getSize(); i++) {
 
             Coordinate coordinate = toCoordinate(i);
 
@@ -195,5 +206,22 @@ public abstract class InventoryMenu {
 
     public Element getElementAt(int x, int y) {
         return elementMap.get(new Coordinate(x, y));
+    }
+
+    public void setElementAt(Coordinate coordinate, Element element) {
+        this.elementMap.put(coordinate, element);
+    }
+
+    public void setElementAt(int x, int y, Element element) {
+        this.elementMap.put(new Coordinate(x, y), element);
+    }
+
+    public List<Element> getElements() {
+        
+        List<Element> elements = new ArrayList<>();
+        
+        elementMap.entrySet().stream().map(Map.Entry::getValue).forEach(elements::add);
+        
+        return elements;
     }
 }

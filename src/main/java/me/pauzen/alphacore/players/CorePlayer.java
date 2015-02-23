@@ -5,6 +5,7 @@
 package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.abilities.Ability;
+import me.pauzen.alphacore.doublejump.DoubleJump;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.loadingbar.LoadingBar;
 import me.pauzen.alphacore.places.Place;
@@ -37,6 +38,7 @@ public class CorePlayer {
     private Place            place;
     private TrackerDisplayer trackerDisplayer;
     private LoadingBar       loadingBar;
+    private DoubleJump       doubleJump;
 
     private PlayerData playerData;
 
@@ -51,6 +53,7 @@ public class CorePlayer {
     public CorePlayer(Player player) {
         this.playerName = player.getName();
         this.entityPlayer = new EntityPlayer(player);
+        this.doubleJump = new DoubleJump(this, 1024, 3.0D);
         load();
     }
 
@@ -66,16 +69,16 @@ public class CorePlayer {
         return trackerDisplayer;
     }
 
+    public void setTrackerDisplayer(TrackerDisplayer trackerDisplayer) {
+        this.trackerDisplayer = trackerDisplayer;
+    }
+
     public LoadingBar getLoadingBar() {
         return loadingBar;
     }
 
     public void setLoadingBar(LoadingBar loadingBar) {
         this.loadingBar = loadingBar;
-    }
-
-    public void setTrackerDisplayer(TrackerDisplayer trackerDisplayer) {
-        this.trackerDisplayer = trackerDisplayer;
     }
 
     public Tracker getTracker(String trackerName) {
@@ -239,5 +242,14 @@ public class CorePlayer {
     public boolean hasLeft() {
         return getPlayer() == null;
     }
+
+    public DoubleJump getDoubleJump() {
+        return doubleJump;
+    }
+
+    public void setDoubleJump(DoubleJump doubleJump) {
+        this.doubleJump = doubleJump;
+    }
+    
 }
 

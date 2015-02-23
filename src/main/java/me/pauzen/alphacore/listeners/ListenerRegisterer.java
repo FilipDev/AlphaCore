@@ -23,7 +23,7 @@ public class ListenerRegisterer {
         new DisplayListener();
         new InventoryClickListener();
 
-        new DoubleJumpListener(1.0);
+        new DoubleJumpListener();
     }
 
 }
