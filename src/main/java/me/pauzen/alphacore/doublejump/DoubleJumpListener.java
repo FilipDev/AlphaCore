@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.GameMode;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +30,7 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
     public void onFlightToggle(PlayerToggleFlightEvent e) {
 
         CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
+        if (e.getPlayer().getGameMode() == GameMode.CREATIVE) return;
 
         if (corePlayer.hasActivated(PremadeAbilities.DOUBLE_JUMP.ability())) {
 
