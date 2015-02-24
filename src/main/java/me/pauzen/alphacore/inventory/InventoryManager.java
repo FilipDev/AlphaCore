@@ -4,18 +4,56 @@
 
 package me.pauzen.alphacore.inventory;
 
+import me.pauzen.alphacore.inventory.elements.AnimatedElement;
+import me.pauzen.alphacore.inventory.elements.Element;
+import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.updater.UpdateEvent;
+import me.pauzen.alphacore.updater.UpdateType;
 import me.pauzen.alphacore.utils.InvisibleID;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class InventoryManager implements Registrable {
+public class InventoryManager extends ListenerImplementation implements Registrable {
 
     @Nullify
     private static InventoryManager manager;
+    
+    @EventHandler
+    public void onUpdate(UpdateEvent e) {
+        if (e.getUpdateType() == UpdateType.TICK) {
+            for (InventoryMenu inventoryMenu : menus.values()) {
+                for (Element element : inventoryMenu.getElements()) {
+                    if (element instanceof AnimatedElement) {
+                        AnimatedElement animatedElement = (AnimatedElement) element;
+
+                        inventoryMenu.getOpen().forEach((inventory) -> animatedElement.getListener().onUpdate(inventoryMenu, inventory));
+                    }
+                }
+            }
+        }
+    }
+    
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent e) {
+        if (InvisibleID.hasInvisibleID(e.getInventory().getName())) {
+            menus.get(InvisibleID.getIDFrom(e.getInventory().getName())).openInventory((Player) e.getPlayer(), e.getInventory());
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e) {
+        if (InvisibleID.hasInvisibleID(e.getInventory().getName())) {
+            menus.get(InvisibleID.getIDFrom(e.getInventory().getName())).closeInventory((Player) e.getPlayer());
+        }
+    }
 
     private Map<String, InventoryMenu> menus = new HashMap<>();
 

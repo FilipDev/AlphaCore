@@ -4,16 +4,19 @@
 
 package me.pauzen.alphacore.abilities;
 
+import me.pauzen.alphacore.utils.misc.Todo;
+
 public enum PremadeAbilities {
 
     GOD(false),
     HUNGER_GOD(false),
     DOUBLE_JUMP(true),
-    AUTO_RESPAWN(false),
+    @Todo("Fix me!")
+    AUTO_RESPAWN(true),
     NO_FALL(false),
     BYPASS_RESTRICTIONS(false),
-    CHAT(false),
-    INSTANT_BREAK(false),;
+    CHAT(true),
+    INSTANT_BREAK(true),;
 
     private Ability ability;
 

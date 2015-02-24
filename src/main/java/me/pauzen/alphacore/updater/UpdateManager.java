@@ -9,6 +9,7 @@ import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Bukkit;
 
+@Priority(LoadPriority.LAST)
 public class UpdateManager implements Registrable {
 
     @Nullify

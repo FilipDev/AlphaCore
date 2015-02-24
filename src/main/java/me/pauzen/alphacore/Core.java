@@ -7,6 +7,8 @@ package me.pauzen.alphacore;
 import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.listeners.ListenerRegisterer;
+import me.pauzen.alphacore.updater.LoadPriority;
+import me.pauzen.alphacore.updater.Priority;
 import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
@@ -34,15 +36,13 @@ public class Core extends JavaPlugin {
     @Override
     public void onEnable() {
         core = this;
-        Set<Class> tempRegistrables = new HashSet<>();
-        getRegistrables().stream().forEach(clazz -> {
 
-            if (ReflectionFactory.implementsInterface(clazz, Registrable.class)) {
-                tempRegistrables.add(clazz);
-            }
-        });
+        generatePriorities();
 
-        registerManagers(tempRegistrables);
+        getRegistrables();
+
+        registerManagers();
+        
         PremadeAbilities.values();
         PremadeEffects.values();
         ListenerRegisterer.register();
@@ -54,11 +54,21 @@ public class Core extends JavaPlugin {
         registrables.forEach(Nullifiable::nullify);
     }
 
-    public void registerManagers(Set<Class> registrables) {
-        registrables.forEach(this::registerManager);
+    private EnumMap<LoadPriority, List<Class>> loadPriorityList = new EnumMap<>(LoadPriority.class);
+
+    public void generatePriorities() {
+        for (LoadPriority loadPriority : LoadPriority.values()) {
+            loadPriorityList.put(loadPriority, new ArrayList<>());
+        }
     }
 
-    public Set<Class> getRegistrables() {
+    public void registerManagers() {
+        loadPriorityList.entrySet().forEach((entry) -> {
+            entry.getValue().forEach(this::registerManager);
+        });
+    }
+
+    public void getRegistrables() {
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
@@ -67,44 +77,46 @@ public class Core extends JavaPlugin {
         }
 
         if (jarFile == null) {
-            return null;
+            return;
         }
 
         Enumeration<JarEntry> entries = jarFile.entries();
 
-        Set<Class> classes = new HashSet<>();
+        jarFile.stream().filter((currentEntry) -> currentEntry.getName().endsWith(".class")).forEach((currentEntry) -> {
+            String className = currentEntry.getName().substring(0, currentEntry.getName().length() - 6);
+            className = className.replace("/", ".");
 
-        JarEntry currentEntry;
-        while (true) {
-
+            Class clazz = null;
             try {
-                currentEntry = entries.nextElement();
-            } catch (NoSuchElementException e) {
-                break;
+                clazz = this.getClass().getClassLoader().loadClass(className);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return;
             }
 
-            try {
-                if (!currentEntry.getName().endsWith(".class")) {
-                    continue;
-                }
+            Priority annotation = (Priority) clazz.getAnnotation(Priority.class);
 
-                String className = currentEntry.getName().substring(0, currentEntry.getName().length() - 6);
-                className = className.replace("/", ".");
+            LoadPriority loadPriority;
 
-                Class clazz = this.getClass().getClassLoader().loadClass(className);
-                clazz.getDeclaredFields();
-
-                classes.add(clazz);
-            } catch (ClassNotFoundException ignored) {
+            if (annotation == null) {
+                loadPriority = LoadPriority.NORMAL;
+            } else {
+                loadPriority = annotation.value();
             }
-        }
-        return classes;
+
+            if (!ReflectionFactory.implementsInterface(clazz, Registrable.class)) {
+                return;
+            }
+
+            loadPriorityList.get(loadPriority).add(clazz);
+        });
+        
     }
 
-    public void registerManager(Class<? extends Registrable> registrableClass) {
+    public void registerManager(Class clazz) {
         try {
-            ReflectionFactory.getMethod(registrableClass, "register").invoke(null);
-            Registrable registrable = (Registrable) ReflectionFactory.getField(registrableClass, "manager").get(null);
+            ReflectionFactory.getMethod(clazz, "register").invoke(null);
+            Registrable registrable = (Registrable) ReflectionFactory.getField(clazz, "manager").get(null);
             if (registrable != null) {
                 registrables.add(registrable);
             }

@@ -9,6 +9,7 @@ import me.pauzen.alphacore.inventory.elements.InteractableElement;
 import me.pauzen.alphacore.inventory.elements.ToggleableElement;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
+import me.pauzen.alphacore.inventory.misc.ElementGetter;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.InvisibleID;
 import org.bukkit.Bukkit;
@@ -20,10 +21,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class InventoryMenu {
@@ -34,8 +32,10 @@ public abstract class InventoryMenu {
 
     private InvisibleID inventoryID;
 
+    private Map<UUID, Inventory> openedInventories = new HashMap<>();
+
     private String name;
-    private int size;
+    private int    size;
 
     /**
      * Creates new Inventory with null holder, size and name as specified with the name getting an invisible unique ID appended to the end of it.
@@ -52,19 +52,30 @@ public abstract class InventoryMenu {
         this.size = size;
     }
     
+    public void openInventory(Player player, Inventory inventory) {
+        this.openedInventories.put(player.getUniqueId(), inventory);
+    }
+    
+    public void closeInventory(Player player) {
+        this.openedInventories.remove(player.getUniqueId());
+    }
+
     public Inventory generateInventory(Player player) {
 
         Inventory inventory = Bukkit.createInventory(null, size, name + inventoryID.getId());
 
         elementMap.entrySet().forEach(entry -> {
+
+            int i = entry.getKey().toSlot();
+
             if (entry.getValue() instanceof ToggleableElement) {
                 ToggleableElement toggleableElement = (ToggleableElement) entry.getValue();
 
                 toggleableElement.testPredicate(CorePlayer.get(player), inventory);
             }
-            inventory.setItem(entry.getKey().toSlot(), entry.getValue().getRepresentation());
+            inventory.setItem(i, entry.getValue().getRepresentation());
         });
-        
+
         return inventory;
     }
 
@@ -139,7 +150,9 @@ public abstract class InventoryMenu {
      * @param player Player to show the inventory to.
      */
     public void show(Player player) {
-        player.openInventory(generateInventory(player));
+        Inventory inventory = generateInventory(player);
+        player.openInventory(inventory);
+        openInventory(player, inventory);
     }
 
     /**
@@ -234,7 +247,52 @@ public abstract class InventoryMenu {
     public void setItemAt(int x, int y, ItemStack itemStack) {
         setElementAt(x, y, new Element(itemStack));
     }
+    
+    public void setElementsBetween(int x1, int y1, int x2, int y2, ElementGetter elementGetter) {
+        int minX = Math.min(x1, x2);
+        int minY = Math.min(y1, y2);
+        int maxX = Math.max(x1, x2);
+        int maxY = Math.max(y1, y2);
+        
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                setElementAt(x, y, elementGetter.getElement(Coordinate.coordinate(x, y)));
+            }
+        }
+    }
+    
+    public void setElementsBetween(Coordinate coordinate1, Coordinate coordinate2, ElementGetter elementGetter) {
+        setElementsBetween(coordinate1.getX(), coordinate1.getY(), coordinate2.getX(), coordinate2.getY(), elementGetter);
+    }
+    
+    public ItemStack getItemAt(int x, int y) {
+        Element element = getElementAt(x, y);
+        if (element == null) {
+            return new ItemStack(Material.AIR);
+        }
+        return element.getRepresentation();
+    }
 
+    public Material getTypeAt(int x, int y) {
+        return getItemAt(x, y).getType();
+    }
+
+    public ItemStack getItemAt(Inventory inventory, int x, int y) {
+        return inventory.getItem(Coordinate.asSlot(x, y));
+    }
+
+    public Material getTypeAt(Inventory inventory, int x, int y) {
+        return getItemAt(inventory, x, y).getType();
+    }
+
+    public ItemStack getItemAt(Inventory inventory, Coordinate coordinate) {
+        return getItemAt(inventory, coordinate.getX(), coordinate.getY());
+    }
+
+    public Material getTypeAt(Inventory inventory, Coordinate coordinate) {
+        return getItemAt(inventory, coordinate).getType();
+    }
+    
     public void setElementAt(Coordinate coordinate, Element element) {
         this.elementMap.put(coordinate, element);
     }
@@ -250,5 +308,9 @@ public abstract class InventoryMenu {
         elementMap.entrySet().stream().map(Map.Entry::getValue).forEach(elements::add);
         
         return elements;
+    }
+
+    public Collection<Inventory> getOpen() {
+        return openedInventories.values();
     }
 }

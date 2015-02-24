@@ -5,17 +5,22 @@
 package me.pauzen.alphacore.doublejump;
 
 import me.pauzen.alphacore.abilities.PremadeAbilities;
+import me.pauzen.alphacore.inventory.InventoryMenu;
+import me.pauzen.alphacore.inventory.elements.AnimatedElement;
+import me.pauzen.alphacore.inventory.items.ItemBuilder;
 import me.pauzen.alphacore.listeners.EfficientMoveEvent;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.SoundUtils;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,10 +30,19 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
     @Nullify
     private Set<CorePlayer> doubleJumped = new HashSet<>();
 
-    public DoubleJumpListener() {
-        super();
-    }
-    
+    private InventoryMenu menu = new InventoryMenu("Test", 27) {
+        @Override
+        public void registerElements() {
+            setTypeAt(0, 0, Material.LEASH);
+            setTypeAt(0, 1, Material.APPLE);
+
+            setElementsBetween(0, 0, 8, 2, (coordinate) -> {
+                ItemStack itemStack = ItemBuilder.from(Material.STAINED_GLASS_PANE).durability(1).name("Test").build();
+                return new AnimatedElement(itemStack, this, (menu, inventory) -> getItemAt(inventory, coordinate).setDurability(((short) ((getItemAt(inventory, coordinate).getDurability() + 1) % (short) 16))));
+            });
+        }
+    };
+
     @EventHandler
     public void onFlightToggle(PlayerToggleFlightEvent e) {
 
@@ -51,6 +65,8 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
         if (!corePlayer.getDoubleJump().canJump()) {
             e.getPlayer().setAllowFlight(false);
         }
+
+        menu.show(e.getPlayer());
     }
 
     @EventHandler

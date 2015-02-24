@@ -50,6 +50,10 @@ public class Coordinate {
     }
 
     public int toSlot() {
+        return asSlot(x, y);
+    }
+
+    public static int asSlot(int x, int y) {
         return y * 9 + x;
     }
 
