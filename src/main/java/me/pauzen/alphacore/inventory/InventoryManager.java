@@ -7,6 +7,8 @@ package me.pauzen.alphacore.inventory;
 import me.pauzen.alphacore.inventory.elements.AnimatedElement;
 import me.pauzen.alphacore.inventory.elements.Element;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.updater.LoadPriority;
+import me.pauzen.alphacore.updater.Priority;
 import me.pauzen.alphacore.updater.UpdateEvent;
 import me.pauzen.alphacore.updater.UpdateType;
 import me.pauzen.alphacore.utils.InvisibleID;
@@ -21,6 +23,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.HashMap;
 import java.util.Map;
 
+@Priority(LoadPriority.FIRST)
 public class InventoryManager extends ListenerImplementation implements Registrable {
 
     @Nullify

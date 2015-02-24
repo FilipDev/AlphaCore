@@ -20,6 +20,11 @@ public class InteractableElement extends Element {
         this.clickListener = clickListener;
     }
 
+    public InteractableElement(ClickListener clickListener, ItemStack item) {
+        super(item);
+        this.clickListener = clickListener;
+    }
+
     public void onClick(Player clicker, ClickType clickType, Inventory inventory) {
         clickListener.onClick(clicker, clickType, inventory);
     }

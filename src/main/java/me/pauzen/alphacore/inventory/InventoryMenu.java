@@ -43,13 +43,13 @@ public abstract class InventoryMenu {
      * @param name The desired name of the inventory.
      * @param size The desired size of the inventory, must be a multiple of 9. (size % 9 == 0) condition must be met.
      */
-    public InventoryMenu(String name, int size) {
+    public InventoryMenu(String name, int rows) {
         inventoryID = InvisibleID.generate();
         registerElements();
         fillRemaining();
         InventoryManager.getManager().registerMenu(this);
         this.name = name;
-        this.size = size;
+        this.size = rows * 9;
     }
     
     public void openInventory(Player player, Inventory inventory) {
@@ -201,6 +201,10 @@ public abstract class InventoryMenu {
     public void createAllowanceConditionForClickingAt(int x, int y, Predicate<InventoryClickEvent> predicate) {
         createAllowanceConditionForClickingAt(new Coordinate(x, y), predicate);
     }
+    
+    public void createAllowanceConditionForClickingAt(int x, int y) {
+        createAllowanceConditionForClickingAt(x, y, (clickEvent) -> true);
+    }
 
     /**
      * Gets all elements surrounding a coordinate.
@@ -214,6 +218,27 @@ public abstract class InventoryMenu {
             foundElements[i] = getElementAt(Coordinate.Direction.values()[i].getRelative(coordinate));
         }
         return foundElements;
+    }
+    
+    public Element[] getElementsBetween(int x1, int y1, int x2, int y2) {
+        
+        Element[] elements = new Element[size];
+        
+        int minX = Math.min(x1, x2);
+        int minY = Math.min(y1, y2);
+        int maxX = Math.max(x1, x2);
+        int maxY = Math.max(y1, y2);
+
+        int slot = 0;
+        
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                elements[slot] = getElementAt(x, y);
+                slot++;
+            }
+        }
+        
+        return elements;
     }
 
     private static Coordinate toCoordinate(int x, int y) {

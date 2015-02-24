@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.listeners;
 
+import me.pauzen.alphacore.combat.AutoRespawnerManager;
 import me.pauzen.alphacore.doublejump.DoubleJumpListener;
 import me.pauzen.alphacore.players.data.AutoSaver;
 
@@ -22,6 +23,7 @@ public class ListenerRegisterer {
         new EntityDeathListener();
         new DisplayListener();
         new InventoryClickListener();
+        new AutoRespawnerManager();
 
         new DoubleJumpListener();
     }

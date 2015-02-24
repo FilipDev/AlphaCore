@@ -5,7 +5,6 @@
 package me.pauzen.alphacore.combat;
 
 import me.pauzen.alphacore.abilities.PremadeAbilities;
-import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.entity.Player;
@@ -32,8 +31,6 @@ public class AutoRespawnerManager extends ListenerImplementation {
                 if (!new AutoRespawnEvent(corePlayer, e.getCause()).call().isCancelled()) {
                     e.setCancelled(true);
                     corePlayer.healFully();
-
-                    PremadeEffects.NO_SHOOT_BOW.effect().apply(corePlayer);
                 }
             }
         }
