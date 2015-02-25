@@ -219,6 +219,15 @@ public abstract class InventoryMenu {
         }
         return foundElements;
     }
+
+    /**
+     * Gets all elements between two points.
+     * @param x1 x value of first point.
+     * @param y1 y value of first point.
+     * @param x2 x value of second point.
+     * @param y2 y value of second point.
+     * @return An array of elements found between the two points.
+     */
     
     public Element[] getElementsBetween(int x1, int y1, int x2, int y2) {
         
@@ -272,7 +281,15 @@ public abstract class InventoryMenu {
     public void setItemAt(int x, int y, ItemStack itemStack) {
         setElementAt(x, y, new Element(itemStack));
     }
-    
+
+    /**
+     * Set all elements between two points to an element.
+     * @param x1 x value of first point.
+     * @param y1 y value of first point.
+     * @param x2 x value of second point.
+     * @param y2 y value of second point.
+     * @param elementGetter A functional element that retrieves to do element based on a coordinate.
+     */
     public void setElementsBetween(int x1, int y1, int x2, int y2, ElementGetter elementGetter) {
         int minX = Math.min(x1, x2);
         int minY = Math.min(y1, y2);
@@ -326,6 +343,10 @@ public abstract class InventoryMenu {
         this.elementMap.put(new Coordinate(x, y), element);
     }
 
+    /**
+     * Gets all elements in the menu.
+     * @return A list of all elements.
+     */
     public List<Element> getElements() {
         
         List<Element> elements = new ArrayList<>();

@@ -4,13 +4,9 @@
 
 package me.pauzen.alphacore.inventory;
 
-import me.pauzen.alphacore.inventory.elements.AnimatedElement;
-import me.pauzen.alphacore.inventory.elements.Element;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.updater.LoadPriority;
 import me.pauzen.alphacore.updater.Priority;
-import me.pauzen.alphacore.updater.UpdateEvent;
-import me.pauzen.alphacore.updater.UpdateType;
 import me.pauzen.alphacore.utils.InvisibleID;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
@@ -28,21 +24,6 @@ public class InventoryManager extends ListenerImplementation implements Registra
 
     @Nullify
     private static InventoryManager manager;
-    
-    @EventHandler
-    public void onUpdate(UpdateEvent e) {
-        if (e.getUpdateType() == UpdateType.TICK) {
-            for (InventoryMenu inventoryMenu : menus.values()) {
-                for (Element element : inventoryMenu.getElements()) {
-                    if (element instanceof AnimatedElement) {
-                        AnimatedElement animatedElement = (AnimatedElement) element;
-
-                        inventoryMenu.getOpen().forEach((inventory) -> animatedElement.getListener().onUpdate(inventoryMenu, inventory));
-                    }
-                }
-            }
-        }
-    }
     
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {

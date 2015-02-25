@@ -20,7 +20,7 @@ public class InvisibleID {
 
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 4; i++) {
             ChatColor generatedColor = ChatColor.getByChar(Integer.toHexString(random.nextInt(16)));
 
             idBuilder.append(generatedColor.toString());
