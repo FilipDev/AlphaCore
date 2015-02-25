@@ -25,13 +25,13 @@ public class ClearScreenCommand extends Command {
     @Override
     public CommandListener defaultListener() {
 
-        InventoryMenu menu = new InventoryMenu(ChatColor.RED + "Test", 5) {
+        InventoryMenu menu = new InventoryMenu(ChatColor.RED + "Test", 6) {
             @Override
             public void registerElements() {
                 ItemStack yesItem = ItemBuilder.from(Material.STAINED_GLASS_PANE).durability(5).name(String.format("%s%sYES", ChatColor.GREEN, ChatColor.BOLD)).build();
                 ItemStack noItem = ItemBuilder.from(Material.STAINED_GLASS_PANE).durability(14).name(String.format("%s%sNO", ChatColor.RED, ChatColor.BOLD)).build();
-                setElementsBetween(Coordinate.coordinate(0, 2), Coordinate.coordinate(3, 4), (coordinate) -> new InteractableElement((clicker, clickType, inventory) -> clicker.sendMessage("YES"), yesItem));
-                setElementsBetween(Coordinate.coordinate(5, 2), Coordinate.coordinate(8, 4), (coordinate) -> new InteractableElement((clicker, clickType, inventory) -> clicker.sendMessage("NO"), noItem));
+                setElementsBetween(Coordinate.coordinate(0, 2), Coordinate.coordinate(3, 5), (coordinate) -> new InteractableElement((clicker, clickType, inventory) -> clicker.sendMessage("YES"), yesItem));
+                setElementsBetween(Coordinate.coordinate(5, 2), Coordinate.coordinate(8, 5), (coordinate) -> new InteractableElement((clicker, clickType, inventory) -> clicker.sendMessage("NO"), noItem));
             }
         };
         

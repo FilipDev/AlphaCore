@@ -18,8 +18,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
-import java.util.*;
-import java.util.jar.JarEntry;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.jar.JarFile;
 
 public class Core extends JavaPlugin {
@@ -79,8 +80,6 @@ public class Core extends JavaPlugin {
         if (jarFile == null) {
             return;
         }
-
-        Enumeration<JarEntry> entries = jarFile.entries();
 
         jarFile.stream().filter((currentEntry) -> currentEntry.getName().endsWith(".class")).forEach((currentEntry) -> {
             String className = currentEntry.getName().substring(0, currentEntry.getName().length() - 6);
