@@ -5,16 +5,13 @@
 package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.abilities.Ability;
-import me.pauzen.alphacore.doublejump.DoubleJump;
 import me.pauzen.alphacore.effects.Effect;
-import me.pauzen.alphacore.loadingbar.LoadingBar;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.places.PlaceManager;
 import me.pauzen.alphacore.places.events.PlaceMoveEvent;
 import me.pauzen.alphacore.players.data.PlayerData;
 import me.pauzen.alphacore.players.data.Tracker;
 import me.pauzen.alphacore.players.data.events.PlayerLoadEvent;
-import me.pauzen.alphacore.points.TrackerDisplayer;
 import me.pauzen.alphacore.teams.Team;
 import me.pauzen.alphacore.teams.TeamManager;
 import me.pauzen.alphacore.utils.GeneralUtils;
@@ -34,9 +31,7 @@ public class CorePlayer {
     private EntityPlayer     entityPlayer;
     private Team             team;
     private Place            place;
-    private TrackerDisplayer trackerDisplayer;
-    private LoadingBar       loadingBar;
-    private DoubleJump       doubleJump;
+    private Map<String, Object> attributes = new HashMap<>();
 
     private PlayerData playerData;
 
@@ -47,11 +42,27 @@ public class CorePlayer {
 
     private Set<Effect>  activeEffects      = new HashSet<>();
     private Set<Ability> activatedAbilities = new HashSet<>();
+    
+    public void addAttribute(String attributeName, Object attribute) {
+        attributes.put(attributeName, attribute);
+    }
+    
+    public void removeAttribute(String attributeName) {
+        attributes.remove(attributeName);
+    }
+    
+    public boolean hasAttribute(String attributeName) {
+        return attributes.containsKey(attributeName);
+    }
+    
+    @SuppressWarnings("ALL")
+    public <T> T getAttribute(Class<T> attributeType, String attributeName) {
+        return (T) attributes.get(attributeName);
+    }
 
     public CorePlayer(Player player) {
         this.playerName = player.getName();
         this.entityPlayer = new EntityPlayer(player);
-        this.doubleJump = new DoubleJump(this, 1024, 3.0D);
         load();
     }
 
@@ -61,22 +72,6 @@ public class CorePlayer {
 
     public ClientVersion getClientVersion() {
         return ClientVersion.valueOf(entityPlayer.getPlayerConnection().getVersion());
-    }
-
-    public TrackerDisplayer getTrackerDisplayer() {
-        return trackerDisplayer;
-    }
-
-    public void setTrackerDisplayer(TrackerDisplayer trackerDisplayer) {
-        this.trackerDisplayer = trackerDisplayer;
-    }
-
-    public LoadingBar getLoadingBar() {
-        return loadingBar;
-    }
-
-    public void setLoadingBar(LoadingBar loadingBar) {
-        this.loadingBar = loadingBar;
     }
 
     public Tracker getTracker(String trackerName) {
@@ -208,7 +203,7 @@ public class CorePlayer {
 
     public void clearChat() {
         String[] spamMessage = new String[]{" ", "  ", "   ", "==CLEARING CHAT=="};
-        for (int n = 0; n < 50; n++) {
+        for (int n = 0; n < 300 / spamMessage.length; n++) {
             for (String aSpamMessage : spamMessage) {
                 getPlayer().sendMessage(aSpamMessage);
             }
@@ -242,14 +237,5 @@ public class CorePlayer {
     public boolean hasLeft() {
         return getPlayer() == null;
     }
-
-    public DoubleJump getDoubleJump() {
-        return doubleJump;
-    }
-
-    public void setDoubleJump(DoubleJump doubleJump) {
-        this.doubleJump = doubleJump;
-    }
-    
 }
 

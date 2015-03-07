@@ -8,7 +8,6 @@ import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.utils.InvisibleID;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
-import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.entity.Player;
@@ -28,24 +27,29 @@ public class InventoryManager extends ListenerImplementation implements Registra
     @Nullify
     private static InventoryManager manager;
     
-    @Todo("Add null check." + "Add MenuRegisterEvent to allow plugins to register the menu and not simply return here.")
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {
-        if (InvisibleID.hasInvisibleID(e.getInventory().getName())) {
-            menus.get(InvisibleID.getIDFrom(e.getInventory().getName())).openInventory((Player) e.getPlayer(), e.getInventory());
+        InventoryMenu menu = getMenu(e.getInventory());
+
+        if (menu != null) {
+            menu.openInventory((Player) e.getPlayer(), e.getInventory());
         }
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
-        if (InvisibleID.hasInvisibleID(e.getInventory().getName())) {
-            menus.get(InvisibleID.getIDFrom(e.getInventory().getName())).closeInventory((Player) e.getPlayer());
+
+        InventoryMenu menu = getMenu(e.getInventory());
+
+        if (menu != null) {
+            menu.closeInventory((Player) e.getPlayer());
         }
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         InventoryMenu menu = getMenu(e.getInventory());
+        
         if (menu != null) {
             menu.process(e);
         }
@@ -62,6 +66,7 @@ public class InventoryManager extends ListenerImplementation implements Registra
 
     public static void register() {
         manager = new InventoryManager();
+        
     }
 
     public void registerMenu(InventoryMenu menu) {

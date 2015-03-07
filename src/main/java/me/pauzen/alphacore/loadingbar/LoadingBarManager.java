@@ -46,7 +46,7 @@ public class LoadingBarManager extends ListenerImplementation implements Registr
         
         CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
 
-        LoadingBar loadingBar = corePlayer.getLoadingBar();
+        LoadingBar loadingBar = corePlayer.getAttribute(LoadingBar.class, "loading_bar");
 
         if (loadingBar == null) {
             return;

@@ -34,7 +34,7 @@ public class LoadingBar {
         corePlayer.getPlayer().setExp(0.0F);
 
         LoadingBarManager.getManager().registerBar(this);
-        corePlayer.setLoadingBar(this);
+        corePlayer.addAttribute("loading_bar", this);
         return this;
     }
 
@@ -76,7 +76,7 @@ public class LoadingBar {
         corePlayer.getPlayer().setExp(previousXP / ExperienceUtils.getRequiredExperience(previousLevel));
         corePlayer.getPlayer().setLevel(previousLevel);
         new LoadedEvent(corePlayer).call();
-        corePlayer.setLoadingBar(null);
+        corePlayer.removeAttribute("loading_bar");
         LoadingBarManager.getManager().deregisterBar(this);
     }
 

@@ -61,14 +61,23 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder addLore(String lore) {
+    public ItemBuilder lore(String lore) {
         itemMeta.getLore().add(lore);
+        return this;
+    }
+
+    public ItemBuilder lore(int index, String lore) {
+        itemMeta.getLore().set(index, lore);
         return this;
     }
 
     public ItemBuilder clearLore() {
         itemMeta.setLore(new ArrayList<>());
         return this;
+    }
+
+    public ItemMeta getMeta() {
+        return this.itemMeta;
     }
 
     public ItemStack build() {

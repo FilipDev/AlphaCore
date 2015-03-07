@@ -33,13 +33,13 @@ public class PlayerManager extends ListenerImplementation implements Registrable
         if (getWrapper(e.getPlayer()) == null) {
             registerPlayer(e.getPlayer());
             CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
-            corePlayer.setLoadingBar(new LoadingBar(corePlayer).display(400));
+            corePlayer.addAttribute("loading_bar", new LoadingBar(corePlayer).display(400));
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent e) {
-        LoadingBar loadingBar = CorePlayer.get(e.getPlayer()).getLoadingBar();
+        LoadingBar loadingBar = CorePlayer.get(e.getPlayer()).getAttribute(LoadingBar.class, "loading_bar");
         if (loadingBar != null) {
             loadingBar.revert();
         }

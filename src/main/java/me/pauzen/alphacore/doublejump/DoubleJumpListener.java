@@ -40,13 +40,13 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
                 doubleJumped.add(corePlayer);
                 corePlayer.activateAbility(PremadeAbilities.NO_FALL.ability());
 
-                if (!corePlayer.getDoubleJump().canJump()) {
+                if (!corePlayer.getAttribute(DoubleJump.class, "double_jump").canJump()) {
                     e.getPlayer().setAllowFlight(false);
                 }
             }
         }
 
-        if (!corePlayer.getDoubleJump().canJump()) {
+        if (!corePlayer.getAttribute(DoubleJump.class, "double_jump").canJump()) {
             e.getPlayer().setAllowFlight(false);
         }
     }
@@ -65,16 +65,15 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
                 if (e.getPlayer().isOnGround()) {
                     doubleJumped.remove(corePlayer);
                     corePlayer.deactivateAbility(PremadeAbilities.NO_FALL.ability());
-                    corePlayer.getDoubleJump().resetJumps();
+                    corePlayer.getAttribute(DoubleJump.class, "double_jump").resetJumps();
                     e.getPlayer().getPlayer().setAllowFlight(true);
                 }
-                new DoubleJump(null, 0, 0);
             }
         }
     }
 
     private boolean launchPlayer(Player player) {
-        return CorePlayer.get(player).getDoubleJump().jump();
+        return CorePlayer.get(player).getAttribute(DoubleJump.class, "double_jump").jump();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

@@ -12,7 +12,6 @@ import java.util.Map;
 
 public enum RegisteredCommand {
 
-    @Todo("Make Effects command")
     CRASH(new CrashCommand()),
     GOD(new GodCommand()),
     HGOD(new HungerGodCommand()),
