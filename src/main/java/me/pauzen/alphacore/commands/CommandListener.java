@@ -4,7 +4,7 @@
 
 package me.pauzen.alphacore.commands;
 
-import me.pauzen.alphacore.abilities.PremadeAbilities;
+import me.pauzen.alphacore.abilities.premade.RestrictionBypass;
 import me.pauzen.alphacore.messages.ErrorMessage;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.command.CommandSender;
@@ -36,12 +36,12 @@ public abstract class CommandListener {
     public boolean preRun(Command command, CommandSender commandSender, String[] args, Map<String, String> modifiers) {
         if (commandSender instanceof Player) {
             CorePlayer corePlayer = CorePlayer.get((Player) commandSender);
-            if (!PremadeAbilities.BYPASS_RESTRICTIONS.ability().hasActivated(corePlayer)) {
+            if (!corePlayer.hasActivated(RestrictionBypass.class)) {
                 if (corePlayer.getCurrentPlace().shouldRun(command)) {
                     if (testForPermissions != null) {
                         for (String testForPermission : testForPermissions) {
                             if (!commandSender.hasPermission(testForPermission)) {
-                                ErrorMessage.PERMISSIONS.sendMessage(commandSender, "this command");
+                                ErrorMessage.PERMISSIONS.send(commandSender, "this command");
                                 return false;
                             }
                         }

@@ -6,6 +6,8 @@ package me.pauzen.alphacore.doublejump;
 
 import me.pauzen.alphacore.players.CorePlayer;
 
+import javax.annotation.Nonnull;
+
 public class DoubleJump {
 
     private int allowedJumps;
@@ -15,7 +17,7 @@ public class DoubleJump {
 
     private CorePlayer corePlayer;
 
-    public DoubleJump(CorePlayer corePlayer, int allowedJumps, double vectorFactor) {
+    public DoubleJump(@Nonnull() CorePlayer corePlayer, int allowedJumps, double vectorFactor) {
         this.allowedJumps = allowedJumps;
         this.vectorFactor = vectorFactor;
         this.leftJumps = allowedJumps;

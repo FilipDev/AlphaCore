@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.teams;
 
+import me.pauzen.alphacore.group.Group;
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.misc.Todo;
@@ -13,25 +14,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Todo("Load teams from file.")
-public class Team {
+public class Team extends Group {
 
     private String    name;
     private ChatColor chatColor;
-    private Set<CorePlayer> players = new HashSet<>();
-
     public Team(String name, ChatColor chatColor) {
         this.name = name;
         this.chatColor = chatColor;
     }
 
-    public void cleanup() {
-        this.players = null;
-    }
-
     public Set<CorePlayer> getAND(CorePlayer... corePlayers) {
         Set<CorePlayer> containing = new HashSet<>();
         for (CorePlayer corePlayer : corePlayers) {
-            if (getPlayers().contains(corePlayer)) {
+            if (isMember(corePlayer)) {
                 containing.add(corePlayer);
             }
         }
@@ -39,13 +34,9 @@ public class Team {
         return containing;
     }
 
-    public Set<CorePlayer> getPlayers() {
-        return this.players;
-    }
-
-    public void addPlayer(CorePlayer CorePlayer) {
-        this.players.add(CorePlayer);
-        ChatMessage.JOINED_TEAM.sendMessage(CorePlayer, this.getName());
+    public void addPlayer(CorePlayer corePlayer) {
+        super.addPlayer(corePlayer);
+        ChatMessage.JOINED_TEAM.send(corePlayer, this.getName());
     }
 
     public String getName() {
@@ -64,7 +55,6 @@ public class Team {
         //TODO: Add load functionality
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,7 +64,6 @@ public class Team {
 
         if (chatColor != team.chatColor) return false;
         if (name != null ? !name.equals(team.name) : team.name != null) return false;
-        if (players != null ? !players.equals(team.players) : team.players != null) return false;
 
         return true;
     }
@@ -83,7 +72,6 @@ public class Team {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (chatColor != null ? chatColor.hashCode() : 0);
-        result = 31 * result + (players != null ? players.hashCode() : 0);
         return result;
     }
 }

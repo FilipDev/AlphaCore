@@ -2,7 +2,7 @@
  *  Created by Filip P. on 2/2/15 11:24 PM.
  */
 
-package me.pauzen.alphacore.commands.childcommands;
+package me.pauzen.alphacore.commands.premade;
 
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
@@ -15,8 +15,8 @@ import org.bukkit.entity.Player;
 public class CrashCommand extends Command {
 
     @Override
-    public String getName() {
-        return "crash";
+    public String[] getNames() {
+        return new String[]{"c", "crash"};
     }
 
     @Override

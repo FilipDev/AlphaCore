@@ -18,14 +18,14 @@ public interface Message {
         return getPrefix() + getRawMessage();
     }
 
-    default void sendMessage(CommandSender commandSender, String... strings) {
+    default void send(CommandSender commandSender, String... strings) {
         if (!new MessageSendEvent(commandSender).call().isCancelled()) {
             commandSender.sendMessage(String.format(this.getMessage(), strings));
         }
     }
 
-    default void sendMessage(CorePlayer corePlayer, String... strings) {
-        sendMessage(corePlayer.getPlayer(), strings);
+    default void send(CorePlayer corePlayer, String... strings) {
+        send(corePlayer.getPlayer(), strings);
     }
 
     default void sendRawMessage(CommandSender commandSender, String... strings) {
@@ -39,6 +39,6 @@ public interface Message {
     }
 
     default void sendConsole(String... strings) {
-        sendMessage(Bukkit.getConsoleSender(), strings);
+        send(Bukkit.getConsoleSender(), strings);
     }
 }

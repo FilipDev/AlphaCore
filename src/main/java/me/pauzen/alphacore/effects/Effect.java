@@ -14,18 +14,21 @@ public abstract class Effect {
     private Map<CorePlayer, Long> affectedPlayers = new HashMap<>();
 
     private long effectLength;
+    private String name;
 
     /**
      * Define amount of ticks the effect lasts.
      *
      * @param effectLength Ticks until the effect wears off after application.
      */
-    public Effect(long effectLength) {
+    public Effect(String name, long effectLength) {
+        this.name = name;
         this.effectLength = effectLength * 50;
         EffectManager.getManager().registerEffect(this);
     }
 
-    public Effect() {
+    public Effect(String name) {
+        this.name = name;
         this.effectLength = -1;
         EffectManager.getManager().registerEffect(this);
     }
@@ -73,4 +76,7 @@ public abstract class Effect {
         return getEffectLength() == -1 ? 1 : getEffectLength() - (System.currentTimeMillis() - affectedPlayers.get(corePlayer));
     }
 
+    public String getName() {
+        return name;
+    }
 }

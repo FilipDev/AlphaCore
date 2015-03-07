@@ -7,12 +7,16 @@ package me.pauzen.alphacore;
 import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.listeners.ListenerRegisterer;
-import me.pauzen.alphacore.updater.LoadPriority;
-import me.pauzen.alphacore.updater.Priority;
+import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.players.PlayerManager;
+import me.pauzen.alphacore.utils.loading.LoadPriority;
+import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
 import me.pauzen.alphacore.utils.reflection.Registrable;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -47,10 +51,17 @@ public class Core extends JavaPlugin {
         PremadeAbilities.values();
         PremadeEffects.values();
         ListenerRegisterer.register();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerManager.getManager().registerPlayer(player);
+        }
     }
 
     @Override
     public void onDisable() {
+        for (CorePlayer corePlayer : PlayerManager.getCorePlayers()) {
+            PlayerManager.getManager().destroyWrapper(corePlayer.getPlayer());
+        }
         core = null;
         registrables.forEach(Nullifiable::nullify);
     }
@@ -93,6 +104,10 @@ public class Core extends JavaPlugin {
                 return;
             }
 
+            if (!Registrable.class.isAssignableFrom(clazz)) {
+                return;
+            }
+
             Priority annotation = (Priority) clazz.getAnnotation(Priority.class);
 
             LoadPriority loadPriority;
@@ -103,10 +118,14 @@ public class Core extends JavaPlugin {
                 loadPriority = annotation.value();
             }
 
-            if (!ReflectionFactory.implementsInterface(clazz, Registrable.class)) {
+            if (clazz == Registrable.class) {
                 return;
             }
 
+            if (loadPriority == LoadPriority.NEVER) {
+                return;
+            }
+            
             loadPriorityList.get(loadPriority).add(clazz);
         });
         
@@ -114,6 +133,7 @@ public class Core extends JavaPlugin {
 
     public void registerManager(Class clazz) {
         try {
+            System.out.println(clazz);
             ReflectionFactory.getMethod(clazz, "register").invoke(null);
             Registrable registrable = (Registrable) ReflectionFactory.getField(clazz, "manager").get(null);
             if (registrable != null) {

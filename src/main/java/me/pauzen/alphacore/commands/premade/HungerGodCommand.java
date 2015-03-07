@@ -2,7 +2,7 @@
  *  Created by Filip P. on 2/15/15 12:51 AM.
  */
 
-package me.pauzen.alphacore.commands.childcommands;
+package me.pauzen.alphacore.commands.premade;
 
 import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.commands.Command;

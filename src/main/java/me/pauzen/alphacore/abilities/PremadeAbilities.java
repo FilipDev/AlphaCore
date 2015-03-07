@@ -4,32 +4,28 @@
 
 package me.pauzen.alphacore.abilities;
 
+import me.pauzen.alphacore.abilities.premade.God;
+import me.pauzen.alphacore.abilities.premade.NoFall;
 import me.pauzen.alphacore.utils.misc.Todo;
 
 public enum PremadeAbilities {
 
-    GOD(false),
-    HUNGER_GOD(false),
-    DOUBLE_JUMP(true),
-    @Todo("Fix me!")
-    AUTO_RESPAWN(true),
-    NO_FALL(false),
-    BYPASS_RESTRICTIONS(false),
-    CHAT(true),
-    INSTANT_BREAK(true),;
+    @Todo("Create class for every one of these eliminating the requirement for this enum.")
+    HUNGER_GOD(new Ability("Hunger God")),
+    GOD(new God()),
+    NO_FALL(new NoFall()),
+    DOUBLE_JUMP(new Ability("Double Jump")),
+    CHAT(new Ability("Chat")),
+    INSTANT_BREAK(new Ability("Instant Break")),;
 
     private Ability ability;
 
-    PremadeAbilities(boolean defaultEnabled) {
-        this.ability = new Ability(toName(name()), defaultEnabled);
+    PremadeAbilities(Ability ability) {
+        this.ability = ability;
     }
 
     public Ability ability() {
         return this.ability;
-    }
-
-    public boolean isDefault() {
-        return ability.isDefault();
     }
 
     private static String toName(String name) {

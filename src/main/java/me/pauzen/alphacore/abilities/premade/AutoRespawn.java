@@ -1,18 +1,22 @@
 /*
- *  Created by Filip P. on 2/6/15 6:43 PM.
+ *  Created by Filip P. on 2/28/15 10:28 AM.
  */
 
-package me.pauzen.alphacore.combat;
+package me.pauzen.alphacore.abilities.premade;
 
-import me.pauzen.alphacore.abilities.PremadeAbilities;
-import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.abilities.Ability;
+import me.pauzen.alphacore.combat.AutoRespawnEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public class AutoRespawnerManager extends ListenerImplementation {
+public class AutoRespawn extends Ability {
+
+    public AutoRespawn() {
+        super("Auto Respawn");
+    }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDamage(EntityDamageEvent e) {
@@ -25,7 +29,7 @@ public class AutoRespawnerManager extends ListenerImplementation {
 
         CorePlayer corePlayer = CorePlayer.get(player);
 
-        if (corePlayer.hasActivated(PremadeAbilities.AUTO_RESPAWN.ability())) {
+        if (corePlayer.hasActivated(this)) {
             double health = player.getHealth();
             if (e.getFinalDamage() >= health) {
                 if (!new AutoRespawnEvent(corePlayer, e.getCause()).call().isCancelled()) {

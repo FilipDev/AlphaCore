@@ -68,6 +68,7 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
                     corePlayer.getDoubleJump().resetJumps();
                     e.getPlayer().getPlayer().setAllowFlight(true);
                 }
+                new DoubleJump(null, 0, 0);
             }
         }
     }

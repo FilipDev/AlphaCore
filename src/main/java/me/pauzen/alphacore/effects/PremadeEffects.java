@@ -10,15 +10,15 @@ import me.pauzen.alphacore.players.CorePlayer;
 
 public enum PremadeEffects {
 
-    NO_BLOCK_BREAK(),
-    NO_BLOCK_PLACE(),
-    NO_SHOOT_BOW(15),
-    MUTE(PremadeAbilities.CHAT.ability()),;
+    NO_BLOCK_BREAK("No Block Break"),
+    NO_BLOCK_PLACE("No Block Place"),
+    NO_SHOOT_BOW("No Bow Shoot", 15),
+    MUTE("Mute",PremadeAbilities.CHAT.ability()),;
 
     private Effect effect;
 
-    PremadeEffects(long duration) {
-        this.effect = new Effect(duration) {
+    PremadeEffects(String name, long duration) {
+        this.effect = new Effect(name, duration) {
             @Override
             public void onApply(CorePlayer corePlayer) {
             }
@@ -37,8 +37,8 @@ public enum PremadeEffects {
         this.effect = effect;
     }
 
-    PremadeEffects(Ability ability) {
-        this(new Effect() {
+    PremadeEffects(String name, Ability ability) {
+        this(new Effect(name) {
             @Override
             public void onApply(CorePlayer corePlayer) {
                 corePlayer.toggleAbilityState(ability);
@@ -55,8 +55,8 @@ public enum PremadeEffects {
         });
     }
 
-    PremadeEffects() {
-        this(-1);
+    PremadeEffects(String name) {
+        this(name, -1);
     }
 
     public Effect effect() {

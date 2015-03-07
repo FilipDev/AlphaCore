@@ -5,6 +5,7 @@
 package me.pauzen.alphacore.loadingbar;
 
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.ExperienceUtils;
 
 public class LoadingBar {
 
@@ -13,6 +14,8 @@ public class LoadingBar {
 
     private int   previousLevel;
     private float previousXP;
+    
+    private boolean gaveXP = false;
 
     public LoadingBar(CorePlayer corePlayer) {
         this.corePlayer = corePlayer;
@@ -39,8 +42,18 @@ public class LoadingBar {
         return this.current;
     }
 
+    public boolean gaveXP() {
+        return gaveXP;
+    }
+
+    public void setGaveXP(boolean gaveXP) {
+        this.gaveXP = gaveXP;
+    }
+
     public void update() {
         if (displaying) {
+            
+            gaveXP = true;
 
             corePlayer.getPlayer().setExp(current += xpPerTick);
 
@@ -60,7 +73,7 @@ public class LoadingBar {
 
     public void revert() {
         displaying = false;
-        corePlayer.getPlayer().setExp(previousXP);
+        corePlayer.getPlayer().setExp(previousXP / ExperienceUtils.getRequiredExperience(previousLevel));
         corePlayer.getPlayer().setLevel(previousLevel);
         new LoadedEvent(corePlayer).call();
         corePlayer.setLoadingBar(null);

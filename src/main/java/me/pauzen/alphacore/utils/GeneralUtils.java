@@ -4,6 +4,10 @@
 
 package me.pauzen.alphacore.utils;
 
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import java.io.File;
 import java.util.Collection;
 
@@ -51,6 +55,15 @@ public class GeneralUtils {
         }
 
         return -1;
+    }
+
+    public static ItemMeta getMeta(ItemStack itemStack) {
+
+        if (!itemStack.hasItemMeta()) {
+            itemStack.setItemMeta(Bukkit.getItemFactory().getItemMeta(itemStack.getType()));
+        }
+
+        return itemStack.getItemMeta();
     }
 
 }

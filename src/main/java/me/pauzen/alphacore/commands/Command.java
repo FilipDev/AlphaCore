@@ -20,7 +20,7 @@ public abstract class Command {
         for (CommandListener commandListener : this.commandListeners) {
             if (!commandListener.canConsoleSend()) {
                 if (!(commandSender instanceof Player)) {
-                    ErrorMessage.CONSOLESENDER.sendMessage(commandSender);
+                    ErrorMessage.CONSOLESENDER.send(commandSender);
                     continue;
                 }
             }
@@ -36,7 +36,13 @@ public abstract class Command {
         this.commandListeners.add(commandListener);
     }
 
-    public abstract String getName();
+    public String[] getNames() {
+        return new String[]{getName()};
+    }
+    
+    public String getName() {
+        return "";
+    }
 
     public abstract CommandListener defaultListener();
 

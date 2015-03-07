@@ -4,10 +4,6 @@ package me.pauzen.alphacore.utils.misc;
  * Written by FilipDev on 12/24/14 12:19 AM.
  */
 
-/*
- * Written by FilipDev on 12/23/14 8:55 PM.
- */
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -11,10 +11,9 @@ import me.pauzen.alphacore.loadingbar.LoadingBar;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.places.PlaceManager;
 import me.pauzen.alphacore.places.events.PlaceMoveEvent;
-import me.pauzen.alphacore.playerlogger.PlayTimeLogger;
-import me.pauzen.alphacore.players.data.DefaultTrackers;
 import me.pauzen.alphacore.players.data.PlayerData;
 import me.pauzen.alphacore.players.data.Tracker;
+import me.pauzen.alphacore.players.data.events.PlayerLoadEvent;
 import me.pauzen.alphacore.points.TrackerDisplayer;
 import me.pauzen.alphacore.teams.Team;
 import me.pauzen.alphacore.teams.TeamManager;
@@ -32,7 +31,6 @@ public class CorePlayer {
 
 
     private String           playerName;
-    private PlayTimeLogger   playTimeLogger;
     private EntityPlayer     entityPlayer;
     private Team             team;
     private Place            place;
@@ -109,10 +107,6 @@ public class CorePlayer {
         return GeneralUtils.toggleContainment(activeEffects, effect);
     }
 
-    public void registerDefaultAbilities() {
-        Ability.getRegisteredAbilities().stream().filter(Ability::isDefault).forEach(this::activateAbility);
-    }
-
     public void assignTeam(Team team) {
         this.team = team;
     }
@@ -133,6 +127,16 @@ public class CorePlayer {
 
     public boolean hasActivated(Ability ability) {
         return activatedAbilities.contains(ability) || place.hasActivated(ability);
+    }
+    
+    public boolean hasActivated(Class<? extends Ability> abilityClass) {
+        for (Ability activatedAbility : activatedAbilities) {
+            if (activatedAbility.getClass() == abilityClass) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public Set<Ability> getActivatedAbilities() {
@@ -159,20 +163,16 @@ public class CorePlayer {
             this.team = TeamManager.getDefaultTeam();
         }
         List<Tracker> trackers = getPlayerData().getYamlReader().getTrackers(this);
+        PlayerLoadEvent playerLoadEvent = new PlayerLoadEvent(this);
+        playerLoadEvent.call();
+        playerLoadEvent.getDefaultAbilities().forEach(this::activateAbility);
         if (trackers == null) {
-            DefaultTrackers.getDefaultTrackers().forEach(tracker -> tracker.copy().addTracker(this));
+            playerLoadEvent.getDefaultTrackers().forEach((tracker) -> tracker.addTracker(this));
         }
         else {
             getPlayerData().getYamlReader().getTrackers(this).forEach(tracker -> tracker.addTracker(this));
         }
         this.place = PlaceManager.getDefaultPlace();
-        registerDefaultAbilities();
-    }
-
-    public void defaultLoad() {
-        this.team = TeamManager.getDefaultTeam();
-        new PlayTimeLogger(0).addTracker(this);
-        registerDefaultAbilities();
     }
 
     public void save() {

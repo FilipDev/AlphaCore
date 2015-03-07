@@ -36,20 +36,22 @@ public abstract class InventoryMenu {
 
     private String name;
     private int    size;
+    private Coordinate endCoordinate;
 
     /**
      * Creates new Inventory with null holder, size and name as specified with the name getting an invisible unique ID appended to the end of it.
      *
      * @param name The desired name of the inventory.
-     * @param size The desired size of the inventory, must be a multiple of 9. (size % 9 == 0) condition must be met.
+     * @param rows The desired amount of rows in the inventory.
      */
     public InventoryMenu(String name, int rows) {
+        this.name = name;
+        this.size = rows * 9;
+        endCoordinate = Coordinate.fromSlot(size - 1);
         inventoryID = InvisibleID.generate();
         registerElements();
         fillRemaining();
         InventoryManager.getManager().registerMenu(this);
-        this.name = name;
-        this.size = rows * 9;
     }
     
     public void openInventory(Player player, Inventory inventory) {
@@ -205,6 +207,66 @@ public abstract class InventoryMenu {
     public void createAllowanceConditionForClickingAt(int x, int y) {
         createAllowanceConditionForClickingAt(x, y, (clickEvent) -> true);
     }
+    
+    public void allowClickingWithin(Coordinate coordinate1, Coordinate coordinate2, Predicate<InventoryClickEvent> predicate) {
+        for (Coordinate coordinate : getCoordinatesWithin(coordinate1, coordinate2)) {
+            createAllowanceConditionForClickingAt(coordinate, predicate);
+        }
+    }
+
+    public Coordinate[] getCoordinatesWithin(Coordinate coordinate1, Coordinate coordinate2) {
+        int minX = Math.min(coordinate1.getX(), coordinate2.getX());
+        int minY = Math.min(coordinate1.getY(), coordinate2.getY());
+        int maxX = Math.max(coordinate1.getX(), coordinate2.getX());
+        int maxY = Math.max(coordinate1.getY(), coordinate2.getY());
+
+        Coordinate[] coordinates = new Coordinate[(maxX - minX + 1) * (maxY - minY + 1)];
+
+        int curr = 0;
+
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = minX; x <= maxX; x++) {
+                coordinates[curr] = Coordinate.coordinate(x, y);
+                curr++;
+            }
+        }
+        return coordinates;
+    }
+
+    public Coordinate[] getBorder(Coordinate a, Coordinate b) {
+
+        int minX = Math.min(a.getX(), b.getX());
+        int minY = Math.min(a.getY(), b.getY());
+
+        int maxX = Math.max(a.getX(), b.getX());
+        int maxY = Math.max(a.getY(), b.getY());
+
+        Coordinate[] coordinates = new Coordinate[(maxX - minX) * 2 + (maxY - minY) * 2];
+
+        int curr = 0;
+
+        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(minX, minY), Coordinate.coordinate(minX, maxY))) {
+            coordinates[curr] = coordinate;
+            curr++;
+        }
+
+        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(maxX, minY), Coordinate.coordinate(maxX, maxY))) {
+            coordinates[curr] = coordinate;
+            curr++;
+        }
+
+        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(minX + 1, maxY), Coordinate.coordinate(maxX - 1, maxY))) {
+            coordinates[curr] = coordinate;
+            curr++;
+        }
+
+        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(minX + 1, minY), Coordinate.coordinate(maxX - 1, minY))) {
+            coordinates[curr] = coordinate;
+            curr++;
+        }
+
+        return coordinates;
+    }
 
     /**
      * Gets all elements surrounding a coordinate.
@@ -233,20 +295,13 @@ public abstract class InventoryMenu {
         
         Element[] elements = new Element[size];
         
-        int minX = Math.min(x1, x2);
-        int minY = Math.min(y1, y2);
-        int maxX = Math.max(x1, x2);
-        int maxY = Math.max(y1, y2);
-
         int slot = 0;
-        
-        for (int x = minX; x <= maxX; x++) {
-            for (int y = minY; y <= maxY; y++) {
-                elements[slot] = getElementAt(x, y);
-                slot++;
-            }
+
+        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(x1, y1), Coordinate.coordinate(x2, y2))) {
+            elements[slot] = getElementAt(coordinate);
+            slot++;
         }
-        
+
         return elements;
     }
 
@@ -291,20 +346,19 @@ public abstract class InventoryMenu {
      * @param elementGetter A functional element that retrieves to do element based on a coordinate.
      */
     public void setElementsBetween(int x1, int y1, int x2, int y2, ElementGetter elementGetter) {
-        int minX = Math.min(x1, x2);
-        int minY = Math.min(y1, y2);
-        int maxX = Math.max(x1, x2);
-        int maxY = Math.max(y1, y2);
-        
-        for (int x = minX; x <= maxX; x++) {
-            for (int y = minY; y <= maxY; y++) {
-                setElementAt(x, y, elementGetter.getElement(Coordinate.coordinate(x, y)));
-            }
+        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(x1, y1), Coordinate.coordinate(x2, y2))) {
+            setElementAt(coordinate, elementGetter.getElement(coordinate));
         }
     }
     
     public void setElementsBetween(Coordinate coordinate1, Coordinate coordinate2, ElementGetter elementGetter) {
         setElementsBetween(coordinate1.getX(), coordinate1.getY(), coordinate2.getX(), coordinate2.getY(), elementGetter);
+    }
+    
+    public void setBorder(ElementGetter elementGetter) {
+        for (Coordinate coordinate : getBorder(Coordinate.coordinate(0, 0), endCoordinate)) {
+            setElementAt(coordinate, elementGetter.getElement(coordinate));
+        }
     }
     
     public ItemStack getItemAt(int x, int y) {

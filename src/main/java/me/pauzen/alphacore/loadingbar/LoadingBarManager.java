@@ -43,11 +43,17 @@ public class LoadingBarManager extends ListenerImplementation implements Registr
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onXPEvent(PlayerExpChangeEvent e) {
+        
         CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
 
         LoadingBar loadingBar = corePlayer.getLoadingBar();
 
         if (loadingBar == null) {
+            return;
+        }
+        
+        if (loadingBar.gaveXP()) {
+            loadingBar.setGaveXP(false);
             return;
         }
 

@@ -7,8 +7,8 @@ package me.pauzen.alphacore.teams;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.ChatColor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultTeam extends Team {
 
@@ -16,10 +16,10 @@ public class DefaultTeam extends Team {
         super("Default", ChatColor.YELLOW);
     }
 
-    private static Set<CorePlayer> emptyCorePlayerSet = new HashSet<>();
+    private static List<CorePlayer> emptyCorePlayerList = new ArrayList<>();
 
     @Override
-    public Set<CorePlayer> getPlayers() {
-        return emptyCorePlayerSet;
+    public List<CorePlayer> getMembers() {
+        return emptyCorePlayerList;
     }
 }

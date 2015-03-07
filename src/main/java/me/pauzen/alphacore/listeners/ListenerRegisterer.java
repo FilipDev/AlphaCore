@@ -4,26 +4,23 @@
 
 package me.pauzen.alphacore.listeners;
 
-import me.pauzen.alphacore.combat.AutoRespawnerManager;
 import me.pauzen.alphacore.doublejump.DoubleJumpListener;
 import me.pauzen.alphacore.players.data.AutoSaver;
+import me.pauzen.alphacore.utils.misc.Todo;
 
 public class ListenerRegisterer {
 
+    @Todo("Make features of AlphaCore more abstract so that a class like this is not required.")
     public static void register() {
         new DamageByEntityListener();
         new BlockListener();
         new AttackListener();
-        new DamageListener();
         new ChatListener();
         new PlayerMoveListener();
         new EntitySpawnListener();
         new AutoSaver();
         new HungerListener();
-        new EntityDeathListener();
         new DisplayListener();
-        new InventoryClickListener();
-        new AutoRespawnerManager();
 
         new DoubleJumpListener();
     }

@@ -80,7 +80,12 @@ public class Place {
     }
 
     public boolean shouldRun(Command command) {
-        return commandChecker.isAllowed(command.getName());
+        for (String name : command.getNames()) {
+            if (!commandChecker.isAllowed(name)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public String getName() {

@@ -1,4 +1,12 @@
 /*
+ *  Created by Filip P. on 3/2/15 1:00 AM.
+ */
+
+/*
+ *  Created by Filip P. on 3/1/15 2:38 PM.
+ */
+
+/*
  *  Created by Filip P. on 2/20/15 7:02 PM.
  */
 
@@ -26,7 +34,9 @@ public class Coordinate {
     }
 
     public static Coordinate fromSlot(int inventorySlot) {
-        return new Coordinate(inventorySlot % 9, inventorySlot / 9);
+        int x = Math.max(0, (inventorySlot) % 9);
+        int y = Math.max(0, inventorySlot / 9);
+        return new Coordinate(x, y);
     }
 
     @Override

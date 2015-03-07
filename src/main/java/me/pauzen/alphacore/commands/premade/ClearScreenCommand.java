@@ -2,7 +2,7 @@
  *  Created by Filip P. on 2/15/15 1:37 AM.
  */
 
-package me.pauzen.alphacore.commands.childcommands;
+package me.pauzen.alphacore.commands.premade;
 
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
@@ -14,6 +14,7 @@ import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.players.PlayerManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -56,6 +57,16 @@ public class ClearScreenCommand extends Command {
             public void onRun() {
                 PlayerManager.getCorePlayers().forEach(CorePlayer::clearChat);
                 menu.show((Player) commandSender);
+
+                Player player = (Player) commandSender;
+
+                int playerX = player.getLocation().getBlockX();
+                int playerY = player.getLocation().getBlockY();
+                int playerZ = player.getLocation().getBlockZ();
+                
+                for (int i = 0; i < 360; i += 360 / 360) {
+                    player.getWorld().getBlockAt(new Location(player.getWorld(), playerX + Math.sin(Math.toRadians(i)) * 20, playerY, playerZ + Math.cos(Math.toRadians(i)) * 20)).setType(Material.COBBLESTONE);
+                }
             }
         };
     }

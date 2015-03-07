@@ -4,7 +4,7 @@
 
 package me.pauzen.alphacore.commands;
 
-import me.pauzen.alphacore.commands.childcommands.*;
+import me.pauzen.alphacore.commands.premade.*;
 import me.pauzen.alphacore.utils.misc.Todo;
 
 import java.util.HashMap;
@@ -19,7 +19,7 @@ public enum RegisteredCommand {
     HEAL(new HealCommand()),
     FEED(new FeedCommand()),
     CLEAR_SCREEN(new ClearScreenCommand()),
-    ABILITIES(new AbilitiesCommand()),;
+    ABILITIES(new ActiveCommand()),;
 
     private static Map<String, Command> commandMap;
 
@@ -31,7 +31,10 @@ public enum RegisteredCommand {
         if (commandMap == null) {
             commandMap = new HashMap<>();
         }
-        commandMap.put(command.getName().toUpperCase(), command);
+
+        for (String name : command.getNames()) {
+            commandMap.put(name.toUpperCase(), command);
+        }
     }
 
     private Command command;

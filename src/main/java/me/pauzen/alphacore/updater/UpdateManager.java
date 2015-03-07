@@ -5,6 +5,8 @@
 package me.pauzen.alphacore.updater;
 
 import me.pauzen.alphacore.Core;
+import me.pauzen.alphacore.utils.loading.LoadPriority;
+import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Bukkit;

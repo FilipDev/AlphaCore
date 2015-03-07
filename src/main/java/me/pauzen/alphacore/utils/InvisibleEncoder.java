@@ -58,5 +58,13 @@ public class InvisibleEncoder {
 
         return decoded.toString();
     }
+    
+    public static boolean contains(String string1, String string2) {
+        return string1.contains(encode(string2));
+    }
+    
+    public static int indexOf(String string1, String string2) {
+        return string1.indexOf(encode(string2));
+    }
 
 }

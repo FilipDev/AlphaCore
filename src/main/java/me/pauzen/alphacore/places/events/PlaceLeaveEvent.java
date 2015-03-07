@@ -12,6 +12,16 @@ import org.bukkit.event.HandlerList;
 public class PlaceLeaveEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+    
     private Place place;
 
     public PlaceLeaveEvent(CorePlayer corePlayer, Place place) {
@@ -21,14 +31,5 @@ public class PlaceLeaveEvent extends CallablePlayerContainerEvent {
 
     public Place getPlace() {
         return place;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 }

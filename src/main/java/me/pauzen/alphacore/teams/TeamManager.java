@@ -49,7 +49,7 @@ public class TeamManager implements Registrable {
     }
 
     public void nullify() {
+        manager.teams.values().forEach(Team::clean);
         Registrable.super.nullify();
-        manager.teams.values().forEach(Team::cleanup);
     }
 }

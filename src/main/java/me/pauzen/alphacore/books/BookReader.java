@@ -4,11 +4,13 @@
 
 package me.pauzen.alphacore.books;
 
+import me.pauzen.alphacore.utils.misc.Todo;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+@Todo("Revise")
 public final class BookReader {
 
     private BookReader() {
@@ -18,6 +20,7 @@ public final class BookReader {
         if (!book.hasItemMeta()) {
             book.setItemMeta(Bukkit.getItemFactory().getItemMeta(Material.WRITTEN_BOOK));
         }
+        
         return readBook((BookMeta) book.getItemMeta());
     }
 

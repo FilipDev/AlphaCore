@@ -2,7 +2,7 @@
  *  Created by Filip P. on 2/23/15 10:19 PM.
  */
 
-package me.pauzen.alphacore.updater;
+package me.pauzen.alphacore.utils.loading;
 
 public enum LoadPriority implements Comparable<LoadPriority> {
 
@@ -12,7 +12,9 @@ public enum LoadPriority implements Comparable<LoadPriority> {
     NORMAL(3),
     LOW(4),
     LOWEST(5),
-    LAST(6);
+    LAST(6),
+    NEVER(-1),
+    ;
 
     int position;
 

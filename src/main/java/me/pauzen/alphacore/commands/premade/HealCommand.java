@@ -2,7 +2,7 @@
  *  Created by Filip P. on 2/14/15 9:07 PM.
  */
 
-package me.pauzen.alphacore.commands.childcommands;
+package me.pauzen.alphacore.commands.premade;
 
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
@@ -25,7 +25,7 @@ public class HealCommand extends Command {
             public void onRun() {
                 Player target = args.length == 0 ? (Player) commandSender : Bukkit.getPlayer(args[0]);
                 CorePlayer.get(target).healFully();
-                ChatMessage.HEALED.sendMessage(commandSender);
+                ChatMessage.HEALED.send(commandSender);
             }
         };
     }

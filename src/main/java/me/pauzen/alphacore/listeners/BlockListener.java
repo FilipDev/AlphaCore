@@ -7,7 +7,6 @@ package me.pauzen.alphacore.listeners;
 import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.players.CorePlayer;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -55,7 +54,7 @@ public class BlockListener extends ListenerImplementation {
         CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
 
         if (corePlayer.hasActivated(PremadeAbilities.INSTANT_BREAK.ability())) {
-            e.getClickedBlock().setType(Material.AIR);
+            e.getClickedBlock().breakNaturally(e.getItem());
             return true;
         }
 
