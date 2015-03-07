@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
@@ -47,6 +48,13 @@ public class InventoryManager extends ListenerImplementation implements Registra
         InventoryMenu menu = getMenu(e.getInventory());
         if (menu != null) {
             menu.process(e);
+        }
+    }
+    
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent e) {
+        if (getMenu(e.getInventory()) != null) {
+            e.setCancelled(true);
         }
     }
 

@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.messages;
 
+import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -40,5 +41,11 @@ public interface Message {
 
     default void sendConsole(String... strings) {
         send(Bukkit.getConsoleSender(), strings);
+    }
+    
+    default void sendIntermittently(CommandSender commandSender, long delay, String... strings) {
+        Bukkit.getScheduler().runTaskTimer(Core.getCore(), () -> {
+            send(commandSender, strings);
+        }, 0, delay);
     }
 }
