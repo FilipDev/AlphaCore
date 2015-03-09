@@ -2,10 +2,6 @@
  *  Created by Filip P. on 2/27/15 11:26 PM.
  */
 
-/*
- *  Created by Filip P. on 2/20/15 9:31 PM.
- */
-
 package me.pauzen.alphacore.tools;
 
 import me.pauzen.alphacore.listeners.ListenerImplementation;

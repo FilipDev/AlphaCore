@@ -2,14 +2,6 @@
  *  Created by Filip P. on 2/21/15 12:25 PM.
  */
 
-/*
- *  Created by Filip P. on 2/17/15 4:31 PM.
- */
-
-/*
- *  Created by Filip P. on 2/17/15 4:22 PM.
- */
-
 package me.pauzen.alphacore.utils.sql;
 
 import me.pauzen.alphacore.messages.ErrorMessage;

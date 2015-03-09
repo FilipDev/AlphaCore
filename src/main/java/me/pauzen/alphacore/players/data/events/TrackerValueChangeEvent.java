@@ -2,10 +2,6 @@
  *  Created by Filip P. on 2/15/15 12:13 PM.
  */
 
-/*
- *  Created by Filip P. on 2/13/15 8:01 PM.
- */
-
 package me.pauzen.alphacore.players.data.events;
 
 import me.pauzen.alphacore.events.CallableEvent;

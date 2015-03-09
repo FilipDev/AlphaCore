@@ -2,14 +2,6 @@
  *  Created by Filip P. on 3/2/15 1:00 AM.
  */
 
-/*
- *  Created by Filip P. on 3/1/15 2:38 PM.
- */
-
-/*
- *  Created by Filip P. on 2/20/15 7:02 PM.
- */
-
 package me.pauzen.alphacore.inventory.misc;
 
 public class Coordinate {

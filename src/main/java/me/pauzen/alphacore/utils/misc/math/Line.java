@@ -1,8 +1,4 @@
 /*
- *  Created by Filip P. on 3/6/15 11:13 PM.
- */
-
-/*
  *  Created by Filip P. on 3/2/15 6:02 PM.
  */
 
