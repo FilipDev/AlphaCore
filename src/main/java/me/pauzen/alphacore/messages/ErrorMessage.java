@@ -11,7 +11,9 @@ public enum ErrorMessage implements Message {
     CONSOLESENDER("Command can only be sent by a player."),
     SAME_TEAM("Player is on the same team as you."),
     PERMISSIONS("No permissions for %s."),
-    SQL("Could not connect to SQL database."),;
+    SQL("Could not connect to SQL database."),
+    COMMAND_NOT_FOUND("Command %s non-existent."),
+    ;
 
     private String errorMessage;
 

@@ -13,7 +13,7 @@ public enum PremadeEffects {
     NO_BLOCK_BREAK("No Block Break"),
     NO_BLOCK_PLACE("No Block Place"),
     NO_SHOOT_BOW("No Bow Shoot", 15),
-    MUTE("Mute",PremadeAbilities.CHAT.ability()),;
+    ;
 
     private Effect effect;
 

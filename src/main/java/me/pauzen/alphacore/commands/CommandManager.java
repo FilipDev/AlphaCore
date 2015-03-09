@@ -14,7 +14,7 @@ import java.util.*;
 public class CommandManager implements Registrable {
 
     public Command getCommand(String commandName) {
-        return RegisteredCommand.getCommand(commandName.toUpperCase());
+        return RegisteredCommand.getCommand(commandName.toLowerCase());
     }
 
     public void executeCommand(Command command, CommandSender commandSender, String[] arguments) {
@@ -57,4 +57,9 @@ public class CommandManager implements Registrable {
         RegisteredCommand.registerCommand(command);
     }
 
+    public List<Command> getCommands() {
+        ArrayList<Command> list = new ArrayList<>();
+        list.addAll(RegisteredCommand.getCommands());
+        return list;
+    }
 }

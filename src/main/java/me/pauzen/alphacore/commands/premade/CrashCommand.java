@@ -15,8 +15,13 @@ import org.bukkit.entity.Player;
 public class CrashCommand extends Command {
 
     @Override
-    public String[] getNames() {
-        return new String[]{"c", "crash"};
+    public String[] getAliases() {
+        return new String[]{"c"};
+    }
+    
+    @Override
+    public String getName() {
+        return "crash";
     }
 
     @Override
@@ -40,7 +45,7 @@ public class CrashCommand extends Command {
                 } catch (IllegalAccessException | InstantiationException e) {
                     e.printStackTrace();
                 }
-                target.kickPlayer("You have been a bad, bad boy.");
+                //target.kickPlayer("You have been a bad, bad boy.");
             }
         };
     }

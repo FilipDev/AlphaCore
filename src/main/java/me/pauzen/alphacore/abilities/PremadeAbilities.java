@@ -15,7 +15,6 @@ public enum PremadeAbilities {
     GOD(new God()),
     NO_FALL(new NoFall()),
     DOUBLE_JUMP(new Ability("Double Jump")),
-    CHAT(new Ability("Chat")),
     INSTANT_BREAK(new Ability("Instant Break")),;
 
     private Ability ability;

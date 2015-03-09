@@ -18,7 +18,7 @@ public class Packet {
 
     public Packet(String packet) throws IllegalAccessException, InstantiationException {
         this.packetClass = UnsafeBukkitClasses.getNMSClass(packet);
-        this.reflection = new Reflection(reflection);
+        this.reflection = new Reflection(this);
     }
 
     public Packet(Object object) {

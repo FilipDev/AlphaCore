@@ -4,7 +4,6 @@
 
 package me.pauzen.alphacore.listeners;
 
-import me.pauzen.alphacore.doublejump.DoubleJumpListener;
 import me.pauzen.alphacore.players.data.AutoSaver;
 import me.pauzen.alphacore.utils.misc.Todo;
 
@@ -15,14 +14,11 @@ public class ListenerRegisterer {
         new DamageByEntityListener();
         new BlockListener();
         new AttackListener();
-        new ChatListener();
         new PlayerMoveListener();
         new EntitySpawnListener();
         new AutoSaver();
         new HungerListener();
         new DisplayListener();
-
-        new DoubleJumpListener();
     }
 
 }

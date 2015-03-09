@@ -10,15 +10,13 @@ import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class CommandListener {
 
     private List<String> testForPermissions = new ArrayList<>();
     private boolean canConsoleSend;
+    private Map<String, Command> subCommands = new HashMap<>();
 
     public void testForPermissions(String... permissions) {
         Collections.addAll(testForPermissions, permissions);
@@ -31,6 +29,10 @@ public abstract class CommandListener {
 
     public CommandListener(String... testForPermissions) {
         this(true, testForPermissions);
+    }
+
+    public Map<String, Command> getSubCommands() {
+        return subCommands;
     }
 
     public boolean preRun(Command command, CommandSender commandSender, String[] args, Map<String, String> modifiers) {
@@ -50,6 +52,14 @@ public abstract class CommandListener {
             }
         }
 
+        if (args.length != 0) {
+            Command subCommand = subCommands.get(args[0]);
+            if (subCommand != null) {
+                CommandManager.getManager().executeCommand(subCommand, commandSender, args);
+                return true;
+            }
+        }
+        
         setValues(commandSender, args, modifiers);
         onRun();
         clearValues();
@@ -64,6 +74,14 @@ public abstract class CommandListener {
         this.commandSender = commandSender;
         this.args = args;
         this.modifiers = modifiers;
+    }
+    
+    public void sub(Command... commands) {
+        for (Command command : commands) {
+            for (String name : command.getNames()) {
+                subCommands.put(name, command);
+            }
+        }
     }
 
     private void clearValues() {

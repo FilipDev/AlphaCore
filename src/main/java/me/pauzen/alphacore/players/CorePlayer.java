@@ -202,7 +202,7 @@ public class CorePlayer {
     }
 
     public void clearChat() {
-        String[] spamMessage = new String[]{" ", "  ", "   ", "==CLEARING CHAT=="};
+        String[] spamMessage = new String[]{" ", "  ", "   ", "    "};
         for (int n = 0; n < 300 / spamMessage.length; n++) {
             for (String aSpamMessage : spamMessage) {
                 getPlayer().sendMessage(aSpamMessage);
@@ -236,6 +236,10 @@ public class CorePlayer {
 
     public boolean hasLeft() {
         return getPlayer() == null;
+    }
+
+    public void sendJSON(String json) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + getPlayer().getName() + " " + json);
     }
 }
 

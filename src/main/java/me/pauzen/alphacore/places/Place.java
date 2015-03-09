@@ -11,6 +11,7 @@ import me.pauzen.alphacore.places.events.PlaceJoinEvent;
 import me.pauzen.alphacore.places.events.PlaceLeaveEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.AllowanceChecker;
+import me.pauzen.alphacore.utils.misc.Todo;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -79,6 +80,7 @@ public class Place {
         return commandChecker;
     }
 
+    @Todo("Adapt to use getName too...")
     public boolean shouldRun(Command command) {
         for (String name : command.getNames()) {
             if (!commandChecker.isAllowed(name)) {

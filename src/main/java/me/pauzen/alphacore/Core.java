@@ -144,4 +144,7 @@ public class Core extends JavaPlugin {
         }
     }
 
+    public List<Registrable> getManagers() {
+        return registrables;
+    }
 }

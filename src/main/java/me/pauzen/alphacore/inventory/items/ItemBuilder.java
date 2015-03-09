@@ -11,11 +11,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ItemBuilder {
 
-    private ItemStack itemStack;
-    private ItemMeta  itemMeta;
+    private ItemStack    itemStack;
+    private ItemMeta     itemMeta;
+    private List<String> lore;
 
     private ItemBuilder(ItemStack itemStack) {
 
@@ -23,9 +25,11 @@ public class ItemBuilder {
 
         if (itemStack.hasItemMeta()) {
             this.itemMeta = itemStack.getItemMeta();
+            this.lore = itemMeta.getLore() == null ? new ArrayList<>() : itemMeta.getLore();
         }
         else {
             itemMeta = Bukkit.getItemFactory().getItemMeta(itemStack.getType());
+            this.lore = new ArrayList<>();
         }
     }
 
@@ -34,6 +38,7 @@ public class ItemBuilder {
         this.itemStack = new ItemStack(material);
 
         itemMeta = Bukkit.getItemFactory().getItemMeta(material);
+        this.lore = new ArrayList<>();
     }
 
     public ItemBuilder amount(int amount) {
@@ -62,17 +67,17 @@ public class ItemBuilder {
     }
 
     public ItemBuilder lore(String lore) {
-        itemMeta.getLore().add(lore);
+        this.lore.add(lore);
         return this;
     }
 
     public ItemBuilder lore(int index, String lore) {
-        itemMeta.getLore().set(index, lore);
+        this.lore.set(index, lore);
         return this;
     }
 
     public ItemBuilder clearLore() {
-        itemMeta.setLore(new ArrayList<>());
+        this.lore.clear();
         return this;
     }
 
@@ -81,6 +86,7 @@ public class ItemBuilder {
     }
 
     public ItemStack build() {
+        this.itemMeta.setLore(lore);
         this.itemStack.setItemMeta(itemMeta);
         return itemStack;
     }

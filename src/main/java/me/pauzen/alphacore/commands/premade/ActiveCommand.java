@@ -19,8 +19,13 @@ import java.util.Set;
 public class ActiveCommand extends Command {
 
     @Override
-    public String[] getNames() {
-        return new String[]{"active", "a"};
+    public String[] getAliases() {
+        return new String[]{"a"};
+    }
+
+    @Override
+    public String getName() {
+        return "active";
     }
 
     @Override

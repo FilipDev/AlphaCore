@@ -15,7 +15,9 @@ public enum ChatMessage implements Message {
     HEALED(ChatColor.RED + "You have been fully healed."),
     LINE_SPACER(ChatColor.DARK_GRAY + "------------------------"),
     SPACER(ChatColor.GRAY + "=====" + " %s " + ChatColor.GRAY + "====="),
-    LIST_ELEMENT(ChatColor.GRAY + "%s: " + "%s"),;
+    LIST_ELEMENT(ChatColor.GRAY + "%s: " + "%s"),
+    ABOUT("AlphaCore by Filip."),
+    ;
 
     private String message;
 
