@@ -5,22 +5,23 @@
 package me.pauzen.alphacore.tools;
 
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.tools.listeners.ToolUseListener;
+import me.pauzen.alphacore.utils.Interactable;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class Tool {
 
     public static Tool EMPTY_TOOL = new Tool(null, null);
 
-    private ToolUseListener listener;
-    private ItemStack       itemStack;
+    private Interactable<PlayerInteractEvent> listener;
+    private ItemStack                         itemStack;
 
-    public Tool(ToolUseListener listener, ItemStack itemStack) {
+    public Tool(Interactable<PlayerInteractEvent> listener, ItemStack itemStack) {
         this.listener = listener;
         this.itemStack = itemStack;
     }
 
-    public ToolUseListener getListener() {
+    public Interactable<PlayerInteractEvent> getListener() {
         return listener;
     }
 

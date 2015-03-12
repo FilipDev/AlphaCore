@@ -5,13 +5,14 @@
 package me.pauzen.alphacore.abilities;
 
 import me.pauzen.alphacore.abilities.premade.God;
+import me.pauzen.alphacore.abilities.premade.HungerGod;
 import me.pauzen.alphacore.abilities.premade.NoFall;
 import me.pauzen.alphacore.utils.misc.Todo;
 
 public enum PremadeAbilities {
 
     @Todo("Create class for every one of these eliminating the requirement for this enum.")
-    HUNGER_GOD(new Ability("Hunger God")),
+    HUNGER_GOD(new HungerGod()),
     GOD(new God()),
     NO_FALL(new NoFall()),
     DOUBLE_JUMP(new Ability("Double Jump")),

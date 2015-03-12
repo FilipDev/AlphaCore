@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.tools;
 
+import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.tools.events.ToolRegisterEvent;
 import me.pauzen.alphacore.utils.GeneralUtils;
@@ -14,6 +15,7 @@ import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -49,7 +51,9 @@ public class ToolManager extends ListenerImplementation implements Registrable {
 
                 tools.put(type, tool);
 
-                tool.getListener().onUse(e);
+                Action action = e.getAction();
+                
+                tool.getListener().onInteract(e, ClickType.fromAction(action));
             }
             
         }

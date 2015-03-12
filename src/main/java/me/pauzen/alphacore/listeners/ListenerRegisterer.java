@@ -18,7 +18,6 @@ public class ListenerRegisterer {
         new EntitySpawnListener();
         new AutoSaver();
         new HungerListener();
-        new DisplayListener();
     }
 
 }

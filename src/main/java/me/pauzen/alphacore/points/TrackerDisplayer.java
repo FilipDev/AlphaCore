@@ -7,7 +7,11 @@ package me.pauzen.alphacore.points;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.players.PlayerManager;
 import me.pauzen.alphacore.players.data.Tracker;
+import me.pauzen.alphacore.updater.UpdateEvent;
+import me.pauzen.alphacore.updater.UpdateType;
+import org.bukkit.event.EventHandler;
 
 public class TrackerDisplayer extends ListenerImplementation {
 
@@ -35,5 +39,12 @@ public class TrackerDisplayer extends ListenerImplementation {
 
     public void revert() {
         corePlayer.getPlayer().setLevel(oldLevel);
+    }
+
+    @EventHandler
+    public void onUpdate(UpdateEvent e) {
+        if (e.getUpdateType() == UpdateType.SECOND) {
+            PlayerManager.getCorePlayers().stream().filter(corePlayer -> corePlayer.getAttribute(TrackerDisplayer.class, "tracker_displayer") != null).forEach(corePlayer -> corePlayer.getAttribute(TrackerDisplayer.class, "tracker_displayer").update());
+        }
     }
 }

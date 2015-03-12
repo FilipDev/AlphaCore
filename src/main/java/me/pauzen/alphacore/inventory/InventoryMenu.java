@@ -10,6 +10,7 @@ import me.pauzen.alphacore.inventory.elements.ToggleableElement;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.inventory.misc.ElementGetter;
+import me.pauzen.alphacore.inventory.misc.ElementInteraction;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.InvisibleID;
 import org.bukkit.Bukkit;
@@ -95,8 +96,8 @@ public abstract class InventoryMenu {
         if (clickedElement instanceof InteractableElement) {
             InteractableElement interactableElement = (InteractableElement) clickedElement;
 
-            interactableElement.onClick((Player) event.getWhoClicked(), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.INVENTORY_LEFT :
-                    event.getAction() == InventoryAction.PICKUP_HALF ? ClickType.INVENTORY_RIGHT : ClickType.OTHER, event.getInventory());
+            interactableElement.onInteract(new ElementInteraction((Player) event.getWhoClicked(), event.getInventory()), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.LEFT :
+                    event.getAction() == InventoryAction.PICKUP_HALF ? ClickType.RIGHT : ClickType.OTHER);
         }
         if (!shouldAllowClick(event)) {
             event.setCancelled(true);

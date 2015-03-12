@@ -26,6 +26,9 @@ import java.util.*;
 
 public class CorePlayer {
 
+    public static CorePlayer get(Player player) {
+        return PlayerManager.getManager().getWrapper(player);
+    }
 
     private String           playerName;
     private EntityPlayer     entityPlayer;
@@ -63,7 +66,6 @@ public class CorePlayer {
     public CorePlayer(Player player) {
         this.playerName = player.getName();
         this.entityPlayer = new EntityPlayer(player);
-        load();
     }
 
     public EntityPlayer getEntityPlayer() {
@@ -189,10 +191,6 @@ public class CorePlayer {
         return team;
     }
 
-    public static CorePlayer get(Player player) {
-        return PlayerManager.getManager().getWrapper(player);
-    }
-
     public void setHealthPercentage(double percentage) {
         getPlayer().setHealth((getPlayer().getMaxHealth() * (percentage / 100)));
     }
@@ -234,8 +232,8 @@ public class CorePlayer {
         getPlayer().setSaturation(20);
     }
 
-    public boolean hasLeft() {
-        return getPlayer() == null;
+    public boolean isOnline() {
+        return getPlayer() != null;
     }
 
     public void sendJSON(String json) {

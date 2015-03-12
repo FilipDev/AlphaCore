@@ -13,13 +13,4 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 public class HungerListener extends ListenerImplementation {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onFoodLevelChange(FoodLevelChangeEvent e) {
-        CorePlayer corePlayer = CorePlayer.get((Player) e.getEntity());
-
-        if (corePlayer.hasActivated(PremadeAbilities.HUNGER_GOD.ability())) {
-            ((Player) e.getEntity()).setSaturation(20F);
-            e.setCancelled(true);
-        }
-    }
 }

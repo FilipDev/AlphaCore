@@ -6,12 +6,12 @@ package me.pauzen.alphacore.inventory.elements;
 
 import me.pauzen.alphacore.inventory.elements.listeners.ClickListener;
 import me.pauzen.alphacore.inventory.misc.ClickType;
+import me.pauzen.alphacore.inventory.misc.ElementInteraction;
+import me.pauzen.alphacore.utils.Interactable;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class InteractableElement extends Element {
+public class InteractableElement extends Element implements Interactable<ElementInteraction> {
 
     private ClickListener clickListener;
 
@@ -25,12 +25,12 @@ public class InteractableElement extends Element {
         this.clickListener = clickListener;
     }
 
-    public void onClick(Player clicker, ClickType clickType, Inventory inventory) {
-        clickListener.onClick(clicker, clickType, inventory);
-    }
-
     public InteractableElement(ItemStack itemStack) {
         super(itemStack);
     }
 
+    @Override
+    public void onInteract(ElementInteraction value, ClickType clickType) {
+        clickListener.onClick(value.getClicker(), clickType, value.getInventory());
+    }
 }

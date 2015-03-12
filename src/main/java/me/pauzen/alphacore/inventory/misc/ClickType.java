@@ -4,10 +4,17 @@
 
 package me.pauzen.alphacore.inventory.misc;
 
+import org.bukkit.event.block.Action;
+
 public enum ClickType {
 
-    INVENTORY_LEFT,
-    INVENTORY_RIGHT,
-    OTHER,;
+    LEFT,
+    RIGHT,
+    OTHER,
+    ;
+    
+    public static ClickType fromAction(Action action) {
+        return action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK ? ClickType.LEFT : ClickType.RIGHT;
+    }
 
 }
