@@ -6,6 +6,7 @@ package me.pauzen.alphacore.commands.premade;
 
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
+import me.pauzen.alphacore.commands.CommandMeta;
 import me.pauzen.alphacore.inventory.InventoryMenu;
 import me.pauzen.alphacore.inventory.elements.AnimatedElement;
 import me.pauzen.alphacore.inventory.elements.InteractableElement;
@@ -19,12 +20,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@CommandMeta(value = "cls")
 public class ClearScreenCommand extends Command {
-
-    @Override
-    public String getName() {
-        return "cls";
-    }
 
     @Override
     public CommandListener defaultListener() {

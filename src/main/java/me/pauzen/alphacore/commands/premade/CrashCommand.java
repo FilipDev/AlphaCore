@@ -6,23 +6,18 @@ package me.pauzen.alphacore.commands.premade;
 
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
+import me.pauzen.alphacore.commands.CommandMeta;
 import me.pauzen.alphacore.utils.UnsafeBukkitClasses;
 import me.pauzen.alphacore.utils.commonnms.EntityPlayer;
 import me.pauzen.alphacore.utils.commonnms.Packet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+@CommandMeta(
+        aliases = {"c"},
+        value = "crash"
+)
 public class CrashCommand extends Command {
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"c"};
-    }
-    
-    @Override
-    public String getName() {
-        return "crash";
-    }
 
     @Override
     public CommandListener defaultListener() {

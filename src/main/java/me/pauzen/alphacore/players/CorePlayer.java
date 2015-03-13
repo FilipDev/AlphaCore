@@ -43,9 +43,9 @@ public class CorePlayer {
      */
     private Map<String, Tracker> trackers = new HashMap<>();
 
-    private Set<Effect>  activeEffects      = new HashSet<>();
-    private Set<Ability> activatedAbilities = new HashSet<>();
-    
+    private Map<Effect, Integer>  activeEffects      = new HashMap<>();
+    private Map<Ability, Integer> activatedAbilities = new HashMap<>();
+
     public void addAttribute(String attributeName, Object attribute) {
         attributes.put(attributeName, attribute);
     }
@@ -81,7 +81,11 @@ public class CorePlayer {
     }
 
     public void activateEffect(Effect effect) {
-        this.activeEffects.add(effect);
+        this.activeEffects.put(effect, 1);
+    }
+
+    public void activateEffect(Effect effect, int level) {
+        this.activeEffects.put(effect, level);
     }
 
     public void deactivateEffect(Effect effect) {
@@ -89,21 +93,35 @@ public class CorePlayer {
     }
 
     public boolean hasActivated(Effect effect) {
-        return this.activeEffects.contains(effect) || place.hasActivated(effect);
+        return this.activeEffects.containsKey(effect) || place.hasActivated(effect);
     }
 
     public Set<Effect> getActiveEffects() {
-        return this.activeEffects;
+        return this.activeEffects.keySet();
     }
 
-    public boolean setEffectState(Effect effect, boolean newState) {
-        return GeneralUtils.setContainment(activeEffects, effect, newState);
+    public boolean setEffectState(Effect effect, boolean newState, int level) {
+        return GeneralUtils.setContainment(activeEffects, effect, newState, level);
     }
 
+    public boolean toggleEffectState(Effect effect, int level) {
+        return GeneralUtils.toggleContainment(activeEffects, effect, level);
+    }
+    
     public boolean toggleEffectState(Effect effect) {
-        return GeneralUtils.toggleContainment(activeEffects, effect);
+        return GeneralUtils.toggleContainment(activeEffects, effect, 1);
     }
-
+    
+    public int getLevel(Ability ability) {
+        Integer level = activatedAbilities.get(ability);
+        return level == null ? 0 : level;
+    }
+    
+    public int getLevel(Effect effect) {
+        Integer level = activeEffects.get(effect);
+        return level == null ? 0 : level;
+    }
+    
     public void assignTeam(Team team) {
         this.team = team;
     }
@@ -117,17 +135,22 @@ public class CorePlayer {
         return false;
     }
 
+    public boolean activateAbility(Ability ability, int level) {
+        activatedAbilities.put(ability, level);
+        return true;
+    }
+
     public boolean activateAbility(Ability ability) {
-        activatedAbilities.add(ability);
+        activatedAbilities.put(ability, 1);
         return true;
     }
 
     public boolean hasActivated(Ability ability) {
-        return activatedAbilities.contains(ability) || place.hasActivated(ability);
+        return activatedAbilities.containsKey(ability) || place.hasActivated(ability);
     }
     
     public boolean hasActivated(Class<? extends Ability> abilityClass) {
-        for (Ability activatedAbility : activatedAbilities) {
+        for (Ability activatedAbility : activatedAbilities.keySet()) {
             if (activatedAbility.getClass() == abilityClass) {
                 return true;
             }
@@ -135,17 +158,25 @@ public class CorePlayer {
         
         return false;
     }
-
+    
     public Set<Ability> getActivatedAbilities() {
-        return activatedAbilities;
+        return activatedAbilities.keySet();
     }
 
     public boolean setAbilityState(Ability ability, boolean newState) {
-        return GeneralUtils.setContainment(activatedAbilities, ability, newState);
+        return GeneralUtils.setContainment(activatedAbilities, ability, newState, 1);
+    }
+    
+    public boolean setAbilityState(Ability ability, boolean newState, int level) {
+        return GeneralUtils.setContainment(activatedAbilities, ability, newState, level);
+    }
+    
+    public boolean toggleAbilityState(Ability ability, int level) {
+        return GeneralUtils.toggleContainment(activatedAbilities,  ability, level);
     }
 
     public boolean toggleAbilityState(Ability ability) {
-        return GeneralUtils.toggleContainment(activatedAbilities, ability);
+        return GeneralUtils.toggleContainment(activatedAbilities, ability, 1);
     }
 
     public String getUUID() {

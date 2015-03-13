@@ -15,7 +15,7 @@ public class Ability extends ListenerImplementation {
 
     private Effect  effect;
     private String  abilityName;
-
+    
     public Ability(String abilityName) {
         this.abilityName = abilityName;
         this.effect = new Effect(abilityName) {

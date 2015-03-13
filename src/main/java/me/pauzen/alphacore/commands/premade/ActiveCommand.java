@@ -7,6 +7,7 @@ package me.pauzen.alphacore.commands.premade;
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
+import me.pauzen.alphacore.commands.CommandMeta;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.players.CorePlayer;
@@ -16,17 +17,11 @@ import org.bukkit.entity.Player;
 import java.util.HashSet;
 import java.util.Set;
 
+@CommandMeta(
+        aliases = {"a"},
+        value = "active"
+)
 public class ActiveCommand extends Command {
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"a"};
-    }
-
-    @Override
-    public String getName() {
-        return "active";
-    }
 
     @Override
     public CommandListener defaultListener() {

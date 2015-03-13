@@ -7,14 +7,12 @@ package me.pauzen.alphacore.commands.premade.alphacore;
 import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
+import me.pauzen.alphacore.commands.CommandMeta;
 import org.bukkit.ChatColor;
 
+@CommandMeta("modules")
 public class Modules extends Command {
-    @Override
-    public String getName() {
-        return "modules";
-    }
-
+    
     @Override
     public CommandListener defaultListener() {
         return new CommandListener(true, "alphacore.admin") {

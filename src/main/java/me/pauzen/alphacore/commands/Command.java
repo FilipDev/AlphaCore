@@ -13,6 +13,8 @@ import java.util.*;
 public abstract class Command {
 
     private List<CommandListener> commandListeners = new ArrayList<>();
+    
+    private CommandMeta commandMeta;
 
     /**
      * Executes the command.
@@ -34,6 +36,7 @@ public abstract class Command {
 
     public Command() {
         addListener(defaultListener());
+        commandMeta = getClass().getAnnotation(CommandMeta.class);
     }
 
     /**
@@ -49,14 +52,16 @@ public abstract class Command {
      * @return Command aliases.
      */
     public String[] getAliases() {
-        return new String[]{};
+        return commandMeta.aliases();
     }
 
     /**
      * Returns command name.
      * @return Command name.
      */
-    public abstract String getName();
+    public String getName() {
+        return commandMeta.value();
+    }
 
     /**
      * Returns the command names with aliases and name.
@@ -82,7 +87,7 @@ public abstract class Command {
      * @return Command description.
      */
     public String getDescription() {
-        return "%default%";
+        return commandMeta.description();
     }
 
     /**
