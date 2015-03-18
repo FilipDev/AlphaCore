@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
@@ -75,9 +76,7 @@ public class Core extends JavaPlugin {
     }
 
     public void registerManagers() {
-        loadPriorityList.entrySet().forEach((entry) -> {
-            entry.getValue().forEach(this::registerManager);
-        });
+        loadPriorityList.entrySet().forEach((entry) -> entry.getValue().forEach(this::registerManager));
     }
 
     public void getRegistrables() {
@@ -133,7 +132,6 @@ public class Core extends JavaPlugin {
 
     public void registerManager(Class clazz) {
         try {
-            System.out.println(clazz);
             ReflectionFactory.getMethod(clazz, "register").invoke(null);
             Registrable registrable = (Registrable) ReflectionFactory.getField(clazz, "manager").get(null);
             if (registrable != null) {
@@ -146,5 +144,9 @@ public class Core extends JavaPlugin {
 
     public List<Registrable> getManagers() {
         return registrables;
+    }
+    
+    public static File getData() {
+        return Core.getCore().getDataFolder();
     }
 }

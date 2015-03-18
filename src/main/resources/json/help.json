@@ -1,0 +1,16 @@
+{
+  "text": "",
+  "extra": [
+    {
+      "text": "%s: ",
+      "clickEvent": {
+        "action": "suggest_command",
+        "value": "/%s"
+      },
+      "color": "red"
+    },
+    {
+      "text": "%s"
+    }
+  ]
+}

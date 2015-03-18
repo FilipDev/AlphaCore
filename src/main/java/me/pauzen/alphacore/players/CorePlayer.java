@@ -6,6 +6,7 @@ package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.effects.Effect;
+import me.pauzen.alphacore.messages.JSONMessage;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.places.PlaceManager;
 import me.pauzen.alphacore.places.events.PlaceMoveEvent;
@@ -269,6 +270,10 @@ public class CorePlayer {
 
     public void sendJSON(String json) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + getPlayer().getName() + " " + json);
+    }
+    
+    public void sendJSON(JSONMessage message) {
+        sendJSON(message.getMessage());
     }
 }
 

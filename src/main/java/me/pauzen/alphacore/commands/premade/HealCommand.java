@@ -10,10 +10,13 @@ import me.pauzen.alphacore.commands.CommandMeta;
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 @CommandMeta("heal")
 public class HealCommand extends Command {
+
+    private static ChatMessage HEALED = new ChatMessage(ChatColor.RED + "You have been fully healed.");
 
     @Override
     public CommandListener defaultListener() {
@@ -22,7 +25,7 @@ public class HealCommand extends Command {
             public void onRun() {
                 Player target = args.length == 0 ? (Player) commandSender : Bukkit.getPlayer(args[0]);
                 CorePlayer.get(target).healFully();
-                ChatMessage.HEALED.send(commandSender);
+                HEALED.send(commandSender);
             }
         };
     }

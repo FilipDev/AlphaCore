@@ -17,9 +17,11 @@ public enum RegisteredCommand {
     GOD(new GodCommand()),
     HGOD(new HungerGodCommand()),
     HEAL(new HealCommand()),
+    COLORS(new ColorsCommand()),
     FEED(new FeedCommand()),
     CLEAR_SCREEN(new ClearScreenCommand()),
     ALPHA_CORE(new AlphaCoreCommand()),
+    KILL_ALL(new KillAllCommand()),
     ABILITIES(new ActiveCommand()),;
 
     private static Map<String, Command> commandMap;

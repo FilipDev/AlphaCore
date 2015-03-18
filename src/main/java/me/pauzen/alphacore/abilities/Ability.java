@@ -4,6 +4,8 @@
 
 package me.pauzen.alphacore.abilities;
 
+import me.pauzen.alphacore.commands.Command;
+import me.pauzen.alphacore.commands.CommandListener;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.messages.ChatMessage;
@@ -69,7 +71,14 @@ public class Ability extends ListenerImplementation {
     }
 
     public static void toggleAbilityState(Ability ability, CorePlayer corePlayer) {
-        ChatMessage.TOGGLED.send(corePlayer, ability.getName(), Ability.booleanToState(corePlayer.toggleAbilityState(ability)));
+
+        boolean state = corePlayer.toggleAbilityState(ability);
+
+        AbilityStateChangeEvent stateChangeEvent = new AbilityStateChangeEvent(corePlayer, ability, state);
+        
+        stateChangeEvent.call();
+        
+        ChatMessage.TOGGLED.send(corePlayer, ability.getName(), Ability.booleanToState(state));
     }
 
     public void setAbilityState(CorePlayer corePlayer, boolean newState) {
@@ -78,5 +87,36 @@ public class Ability extends ListenerImplementation {
 
     public void toggleAbilityState(CorePlayer corePlayer) {
         toggleAbilityState(this, corePlayer);
+    }
+    
+    public Command asCommand(String name, String... permissions) {
+        Command command = new Command(name) {
+            @Override
+            public CommandListener defaultListener() {
+                return new CommandListener(false, permissions) {
+                    @Override
+                    public void onRun() {
+
+                        if (modifiers.containsKey("set")) {
+                            boolean setState = Boolean.parseBoolean(modifiers.get("set"));
+                            set(Ability.this, CorePlayer.get((Player) commandSender), setState);
+                            return;
+                        }
+                        
+                        toggle(Ability.this, CorePlayer.get((Player) commandSender));
+                    }
+                    
+                    private void set(Ability ability, CorePlayer corePlayer,  boolean state) {
+                        ability.setAbilityState(corePlayer, state);
+                    }
+                    
+                    private void toggle(Ability ability, CorePlayer corePlayer) {
+                        ability.toggleAbilityState(corePlayer);
+                    }
+                };
+            }
+        };
+        
+        return command;
     }
 }

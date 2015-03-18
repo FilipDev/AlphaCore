@@ -4,9 +4,7 @@
 
 package me.pauzen.alphacore.abilities;
 
-import me.pauzen.alphacore.abilities.premade.God;
-import me.pauzen.alphacore.abilities.premade.HungerGod;
-import me.pauzen.alphacore.abilities.premade.NoFall;
+import me.pauzen.alphacore.abilities.premade.*;
 import me.pauzen.alphacore.utils.misc.Todo;
 
 public enum PremadeAbilities {
@@ -15,7 +13,8 @@ public enum PremadeAbilities {
     HUNGER_GOD(new HungerGod()),
     GOD(new God()),
     NO_FALL(new NoFall()),
-    DOUBLE_JUMP(new Ability("Double Jump")),
+    NO_TARGET(new NoTarget()),
+    DOUBLE_JUMP(new DoubleJumpAbility()),
     INSTANT_BREAK(new Ability("Instant Break")),;
 
     private Ability ability;

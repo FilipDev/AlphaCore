@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.sql.*;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class SQLConnection {
 
@@ -77,6 +78,10 @@ public class SQLConnection {
         }
 
         return null;
+    }
+    
+    public void query(String query, Consumer<ResultSet> callback) {
+        callback.accept(query(query));
     }
 
     public void execute(String executable) {

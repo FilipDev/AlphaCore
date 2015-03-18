@@ -58,8 +58,8 @@ public class PlayerManager extends ListenerImplementation implements Registrable
 
     public void registerPlayer(Player player) {
         this.players.put(player.getUniqueId(), new CorePlayer(player));
+        CorePlayer.get(player).load();
     }
-
     public CorePlayer getWrapper(Player player) {
         return players.get(player.getUniqueId());
     }

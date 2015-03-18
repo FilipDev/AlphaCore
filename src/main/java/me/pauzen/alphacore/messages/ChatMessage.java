@@ -6,22 +6,19 @@ package me.pauzen.alphacore.messages;
 
 import org.bukkit.ChatColor;
 
-public enum ChatMessage implements Message {
+public class ChatMessage implements Message {
 
-    TOGGLED("Ability %s has been %s."),
-    SET("Ability %s has been set to %s."),
-    JOINED_TEAM("You have been added to the team %s"),
-    FED(ChatColor.GOLD + "Your apetite has been sated."),
-    HEALED(ChatColor.RED + "You have been fully healed."),
-    LINE_SPACER(ChatColor.DARK_GRAY + "------------------------"),
-    SPACER(ChatColor.GRAY + "=====" + " %s " + ChatColor.GRAY + "====="),
-    LIST_ELEMENT(ChatColor.GRAY + "%s: " + "%s"),
-    ABOUT("AlphaCore by Filip."),
-    ;
+    public static ChatMessage TOGGLED = new ChatMessage("Ability %s has been %s.");
+    public static ChatMessage SET = new ChatMessage("Ability %s has been set to %s.");
+    public static ChatMessage JOINED_TEAM = new ChatMessage("You have been added to the team %s");
+    public static ChatMessage LINE_SPACER = new ChatMessage(ChatColor.DARK_GRAY + "------------------------");
+    public static ChatMessage SPACER = new ChatMessage(ChatColor.GRAY + "=====" + " %s " + ChatColor.GRAY + "=====");
+    public static ChatMessage LIST_ELEMENT = new ChatMessage(ChatColor.GRAY + "%s: " + "%s");
+    public static ChatMessage ABOUT = new ChatMessage("AlphaCore by Filip.");
 
     private String message;
 
-    private ChatMessage(String message) {
+    public ChatMessage(String message) {
         this.message = message;
     }
 

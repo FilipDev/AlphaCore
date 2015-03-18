@@ -4,17 +4,20 @@
 
 package me.pauzen.alphacore.commands;
 
+import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.messages.ErrorMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public abstract class Command {
+public abstract class Command extends ListenerImplementation {
 
     private List<CommandListener> commandListeners = new ArrayList<>();
-    
-    private CommandMeta commandMeta;
+
+    private String name;
+    private String[] aliases;
+    private String description;
 
     /**
      * Executes the command.
@@ -36,7 +39,25 @@ public abstract class Command {
 
     public Command() {
         addListener(defaultListener());
-        commandMeta = getClass().getAnnotation(CommandMeta.class);
+        CommandMeta commandMeta = getClass().getAnnotation(CommandMeta.class);
+        name = commandMeta.value();
+        description = commandMeta.description();
+        aliases = commandMeta.aliases();
+    }
+    
+    public Command(String name, String[] aliases, String description) {
+        addListener(defaultListener());
+        this.name = name;
+        this.aliases = aliases;
+        this.description = description;
+    }
+    
+    public Command(String name, String[] aliases) {
+        this(name, aliases, "%default%");
+    }
+    
+    public Command(String name) {
+        this(name, new String[]{});
     }
 
     /**
@@ -52,7 +73,7 @@ public abstract class Command {
      * @return Command aliases.
      */
     public String[] getAliases() {
-        return commandMeta.aliases();
+        return aliases;
     }
 
     /**
@@ -60,7 +81,7 @@ public abstract class Command {
      * @return Command name.
      */
     public String getName() {
-        return commandMeta.value();
+        return name;
     }
 
     /**
@@ -87,7 +108,7 @@ public abstract class Command {
      * @return Command description.
      */
     public String getDescription() {
-        return commandMeta.description();
+        return description;
     }
 
     /**
@@ -111,5 +132,9 @@ public abstract class Command {
         }
         
         return false;
+    }
+    
+    public void register() {
+        CommandManager.getManager().registerCommand(this);
     }
 }

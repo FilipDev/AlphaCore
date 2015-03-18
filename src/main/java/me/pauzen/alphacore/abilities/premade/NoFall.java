@@ -14,8 +14,10 @@ public class NoFall extends Ability {
     
     public NoFall() {
         super("No Fall");
+        
+        asCommand("nofall").register();
     }
-    
+
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
 

@@ -11,12 +11,13 @@ import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.SoundUtils;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
-import org.bukkit.GameMode;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +31,10 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
     public void onFlightToggle(PlayerToggleFlightEvent e) {
 
         CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
-        if (e.getPlayer().getGameMode() == GameMode.CREATIVE) return;
+        
+        if (e.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
 
         if (corePlayer.hasActivated(PremadeAbilities.DOUBLE_JUMP.ability())) {
 
@@ -44,6 +48,11 @@ public class DoubleJumpListener extends ListenerImplementation implements Nullif
                     e.getPlayer().setAllowFlight(false);
                 }
             }
+        }
+
+        if (!corePlayer.hasAttribute("double_jump")) {
+            e.getPlayer().setAllowFlight(false);
+            return;
         }
 
         if (!corePlayer.getAttribute(DoubleJump.class, "double_jump").canJump()) {

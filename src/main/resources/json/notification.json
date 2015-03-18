@@ -1,0 +1,12 @@
+{
+  "text": "",
+  "extra": [
+    {
+      "text": "%s(%s!%s)",
+      "hoverEvent": {
+        "action": "show_text",
+        "value": "%s"
+      }
+    },
+  ]
+}

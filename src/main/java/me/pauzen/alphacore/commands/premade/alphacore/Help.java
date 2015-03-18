@@ -9,6 +9,7 @@ import me.pauzen.alphacore.commands.CommandListener;
 import me.pauzen.alphacore.commands.CommandManager;
 import me.pauzen.alphacore.commands.CommandMeta;
 import me.pauzen.alphacore.messages.ErrorMessage;
+import me.pauzen.alphacore.messages.JSONMessage;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +21,7 @@ import java.util.Map;
 public class Help extends Command {
 
     private String defaultDescription = "AlphaCore command.";
-
+    
     @Override
     public CommandListener defaultListener() {
         return new CommandListener(true) {
@@ -44,7 +45,7 @@ public class Help extends Command {
 
                     for (CommandListener commandListener : command.getListeners()) {
                         for (Map.Entry<String, Command> entry : commandListener.getSubCommands().entrySet()) {
-                            send(commandSender, entry.getKey(), getDescription(entry.getValue()));
+                            send(commandSender, command.getName() + " " + entry.getKey(), getDescription(entry.getValue()));
                         }
                     }
 
@@ -52,21 +53,15 @@ public class Help extends Command {
             }
         };
     }
-    
+
+    private JSONMessage jsonMessage = new JSONMessage("help");
+
     private void send(CommandSender commandSender, String name, String description) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
             CorePlayer corePlayer = CorePlayer.get(player);
-            
-            corePlayer.sendJSON(String.format("{\n " +
-                    " text:\"%s\",\n" +
-                    " clickEvent:{\n" +
-                    " action:suggest_command,\n" +
-                    " value:\"/%s\"\n" +
-                    "},\n" +
-                    " color:red" +
-                    "}\n", name + ChatColor.GRAY + ": " + ChatColor.WHITE + description, name));
+            jsonMessage.send(corePlayer, name + ChatColor.GRAY, name, ChatColor.RESET + description);
             return;
         }
         commandSender.sendMessage(ChatColor.RED + name + ChatColor.GRAY + ": " + ChatColor.WHITE + description);

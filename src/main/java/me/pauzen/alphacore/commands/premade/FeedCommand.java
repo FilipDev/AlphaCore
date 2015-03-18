@@ -10,10 +10,13 @@ import me.pauzen.alphacore.commands.CommandMeta;
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 @CommandMeta("feed")
 public class FeedCommand extends Command {
+
+    private static ChatMessage FED = new ChatMessage(ChatColor.GOLD + "Your appetite has been sated.");
 
     @Override
     public CommandListener defaultListener() {
@@ -22,7 +25,7 @@ public class FeedCommand extends Command {
             public void onRun() {
                 Player target = args.length == 0 ? (Player) commandSender : Bukkit.getPlayer(args[0]);
                 CorePlayer.get(target).feed();
-                ChatMessage.FED.send(commandSender);
+                FED.send(commandSender);
             }
         };
     }

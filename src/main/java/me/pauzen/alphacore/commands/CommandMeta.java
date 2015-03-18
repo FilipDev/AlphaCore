@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommandMeta {
     
-    String[] aliases() default {""};
+    String[] aliases() default {};
     
     String value();
     

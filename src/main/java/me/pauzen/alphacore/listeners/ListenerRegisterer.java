@@ -17,7 +17,6 @@ public class ListenerRegisterer {
         new PlayerMoveListener();
         new EntitySpawnListener();
         new AutoSaver();
-        new HungerListener();
     }
 
 }

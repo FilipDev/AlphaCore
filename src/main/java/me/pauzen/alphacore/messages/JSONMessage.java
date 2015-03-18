@@ -1,0 +1,58 @@
+/*
+ *  Created by Filip P. on 3/17/15 10:42 AM.
+ */
+
+package me.pauzen.alphacore.messages;
+
+import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.io.streams.StringReader;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+public class JSONMessage implements Message {
+
+    private String message;
+    
+    public JSONMessage(String name) {
+        this.message = StringReader.read(getClass().getClassLoader().getResourceAsStream("json/" + name + ".json")).getContents();
+    }
+    
+    @Override
+    public String getPrefix() {
+        return "";
+    }
+
+    @Override
+    public String getRawMessage() {
+        return message;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public void send(CommandSender commandSender, String... strings) {
+        if (commandSender instanceof Player) {
+            send(CorePlayer.get((Player) commandSender), strings);
+        } else {
+            commandSender.sendMessage(message);
+        }
+    }
+
+    @Override
+    public void send(CorePlayer corePlayer, String... strings) {
+        corePlayer.sendJSON(String.format(getMessage(), strings));
+    }
+
+    @Override
+    public void sendRawMessage(CommandSender commandSender, String... strings) {
+
+    }
+
+    @Override
+    public void sendRawMessage(CorePlayer corePlayer, String... strings) {
+
+    }
+}
