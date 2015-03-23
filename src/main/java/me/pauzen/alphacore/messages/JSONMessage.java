@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.messages;
 
+import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.io.streams.StringReader;
 import org.bukkit.command.CommandSender;
@@ -14,7 +15,7 @@ public class JSONMessage implements Message {
     private String message;
     
     public JSONMessage(String name) {
-        this.message = StringReader.read(getClass().getClassLoader().getResourceAsStream("json/" + name + ".json")).getContents();
+        this.message = StringReader.read(Core.getZipped("json/" + name + ".json").stream()).getContents();
     }
     
     @Override
@@ -37,7 +38,7 @@ public class JSONMessage implements Message {
         if (commandSender instanceof Player) {
             send(CorePlayer.get((Player) commandSender), strings);
         } else {
-            commandSender.sendMessage(message);
+            commandSender.sendMessage(String.format(getMessage(), strings));
         }
     }
 
@@ -48,11 +49,11 @@ public class JSONMessage implements Message {
 
     @Override
     public void sendRawMessage(CommandSender commandSender, String... strings) {
-
+        commandSender.sendMessage(String.format(getMessage(), strings));
     }
 
     @Override
     public void sendRawMessage(CorePlayer corePlayer, String... strings) {
-
+        sendRawMessage(corePlayer.getPlayer(), strings);
     }
 }

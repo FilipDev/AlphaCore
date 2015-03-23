@@ -31,8 +31,8 @@ public class ToolManager extends ListenerImplementation implements Registrable {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         String itemName = getItemName(e.getItem());
-        if (InvisibleEncoder.contains(itemName, "::tool")) {
-            String type = itemName.substring(InvisibleEncoder.indexOf(itemName, "::tool:") + "::tool:".length());
+        if (InvisibleEncoder.contains(itemName, "-tool")) {
+            String type = itemName.substring(InvisibleEncoder.indexOf(itemName, "-tool-") + "-tool-".length());
 
             Tool tool = tools.get(getItemName(e.getItem()));
 
@@ -48,13 +48,13 @@ public class ToolManager extends ListenerImplementation implements Registrable {
                     tools.put(type, Tool.EMPTY_TOOL);
                     return;
                 }
-
-                tools.put(type, tool);
-
-                Action action = e.getAction();
-                
-                tool.getListener().onInteract(e, ClickType.fromAction(action));
             }
+
+            tools.put(type, tool);
+
+            Action action = e.getAction();
+
+            tool.onInteract(e, ClickType.fromAction(action));
             
         }
     }

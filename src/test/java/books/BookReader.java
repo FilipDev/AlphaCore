@@ -2,7 +2,7 @@
  *  Created by Filip P. on 2/2/15 11:24 PM.
  */
 
-package me.pauzen.alphacore.books;
+package books;
 
 import me.pauzen.alphacore.utils.misc.Todo;
 import org.bukkit.Bukkit;

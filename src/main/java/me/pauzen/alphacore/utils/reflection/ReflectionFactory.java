@@ -269,6 +269,7 @@ public final class ReflectionFactory {
 
     /**
      * Returns an array of all classes that have led up to the calling of this method excluding the class that called this method.
+     * Index 0 is the real caller.
      *
      * @return An array of caller classes.
      */

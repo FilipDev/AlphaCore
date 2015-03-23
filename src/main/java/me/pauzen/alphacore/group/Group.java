@@ -4,7 +4,10 @@
 
 package me.pauzen.alphacore.group;
 
+import me.pauzen.alphacore.messages.ChatMessage;
+import me.pauzen.alphacore.messages.Message;
 import me.pauzen.alphacore.players.CorePlayer;
+import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +29,28 @@ public class Group {
     }
     
     public void clean() {
-        this.members = null;
+        this.members = new ArrayList<>();
     }
 
     public List<CorePlayer> getMembers() {
         return members;
+    }
+
+    private Message cannotJoin = new ChatMessage(ChatColor.RED + "You cannot join this group right now.");
+
+    public void setCannotJoin(Message cannotJoin) {
+        this.cannotJoin = cannotJoin;
+    }
+    
+    public void tryJoining(CorePlayer player) {
+        if (checkJoinable(player)) {
+            addPlayer(player);
+        } else {
+            cannotJoin.send(player);
+        }
+    }
+    
+    public boolean checkJoinable(CorePlayer corePlayer) {
+        return !isMember(corePlayer);
     }
 }

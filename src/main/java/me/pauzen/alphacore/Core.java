@@ -15,6 +15,7 @@ import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
 import me.pauzen.alphacore.utils.reflection.Registrable;
+import me.pauzen.alphacore.utils.reflection.jar.JAREntryFile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -148,5 +149,9 @@ public class Core extends JavaPlugin {
     
     public static File getData() {
         return Core.getCore().getDataFolder();
+    }
+    
+    public static JAREntryFile getZipped(String name) {
+        return new JAREntryFile(name);
     }
 }

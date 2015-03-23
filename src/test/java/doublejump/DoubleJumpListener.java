@@ -2,7 +2,7 @@
  *  Created by Filip P. on 2/2/15 11:24 PM.
  */
 
-package me.pauzen.alphacore.doublejump;
+package doublejump;
 
 import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.listeners.EfficientMoveEvent;
@@ -13,7 +13,6 @@ import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

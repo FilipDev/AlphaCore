@@ -6,8 +6,8 @@ package me.pauzen.alphacore.abilities.premade;
 
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.abilities.AbilityStateChangeEvent;
-import me.pauzen.alphacore.doublejump.DoubleJump;
-import me.pauzen.alphacore.doublejump.DoubleJumpListener;
+import doublejump.DoubleJump;
+import doublejump.DoubleJumpListener;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.EventHandler;
 

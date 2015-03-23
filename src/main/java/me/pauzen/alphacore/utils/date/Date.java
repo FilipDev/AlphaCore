@@ -28,7 +28,7 @@ public class Date {
      * @return New Date Object of the current date.
      */
     public static Date currentDate() {
-        return new Date(Day.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)), TimeFactory.getCurrentInnacurateTime());
+        return new Date(Day.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)), TimeFactory.getCurrentAccurateTime());
     }
 
     /**

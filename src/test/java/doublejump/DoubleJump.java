@@ -2,7 +2,7 @@
  *  Created by Filip P. on 2/22/15 9:09 AM.
  */
 
-package me.pauzen.alphacore.doublejump;
+package doublejump;
 
 import me.pauzen.alphacore.players.CorePlayer;
 
