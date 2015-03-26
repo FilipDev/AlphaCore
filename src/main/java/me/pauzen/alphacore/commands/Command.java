@@ -18,6 +18,8 @@ public abstract class Command extends ListenerImplementation {
     private String name;
     private String[] aliases;
     private String description;
+    
+    private Command parent;
 
     /**
      * Executes the command.
@@ -136,5 +138,13 @@ public abstract class Command extends ListenerImplementation {
     
     public void register() {
         CommandManager.getManager().registerCommand(this);
+    }
+
+    public void setParent(Command parent) {
+        this.parent = parent;
+    }
+
+    public Command getParent() {
+        return parent;
     }
 }

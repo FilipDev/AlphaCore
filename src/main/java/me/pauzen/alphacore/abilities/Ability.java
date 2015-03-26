@@ -6,12 +6,17 @@ package me.pauzen.alphacore.abilities;
 
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
+import me.pauzen.alphacore.commands.CommandManager;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Ability extends ListenerImplementation {
 
@@ -117,6 +122,18 @@ public class Ability extends ListenerImplementation {
             }
         };
         
+        List<String> names = new ArrayList<>();
+        Collections.addAll(names, name.split(" "));
+
+        if (names.size() > 1) {
+            Command previous = CommandManager.getManager().getCommand(names.get(names.size() - 2));
+
+            if (previous != null) {
+                command.setParent(previous);
+            }
+        }
+
+
         return command;
     }
 }

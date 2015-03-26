@@ -14,7 +14,16 @@ import java.util.*;
 public class CommandManager implements Registrable {
 
     public Command getCommand(String commandName) {
-        return RegisteredCommand.getCommand(commandName.toLowerCase());
+        String[] names = commandName.split(" ");
+        Command command = RegisteredCommand.getCommand(names[0].toLowerCase());
+        if (names.length > 1) {
+            for (int i = 1; i < names.length; i++) {
+                String name = names[i];
+                
+                command = command.defaultListener().getSubCommands().get(name);
+            }
+        }
+        return command;
     }
 
     public void executeCommand(Command command, CommandSender commandSender, String[] arguments) {

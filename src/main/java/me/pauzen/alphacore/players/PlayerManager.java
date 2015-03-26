@@ -5,7 +5,6 @@
 package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.listeners.ListenerImplementation;
-import me.pauzen.alphacore.loadingbar.LoadingBar;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.entity.Player;
@@ -32,17 +31,11 @@ public class PlayerManager extends ListenerImplementation implements Registrable
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (getWrapper(e.getPlayer()) == null) {
             registerPlayer(e.getPlayer());
-            CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
-            corePlayer.addAttribute("loading_bar", new LoadingBar(corePlayer).display(400));
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent e) {
-        LoadingBar loadingBar = CorePlayer.get(e.getPlayer()).getAttribute(LoadingBar.class, "loading_bar");
-        if (loadingBar != null) {
-            loadingBar.revert();
-        }
         destroyWrapper(e.getPlayer());
     }
 
@@ -60,6 +53,7 @@ public class PlayerManager extends ListenerImplementation implements Registrable
         this.players.put(player.getUniqueId(), new CorePlayer(player));
         CorePlayer.get(player).load();
     }
+    
     public CorePlayer getWrapper(Player player) {
         return players.get(player.getUniqueId());
     }
