@@ -4,8 +4,7 @@
 
 package me.pauzen.alphacore.commands;
 
-import me.pauzen.alphacore.commands.premade.*;
-import me.pauzen.alphacore.commands.premade.alphacore.AlphaCoreCommand;
+import me.pauzen.alphacore.commands.alphacore.AlphaCoreCommand;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -4,7 +4,6 @@
 
 package me.pauzen.alphacore.listeners;
 
-import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.EventHandler;
@@ -51,13 +50,6 @@ public class BlockListener extends ListenerImplementation {
     }
 
     public boolean leftClickBlock(PlayerInteractEvent e) {
-        CorePlayer corePlayer = CorePlayer.get(e.getPlayer());
-
-        if (corePlayer.hasActivated(PremadeAbilities.INSTANT_BREAK.ability())) {
-            e.getClickedBlock().breakNaturally(e.getItem());
-            return true;
-        }
-
         return false;
     }
 

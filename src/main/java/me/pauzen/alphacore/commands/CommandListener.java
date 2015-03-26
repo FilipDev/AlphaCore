@@ -4,7 +4,7 @@
 
 package me.pauzen.alphacore.commands;
 
-import me.pauzen.alphacore.abilities.premade.RestrictionBypass;
+import me.pauzen.alphacore.abilities.RestrictionBypass;
 import me.pauzen.alphacore.messages.ErrorMessage;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.command.CommandSender;

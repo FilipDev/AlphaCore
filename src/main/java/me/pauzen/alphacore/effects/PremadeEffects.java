@@ -5,7 +5,6 @@
 package me.pauzen.alphacore.effects;
 
 import me.pauzen.alphacore.abilities.Ability;
-import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.players.CorePlayer;
 
 public enum PremadeEffects {

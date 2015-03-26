@@ -7,6 +7,7 @@ package me.pauzen.alphacore.messages;
 import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.io.streams.StringReader;
+import me.pauzen.alphacore.utils.reflection.jar.JAREntryFile;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,6 +17,10 @@ public class JSONMessage implements Message {
     
     public JSONMessage(String name) {
         this.message = StringReader.read(Core.getZipped("json/" + name + ".json").stream()).getContents();
+    }
+    
+    public JSONMessage(JAREntryFile jar) {
+        this.message = StringReader.read(jar.stream()).getContents();
     }
     
     @Override
