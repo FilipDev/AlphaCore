@@ -20,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class EntitySpawnListener extends ListenerImplementation {
 
+    private Map<String, LivingEntity> loggedEntities = new ConcurrentHashMap<>();
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntitySpawn(CreatureSpawnEvent e) {
         if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER) {
@@ -44,6 +46,4 @@ public class EntitySpawnListener extends ListenerImplementation {
     public LivingEntity getLivingEntity(String id) {
         return loggedEntities.get(id);
     }
-
-    private Map<String, LivingEntity> loggedEntities = new ConcurrentHashMap<>();
 }

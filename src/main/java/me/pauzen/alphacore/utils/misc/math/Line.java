@@ -5,8 +5,13 @@
 package me.pauzen.alphacore.utils.misc.math;
 
 public class Line {
-    
+
     private double a, b;
+
+    public Line(double a, double b) {
+        this.a = a;
+        this.b = b;
+    }
 
     public double getA() {
         return a;
@@ -16,11 +21,6 @@ public class Line {
         return b;
     }
 
-    public Line(double a, double b) {
-        this.a = a;
-        this.b = b;
-    }
-    
     public boolean contains(double value) {
         return value >= a && value <= b;
     }

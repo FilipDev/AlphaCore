@@ -13,7 +13,7 @@ import org.bukkit.ChatColor;
 
 @CommandMeta("modules")
 public class Modules extends Command {
-    
+
     @Override
     public CommandListener defaultListener() {
         return new CommandListener(true, "alphacore.admin") {

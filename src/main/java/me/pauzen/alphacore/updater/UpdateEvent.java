@@ -10,19 +10,18 @@ import org.bukkit.event.HandlerList;
 public class UpdateEvent extends CallableEvent {
 
     private static final HandlerList handlers = new HandlerList();
+    private UpdateType updateType;
 
-    public HandlerList getHandlers() {
-        return handlers;
+    public UpdateEvent(UpdateType updateType) {
+        this.updateType = updateType;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    private UpdateType updateType;
-
-    public UpdateEvent(UpdateType updateType) {
-        this.updateType = updateType;
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public UpdateType getUpdateType() {

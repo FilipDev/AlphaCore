@@ -29,6 +29,24 @@ public class SQLConnection {
         this.plugin = javaPlugin;
     }
 
+    public static String toFormat(Map<String, String> dataTypes) {
+        StringBuilder types = new StringBuilder();
+
+        types.append("(");
+
+        Iterator<Map.Entry<String, String>> iterator = dataTypes.entrySet().iterator();
+        Map.Entry<String, String> currentElement;
+        while ((currentElement = iterator.next()) != null) {
+            types.append(currentElement.getKey() + " " + currentElement.getValue());
+            if (iterator.hasNext()) {
+                types.append(", ");
+            }
+        }
+        types.append(")");
+
+        return types.toString();
+    }
+
     @Override
     public String toString() {
         return "SQLConnection{" +
@@ -79,7 +97,7 @@ public class SQLConnection {
 
         return null;
     }
-    
+
     public void query(String query, Consumer<ResultSet> callback) {
         callback.accept(query(query));
     }
@@ -106,24 +124,6 @@ public class SQLConnection {
         }
 
         execute("CREATE TABLE IF NOT EXISTS " + table.getName() + " " + toFormat(table.getTypes()) + ";");
-    }
-
-    public static String toFormat(Map<String, String> dataTypes) {
-        StringBuilder types = new StringBuilder();
-
-        types.append("(");
-
-        Iterator<Map.Entry<String, String>> iterator = dataTypes.entrySet().iterator();
-        Map.Entry<String, String> currentElement;
-        while ((currentElement = iterator.next()) != null) {
-            types.append(currentElement.getKey() + " " + currentElement.getValue());
-            if (iterator.hasNext()) {
-                types.append(", ");
-            }
-        }
-        types.append(")");
-
-        return types.toString();
     }
 
     public Connection getConnection() {

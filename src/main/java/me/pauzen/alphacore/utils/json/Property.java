@@ -5,22 +5,21 @@
 package me.pauzen.alphacore.utils.json;
 
 public enum Property {
-    
-    HOVER_EVENT("hoverEvent"),
-    ;
-    
+
+    HOVER_EVENT("hoverEvent"),;
+
     private String name;
-    
+
     Property(String name) {
         this.name = name;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public String asJSON(String value) {
         return name + ": " + value;
     }
-    
+
 }

@@ -12,20 +12,19 @@ import org.bukkit.event.entity.EntityDamageEvent;
 public class AutoRespawnEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
+    private EntityDamageEvent.DamageCause damageCause;
 
-    public HandlerList getHandlers() {
-        return handlers;
+    public AutoRespawnEvent(CorePlayer corePlayer, EntityDamageEvent.DamageCause damageCause) {
+        super(corePlayer);
+        this.damageCause = damageCause;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    private EntityDamageEvent.DamageCause damageCause;
-
-    public AutoRespawnEvent(CorePlayer corePlayer, EntityDamageEvent.DamageCause damageCause) {
-        super(corePlayer);
-        this.damageCause = damageCause;
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public EntityDamageEvent.DamageCause getDamageCause() {

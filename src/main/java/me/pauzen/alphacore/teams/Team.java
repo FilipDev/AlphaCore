@@ -18,6 +18,7 @@ public abstract class Team extends Group {
 
     private String    name;
     private ChatColor chatColor;
+
     public Team(String name, ChatColor chatColor) {
         this.name = name;
         this.chatColor = chatColor;

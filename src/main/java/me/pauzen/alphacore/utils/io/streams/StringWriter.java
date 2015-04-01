@@ -17,6 +17,14 @@ public class StringWriter {
         this.writer = writer;
     }
 
+    public static void write(BufferedWriter writer, List<String> strings) {
+        new StringWriter(writer).cleanWrite(strings);
+    }
+
+    public static void write(BufferedWriter writer, String string) {
+        new StringWriter(writer).cleanWrite(string);
+    }
+
     public void write(String string) {
         try {
             writer.write(string);
@@ -46,13 +54,5 @@ public class StringWriter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void write(BufferedWriter writer, List<String> strings) {
-        new StringWriter(writer).cleanWrite(strings);
-    }
-
-    public static void write(BufferedWriter writer, String string) {
-        new StringWriter(writer).cleanWrite(string);
     }
 }

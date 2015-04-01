@@ -12,20 +12,19 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class EfficientMoveEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
+    private PlayerMoveEvent event;
 
-    public HandlerList getHandlers() {
-        return handlers;
+    public EfficientMoveEvent(PlayerMoveEvent event, CorePlayer corePlayer) {
+        super(corePlayer);
+        this.event = event;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    private PlayerMoveEvent event;
-
-    public EfficientMoveEvent(PlayerMoveEvent event, CorePlayer corePlayer) {
-        super(corePlayer);
-        this.event = event;
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public PlayerMoveEvent getEvent() {

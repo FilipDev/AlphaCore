@@ -9,10 +9,10 @@ import org.bukkit.Bukkit;
 
 public final class UnsafeBukkitClasses {
 
+    private static final String VERSION = Bukkit.getServer().getClass().getName().split("\\.")[3];
+
     private UnsafeBukkitClasses() {
     }
-
-    private static final String VERSION = Bukkit.getServer().getClass().getName().split("\\.")[3];
 
     public static Class getNMSClass(String className) {
         return getTheClass("net.minecraft.server.", className);

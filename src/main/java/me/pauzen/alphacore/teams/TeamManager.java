@@ -13,19 +13,22 @@ import java.util.Map;
 
 public class TeamManager implements Registrable {
 
+    private static final Team DEFAULT_TEAM = new DefaultTeam();
     @Nullify
     private static TeamManager manager;
+    private Map<String, Team> teams = new HashMap<>();
+    private boolean defaultTeamPreventPVP = false;
 
     public static void register() {
         manager = new TeamManager();
     }
 
-    private Map<String, Team> teams = new HashMap<>();
-
-    private static final Team DEFAULT_TEAM = new DefaultTeam();
-
     public static TeamManager getManager() {
         return manager;
+    }
+
+    public static Team getDefaultTeam() {
+        return DEFAULT_TEAM;
     }
 
     public void addTeam(Team team) {
@@ -44,16 +47,10 @@ public class TeamManager implements Registrable {
         return this.teams.get(teamName);
     }
 
-    public static Team getDefaultTeam() {
-        return DEFAULT_TEAM;
-    }
-
     public void nullify() {
         manager.teams.values().forEach(Team::clean);
         Registrable.super.nullify();
     }
-    
-    private boolean defaultTeamPreventPVP = false;
 
     public boolean getDefaultTeamPreventPVP() {
         return defaultTeamPreventPVP;

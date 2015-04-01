@@ -35,8 +35,8 @@ public abstract class InventoryMenu {
 
     private Map<UUID, Inventory> openedInventories = new HashMap<>();
 
-    private String name;
-    private int    size;
+    private String     name;
+    private int        size;
     private Coordinate endCoordinate;
 
     /**
@@ -54,11 +54,19 @@ public abstract class InventoryMenu {
         fillRemaining();
         InventoryManager.getManager().registerMenu(this);
     }
-    
+
+    private static Coordinate toCoordinate(int x, int y) {
+        return Coordinate.coordinate(x, y);
+    }
+
+    private static Coordinate toCoordinate(int inventorySlot) {
+        return Coordinate.fromSlot(inventorySlot);
+    }
+
     public void openInventory(Player player, Inventory inventory) {
         this.openedInventories.put(player.getUniqueId(), inventory);
     }
-    
+
     public void closeInventory(Player player) {
         this.openedInventories.remove(player.getUniqueId());
     }
@@ -131,9 +139,11 @@ public abstract class InventoryMenu {
 
     /**
      * Triggered when a player opens an inventory.
+     *
      * @param corePlayer Player that opened the inventory.
      */
-    public void onOpen(CorePlayer corePlayer) {}
+    public void onOpen(CorePlayer corePlayer) {
+    }
 
     /**
      * Fills unregistered element slots with blank elements.
@@ -204,11 +214,11 @@ public abstract class InventoryMenu {
     public void createAllowanceConditionForClickingAt(int x, int y, Predicate<InventoryClickEvent> predicate) {
         createAllowanceConditionForClickingAt(new Coordinate(x, y), predicate);
     }
-    
+
     public void createAllowanceConditionForClickingAt(int x, int y) {
         createAllowanceConditionForClickingAt(x, y, (clickEvent) -> true);
     }
-    
+
     public void allowClickingWithin(Coordinate coordinate1, Coordinate coordinate2, Predicate<InventoryClickEvent> predicate) {
         for (Coordinate coordinate : getCoordinatesWithin(coordinate1, coordinate2)) {
             createAllowanceConditionForClickingAt(coordinate, predicate);
@@ -285,17 +295,18 @@ public abstract class InventoryMenu {
 
     /**
      * Gets all elements between two points.
+     *
      * @param x1 x value of first point.
      * @param y1 y value of first point.
      * @param x2 x value of second point.
      * @param y2 y value of second point.
      * @return An array of elements found between the two points.
      */
-    
+
     public Element[] getElementsBetween(int x1, int y1, int x2, int y2) {
-        
+
         Element[] elements = new Element[size];
-        
+
         int slot = 0;
 
         for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(x1, y1), Coordinate.coordinate(x2, y2))) {
@@ -304,14 +315,6 @@ public abstract class InventoryMenu {
         }
 
         return elements;
-    }
-
-    private static Coordinate toCoordinate(int x, int y) {
-        return Coordinate.coordinate(x, y);
-    }
-
-    private static Coordinate toCoordinate(int inventorySlot) {
-        return Coordinate.fromSlot(inventorySlot);
     }
 
     public String getName() {
@@ -329,21 +332,22 @@ public abstract class InventoryMenu {
     public Element getElementAt(int x, int y) {
         return elementMap.get(new Coordinate(x, y));
     }
-    
+
     public void setTypeAt(int x, int y, Material type) {
         setElementAt(x, y, new Element(type));
     }
-    
+
     public void setItemAt(int x, int y, ItemStack itemStack) {
         setElementAt(x, y, new Element(itemStack));
     }
 
     /**
      * Set all elements between two points to an element.
-     * @param x1 x value of first point.
-     * @param y1 y value of first point.
-     * @param x2 x value of second point.
-     * @param y2 y value of second point.
+     *
+     * @param x1            x value of first point.
+     * @param y1            y value of first point.
+     * @param x2            x value of second point.
+     * @param y2            y value of second point.
      * @param elementGetter A functional element that retrieves to do element based on a coordinate.
      */
     public void setElementsBetween(int x1, int y1, int x2, int y2, ElementGetter elementGetter) {
@@ -351,17 +355,17 @@ public abstract class InventoryMenu {
             setElementAt(coordinate, elementGetter.getElement(coordinate));
         }
     }
-    
+
     public void setElementsBetween(Coordinate coordinate1, Coordinate coordinate2, ElementGetter elementGetter) {
         setElementsBetween(coordinate1.getX(), coordinate1.getY(), coordinate2.getX(), coordinate2.getY(), elementGetter);
     }
-    
+
     public void setBorder(ElementGetter elementGetter) {
         for (Coordinate coordinate : getBorder(Coordinate.coordinate(0, 0), endCoordinate)) {
             setElementAt(coordinate, elementGetter.getElement(coordinate));
         }
     }
-    
+
     public ItemStack getItemAt(int x, int y) {
         Element element = getElementAt(x, y);
         if (element == null) {
@@ -389,7 +393,7 @@ public abstract class InventoryMenu {
     public Material getTypeAt(Inventory inventory, Coordinate coordinate) {
         return getItemAt(inventory, coordinate).getType();
     }
-    
+
     public void setElementAt(Coordinate coordinate, Element element) {
         this.elementMap.put(coordinate, element);
     }
@@ -400,14 +404,15 @@ public abstract class InventoryMenu {
 
     /**
      * Gets all elements in the menu.
+     *
      * @return A list of all elements.
      */
     public List<Element> getElements() {
-        
+
         List<Element> elements = new ArrayList<>();
-        
+
         elementMap.entrySet().stream().map(Map.Entry::getValue).forEach(elements::add);
-        
+
         return elements;
     }
 

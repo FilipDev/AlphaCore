@@ -20,15 +20,15 @@ public class EventManager implements Listener, Registrable {
 
     @Nullify
     private static EventManager manager;
-    
+
     public static void register() {
         manager = new EventManager();
     }
-    
+
     public static <E extends Event> void registerEvent(Class<E> eventClass) {
         manager.registerEventClass(eventClass);
     }
-    
+
     public <E extends Event> void registerEventClass(Class<E> eventClass) {
         Bukkit.getPluginManager().registerEvent(eventClass, this, EventPriority.HIGHEST, (listener, event) -> this.onEvent(event), Core.getCore());
     }
@@ -37,7 +37,7 @@ public class EventManager implements Listener, Registrable {
         if (event instanceof CallEventEvent) {
             return;
         }
-     
+
         new CallEventEvent<>(event).call();
     }
 }

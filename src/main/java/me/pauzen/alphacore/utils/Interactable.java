@@ -7,7 +7,7 @@ package me.pauzen.alphacore.utils;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 
 public interface Interactable<T> {
-    
+
     public void onInteract(T value, ClickType clickType);
-    
+
 }

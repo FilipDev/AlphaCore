@@ -14,6 +14,7 @@ public class EffectManager implements Registrable {
 
     @Nullify
     private static EffectManager manager;
+    private Set<Effect> registeredEffects = new HashSet<>();
 
     public static void register() {
         manager = new EffectManager();
@@ -23,8 +24,6 @@ public class EffectManager implements Registrable {
     public static EffectManager getManager() {
         return manager;
     }
-
-    private Set<Effect> registeredEffects = new HashSet<>();
 
     public void registerEffect(Effect effect) {
         registeredEffects.add(effect);

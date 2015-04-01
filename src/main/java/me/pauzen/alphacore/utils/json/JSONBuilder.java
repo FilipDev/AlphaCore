@@ -5,23 +5,23 @@
 package me.pauzen.alphacore.utils.json;
 
 public class JSONBuilder {
-    
+
     private StringBuilder json;
-    
-    public String getJson() {
-        return json.toString();
-    }
-    
+
     public JSONBuilder() {
         json = new StringBuilder();
         json.append("{");
         json.append("\"text\": \"\",\"extra\": [%s]");
         json.append("}");
     }
-    
+
+    public String getJson() {
+        return json.toString();
+    }
+
     public JSONBuilder addText(Text text) {
         json = new StringBuilder(String.format(json.toString(), text.asJSON() + ",%s"));
         return this;
     }
-    
+
 }

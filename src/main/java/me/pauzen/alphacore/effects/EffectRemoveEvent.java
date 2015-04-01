@@ -11,20 +11,19 @@ import org.bukkit.event.HandlerList;
 public class EffectRemoveEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
+    private Effect effect;
 
-    public HandlerList getHandlers() {
-        return handlers;
+    public EffectRemoveEvent(CorePlayer CorePlayer, Effect effect) {
+        super(CorePlayer);
+        this.effect = effect;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    private Effect effect;
-
-    public EffectRemoveEvent(CorePlayer CorePlayer, Effect effect) {
-        super(CorePlayer);
-        this.effect = effect;
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public Effect getEffect() {

@@ -15,17 +15,44 @@ public abstract class Command extends ListenerImplementation {
 
     private List<CommandListener> commandListeners = new ArrayList<>();
 
-    private String name;
+    private String   name;
     private String[] aliases;
-    private String description;
-    
+    private String   description;
+
     private Command parent;
+
+    public Command() {
+        addListener(defaultListener());
+        CommandMeta commandMeta = getClass().getAnnotation(CommandMeta.class);
+        if (commandMeta == null) {
+            throw new IllegalStateException("Class does not have a CommandMeta annotation.");
+        }
+        name = commandMeta.value();
+        description = commandMeta.description();
+        aliases = commandMeta.aliases();
+    }
+
+    public Command(String name, String[] aliases, String description) {
+        addListener(defaultListener());
+        this.name = name;
+        this.aliases = aliases;
+        this.description = description;
+    }
+
+    public Command(String name, String[] aliases) {
+        this(name, aliases, "%default%");
+    }
+
+    public Command(String name) {
+        this(name, new String[]{});
+    }
 
     /**
      * Executes the command.
+     *
      * @param commandSender Runner of the command.
-     * @param args Command arguments.
-     * @param modifiers Command modifiers (-key value)
+     * @param args          Command arguments.
+     * @param modifiers     Command modifiers (-key value)
      */
     public void execute(CommandSender commandSender, String[] args, Map<String, String> modifiers) {
         for (CommandListener commandListener : this.commandListeners) {
@@ -39,34 +66,9 @@ public abstract class Command extends ListenerImplementation {
         }
     }
 
-    public Command() {
-        addListener(defaultListener());
-        CommandMeta commandMeta = getClass().getAnnotation(CommandMeta.class);
-        if (commandMeta == null) {
-            throw new IllegalStateException("Class does not have a CommandMeta annotation.");
-        }
-        name = commandMeta.value();
-        description = commandMeta.description();
-        aliases = commandMeta.aliases();
-    }
-    
-    public Command(String name, String[] aliases, String description) {
-        addListener(defaultListener());
-        this.name = name;
-        this.aliases = aliases;
-        this.description = description;
-    }
-    
-    public Command(String name, String[] aliases) {
-        this(name, aliases, "%default%");
-    }
-    
-    public Command(String name) {
-        this(name, new String[]{});
-    }
-
     /**
      * Adds a command listener.
+     *
      * @param commandListener A command listener to be ran when the command is ran.
      */
     public void addListener(CommandListener commandListener) {
@@ -75,6 +77,7 @@ public abstract class Command extends ListenerImplementation {
 
     /**
      * The command name aliases.
+     *
      * @return Command aliases.
      */
     public String[] getAliases() {
@@ -83,6 +86,7 @@ public abstract class Command extends ListenerImplementation {
 
     /**
      * Returns command name.
+     *
      * @return Command name.
      */
     public String getName() {
@@ -91,25 +95,28 @@ public abstract class Command extends ListenerImplementation {
 
     /**
      * Returns the command names with aliases and name.
+     *
      * @return Command names.
      */
     public Set<String> getNames() {
         Set<String> names = new HashSet<>();
-        
+
         names.addAll(Arrays.asList(getAliases()));
         names.add(getName());
-        
+
         return names;
     }
 
     /**
      * The default listener which is called when the command is ran.
+     *
      * @return The default CommandListener.
      */
     public abstract CommandListener defaultListener();
 
     /**
      * Returns command description.
+     *
      * @return Command description.
      */
     public String getDescription() {
@@ -118,6 +125,7 @@ public abstract class Command extends ListenerImplementation {
 
     /**
      * Gets the list of registered CommandListeners.
+     *
      * @return CommandListeners.
      */
     public List<CommandListener> getListeners() {
@@ -126,6 +134,7 @@ public abstract class Command extends ListenerImplementation {
 
     /**
      * Returns whether a string is an alias of this command.
+     *
      * @param name The string to check for.
      * @return If the string is an alias.
      */
@@ -135,19 +144,19 @@ public abstract class Command extends ListenerImplementation {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     public void register() {
         CommandManager.getManager().registerCommand(this);
     }
 
-    public void setParent(Command parent) {
-        this.parent = parent;
-    }
-
     public Command getParent() {
         return parent;
+    }
+
+    public void setParent(Command parent) {
+        this.parent = parent;
     }
 }

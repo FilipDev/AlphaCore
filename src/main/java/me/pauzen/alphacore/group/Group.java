@@ -15,19 +15,20 @@ import java.util.List;
 public class Group {
 
     private List<CorePlayer> members = new ArrayList<>();
+    private Message cannotJoin = new ChatMessage(ChatColor.RED + "You cannot join this group right now.");
 
     public void addPlayer(CorePlayer corePlayer) {
         members.add(corePlayer);
     }
-    
+
     public boolean isMember(CorePlayer corePlayer) {
         return members.contains(corePlayer);
     }
-    
+
     public void removePlayer(CorePlayer corePlayer) {
         members.remove(corePlayer);
     }
-    
+
     public void clean() {
         this.members = new ArrayList<>();
     }
@@ -36,20 +37,19 @@ public class Group {
         return members;
     }
 
-    private Message cannotJoin = new ChatMessage(ChatColor.RED + "You cannot join this group right now.");
-
     public void setCannotJoin(Message cannotJoin) {
         this.cannotJoin = cannotJoin;
     }
-    
+
     public void tryJoining(CorePlayer player) {
         if (checkJoinable(player)) {
             addPlayer(player);
-        } else {
+        }
+        else {
             cannotJoin.send(player);
         }
     }
-    
+
     public boolean checkJoinable(CorePlayer corePlayer) {
         return !isMember(corePlayer);
     }

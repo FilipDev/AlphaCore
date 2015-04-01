@@ -8,19 +8,12 @@ import java.util.Random;
 
 public class Range {
 
+    private static Random random = RandomProvider.getRandom();
     private double min, max;
 
     public Range(double min, double max) {
         this.min = min;
         this.max = max;
-    }
-
-    public boolean isWithinInclusive(double value) {
-        return value >= min && value <= max;
-    }
-
-    public boolean isWithinExclusive(double value) {
-        return value > min && value < max;
     }
 
     public static Range toRange(double min, double max) {
@@ -29,6 +22,18 @@ public class Range {
 
     public static Range toRange(int min, int max) {
         return new Range(min, max);
+    }
+
+    public static float random(double min, double max) {
+        return new Range(min, max).randomValue();
+    }
+
+    public boolean isWithinInclusive(double value) {
+        return value >= min && value <= max;
+    }
+
+    public boolean isWithinExclusive(double value) {
+        return value > min && value < max;
     }
 
     @Override
@@ -42,14 +47,8 @@ public class Range {
         return result;
     }
 
-    private static Random random = RandomProvider.getRandom();
-
     public float randomValue() {
         float value = ((float) random.nextInt((int) (max * 100000000.0F) - (int) (min * 100000000.0F)) / 100000000.0F + (float) min);
         return value;
-    }
-
-    public static float random(double min, double max) {
-        return new Range(min, max).randomValue();
     }
 }

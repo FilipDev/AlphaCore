@@ -30,46 +30,42 @@ import java.util.Set;
 
 public class CorePlayer {
 
-    public static CorePlayer get(Player player) {
-        return PlayerManager.getManager().getWrapper(player);
-    }
-
-    private String           playerName;
-    private EntityPlayer     entityPlayer;
-    private Team             team;
-    private Place            place;
+    private String       playerName;
+    private EntityPlayer entityPlayer;
+    private Team         team;
+    private Place        place;
     private Map<String, Object> attributes = new HashMap<>();
-
     private PlayerData playerData;
-
     /**
      * String is Tracker id.
      */
     private Map<String, Tracker> trackers = new HashMap<>();
-
     private Map<Effect, Integer>  activeEffects      = new HashMap<>();
     private Map<Ability, Integer> activatedAbilities = new HashMap<>();
+    public CorePlayer(Player player) {
+        this.playerName = player.getName();
+        this.entityPlayer = new EntityPlayer(player);
+    }
+
+    public static CorePlayer get(Player player) {
+        return PlayerManager.getManager().getWrapper(player);
+    }
 
     public void addAttribute(String attributeName, Object attribute) {
         attributes.put(attributeName, attribute);
     }
-    
+
     public void removeAttribute(String attributeName) {
         attributes.remove(attributeName);
     }
-    
+
     public boolean hasAttribute(String attributeName) {
         return attributes.containsKey(attributeName);
     }
-    
+
     @SuppressWarnings("ALL")
     public <T> T getAttribute(Class<T> attributeType, String attributeName) {
         return (T) attributes.get(attributeName);
-    }
-
-    public CorePlayer(Player player) {
-        this.playerName = player.getName();
-        this.entityPlayer = new EntityPlayer(player);
     }
 
     public EntityPlayer getEntityPlayer() {
@@ -111,21 +107,21 @@ public class CorePlayer {
     public boolean toggleEffectState(Effect effect, int level) {
         return GeneralUtils.toggleContainment(activeEffects, effect, level);
     }
-    
+
     public boolean toggleEffectState(Effect effect) {
         return GeneralUtils.toggleContainment(activeEffects, effect, 1);
     }
-    
+
     public int getLevel(Ability ability) {
         Integer level = activatedAbilities.get(ability);
         return level == null ? 0 : level;
     }
-    
+
     public int getLevel(Effect effect) {
         Integer level = activeEffects.get(effect);
         return level == null ? 0 : level;
     }
-    
+
     public void assignTeam(Team team) {
         this.team = team;
     }
@@ -152,17 +148,17 @@ public class CorePlayer {
     public boolean hasActivated(Ability ability) {
         return activatedAbilities.containsKey(ability) || place.hasActivated(ability);
     }
-    
+
     public boolean hasActivated(Class<? extends Ability> abilityClass) {
         for (Ability activatedAbility : activatedAbilities.keySet()) {
             if (activatedAbility.getClass() == abilityClass) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     public Set<Ability> getActivatedAbilities() {
         return activatedAbilities.keySet();
     }
@@ -170,13 +166,13 @@ public class CorePlayer {
     public boolean setAbilityState(Ability ability, boolean newState) {
         return GeneralUtils.setContainment(activatedAbilities, ability, newState, 1);
     }
-    
+
     public boolean setAbilityState(Ability ability, boolean newState, int level) {
         return GeneralUtils.setContainment(activatedAbilities, ability, newState, level);
     }
-    
+
     public boolean toggleAbilityState(Ability ability, int level) {
-        return GeneralUtils.toggleContainment(activatedAbilities,  ability, level);
+        return GeneralUtils.toggleContainment(activatedAbilities, ability, level);
     }
 
     public boolean toggleAbilityState(Ability ability) {
@@ -274,7 +270,7 @@ public class CorePlayer {
     public void sendJSON(String json) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + getPlayer().getName() + " " + json);
     }
-    
+
     public void sendJSON(JSONMessage message) {
         sendJSON(message.getMessage());
     }

@@ -31,12 +31,6 @@ public class Tracker {
         this.corePlayer = corePlayer;
     }
 
-    public void setValue(int value) {
-        if (updateValue(value)) {
-            this.value = value;
-        }
-    }
-
     public void addValue(int value) {
         setValue(getValue() + value);
     }
@@ -47,6 +41,12 @@ public class Tracker {
 
     public int getValue() {
         return this.value;
+    }
+
+    public void setValue(int value) {
+        if (updateValue(value)) {
+            this.value = value;
+        }
     }
 
     public boolean updateValue(int newValue) {

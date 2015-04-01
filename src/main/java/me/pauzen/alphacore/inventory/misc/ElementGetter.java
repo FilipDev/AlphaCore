@@ -7,7 +7,7 @@ package me.pauzen.alphacore.inventory.misc;
 import me.pauzen.alphacore.inventory.elements.Element;
 
 public interface ElementGetter {
-    
+
     public Element getElement(Coordinate coordinate);
-    
+
 }

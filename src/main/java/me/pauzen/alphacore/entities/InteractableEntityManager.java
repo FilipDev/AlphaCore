@@ -20,18 +20,9 @@ import java.util.Map;
 
 public class InteractableEntityManager extends ListenerImplementation implements Registrable {
 
-    private Map<String, InteractableEntity> interactableEntities = new HashMap<>();
-
-    public void registerInteractableEntity(InteractableEntity interactableEntity) {
-        interactableEntities.put(interactableEntity.getEntity().getUniqueId().toString(), interactableEntity);
-    }
-
-    public InteractableEntity getInteractableEntity(String UUID) {
-        return interactableEntities.get(UUID);
-    }
-
     @Nullify
     private static InteractableEntityManager manager;
+    private Map<String, InteractableEntity> interactableEntities = new HashMap<>();
 
     public static void register() {
         manager = new InteractableEntityManager();
@@ -39,6 +30,14 @@ public class InteractableEntityManager extends ListenerImplementation implements
 
     public static InteractableEntityManager getManager() {
         return manager;
+    }
+
+    public void registerInteractableEntity(InteractableEntity interactableEntity) {
+        interactableEntities.put(interactableEntity.getEntity().getUniqueId().toString(), interactableEntity);
+    }
+
+    public InteractableEntity getInteractableEntity(String UUID) {
+        return interactableEntities.get(UUID);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)

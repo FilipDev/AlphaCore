@@ -15,9 +15,9 @@ public abstract class Effect extends ListenerImplementation implements Applyable
 
     private Map<CorePlayer, Long> affectedPlayers = new HashMap<>();
 
-    private long effectLength;
+    private long   effectLength;
     private String name;
-    
+
     private boolean invisible = false;
 
     /**
@@ -36,7 +36,7 @@ public abstract class Effect extends ListenerImplementation implements Applyable
         this.effectLength = -1;
         EffectManager.getManager().registerEffect(this);
     }
-    
+
     public Effect(String name, boolean invisible) {
         this(name);
         this.invisible = invisible;
@@ -96,7 +96,7 @@ public abstract class Effect extends ListenerImplementation implements Applyable
     public String getName() {
         return name;
     }
-    
+
     @Override
     public boolean isInvisible() {
         return invisible;

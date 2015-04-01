@@ -9,13 +9,13 @@ import org.bukkit.entity.LivingEntity;
 
 public abstract class InteractableEntity {
 
-    public abstract void onClick(ClickType clickType, CorePlayer corePlayer);
-
     private LivingEntity entity;
 
     public InteractableEntity(LivingEntity entity) {
         this.entity = entity;
     }
+
+    public abstract void onClick(ClickType clickType, CorePlayer corePlayer);
 
     public LivingEntity getEntity() {
         return entity;

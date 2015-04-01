@@ -24,17 +24,6 @@ public class StringReader {
         readAll(new BufferedReader(inputStreamReader));
     }
 
-    private void readAll(BufferedReader bufferedReader) {
-        try {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) read.add(line + System.lineSeparator());
-
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static StringReader read(BufferedReader bufferedReader) {
         return new StringReader(bufferedReader);
     }
@@ -45,6 +34,17 @@ public class StringReader {
 
     public static StringReader read(InputStreamReader inputStreamReader) {
         return new StringReader(inputStreamReader);
+    }
+
+    private void readAll(BufferedReader bufferedReader) {
+        try {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) read.add(line + System.lineSeparator());
+
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getString(int index) {
@@ -63,7 +63,7 @@ public class StringReader {
                 e.printStackTrace();
             }
     }
-    
+
     public String getContents() {
         StringBuilder builder = new StringBuilder();
         read.forEach(builder::append);

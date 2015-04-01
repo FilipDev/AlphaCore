@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 
 public class ElementInteraction {
 
-    private Player clicker;
+    private Player    clicker;
     private Inventory inventory;
 
     public ElementInteraction(Player clicker, Inventory inventory) {

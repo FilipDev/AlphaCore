@@ -20,6 +20,10 @@ public class ScriptRunner {
         javaScript.put("server", Bukkit.getServer());
     }
 
+    public static double evaluate(String expression, double... varValues) throws ScriptException {
+        return Double.valueOf(javaScript.eval(String.format(expression, varValues)).toString());
+    }
+
     public void runScript(Player runner, Script script) {
         javaScript.put("src/main/java/me", runner);
         javaScript.put("world", runner.getWorld());
@@ -28,9 +32,5 @@ public class ScriptRunner {
         } catch (ScriptException e) {
             e.printStackTrace();
         }
-    }
-
-    public static double evaluate(String expression, double... varValues) throws ScriptException {
-        return Double.valueOf(javaScript.eval(String.format(expression, varValues)).toString());
     }
 }

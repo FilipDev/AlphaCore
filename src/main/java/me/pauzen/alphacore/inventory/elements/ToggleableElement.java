@@ -20,11 +20,9 @@ import java.util.function.Predicate;
 
 public class ToggleableElement extends Element {
 
-    private Coordinate inventoryCoordinate;
-
     public static Element ON_ELEMENT  = new Element(ItemBuilder.from(Material.INK_SACK).durability(10).name("%s%sEnabled", ChatColor.GREEN, ChatColor.BOLD).build());
     public static Element OFF_ELEMENT = new Element(ItemBuilder.from(Material.INK_SACK).durability(8).name("%s%sDisabled", ChatColor.RED, ChatColor.BOLD).build());
-
+    private Coordinate inventoryCoordinate;
     private boolean                                 currentState;
     private Predicate<Tuple<CorePlayer, Inventory>> predicate;
 
@@ -52,6 +50,17 @@ public class ToggleableElement extends Element {
         this.predicate = predicate;
     }
 
+    public static void toggleAt(InventoryMenu menu, Coordinate coordinate, Player player, Inventory inventory) {
+
+        Element element = menu.getElementAt(coordinate);
+
+        if (element instanceof ToggleableElement) {
+            ToggleableElement toggleable = (ToggleableElement) element;
+
+            toggleable.toggle(player, inventory);
+        }
+    }
+
     /**
      * Gets the Element which represents the on or off state.
      *
@@ -72,11 +81,11 @@ public class ToggleableElement extends Element {
         menu.updateElement(inventory, inventoryCoordinate, toState(currentState));
         onToggle(player, currentState);
     }
-    
+
     public ItemStack toState(boolean state) {
         return state ? ON_ELEMENT.getRepresentation().clone() : OFF_ELEMENT.getRepresentation().clone();
     }
-    
+
     public void testPredicate(CorePlayer corePlayer, Inventory inventory) {
         if (predicate != null) {
             currentState = predicate.test(new Tuple<>(corePlayer, inventory));
@@ -92,16 +101,5 @@ public class ToggleableElement extends Element {
      */
     public void onToggle(Player player, boolean newState) {
         toggleListener.onToggle(player, newState);
-    }
-
-    public static void toggleAt(InventoryMenu menu, Coordinate coordinate, Player player, Inventory inventory) {
-
-        Element element = menu.getElementAt(coordinate);
-
-        if (element instanceof ToggleableElement) {
-            ToggleableElement toggleable = (ToggleableElement) element;
-
-            toggleable.toggle(player, inventory);
-        }
     }
 }

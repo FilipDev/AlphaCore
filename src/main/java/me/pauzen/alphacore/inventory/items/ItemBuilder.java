@@ -41,6 +41,14 @@ public class ItemBuilder {
         this.lore = new ArrayList<>();
     }
 
+    public static ItemBuilder from(Material material) {
+        return new ItemBuilder(material);
+    }
+
+    public static ItemBuilder from(ItemStack itemStack) {
+        return new ItemBuilder(itemStack);
+    }
+
     public ItemBuilder amount(int amount) {
         this.itemStack.setAmount(amount);
         return this;
@@ -89,13 +97,5 @@ public class ItemBuilder {
         this.itemMeta.setLore(lore);
         this.itemStack.setItemMeta(itemMeta);
         return itemStack;
-    }
-
-    public static ItemBuilder from(Material material) {
-        return new ItemBuilder(material);
-    }
-
-    public static ItemBuilder from(ItemStack itemStack) {
-        return new ItemBuilder(itemStack);
     }
 }

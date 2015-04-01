@@ -15,6 +15,8 @@ public class Packet {
     private Object     packet;
     private Class      packetClass;
     private Reflection reflection;
+    private Class[]  params;
+    private Object[] values;
 
     public Packet(String packet) throws IllegalAccessException, InstantiationException {
         this.packetClass = UnsafeBukkitClasses.getNMSClass(packet);
@@ -30,9 +32,6 @@ public class Packet {
     public Object getPacket() {
         return this.packet;
     }
-
-    private Class[]  params;
-    private Object[] values;
 
     public Packet initPacket(Class[] params, Object[] values) {
         try {

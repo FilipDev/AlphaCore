@@ -5,9 +5,8 @@
 package me.pauzen.alphacore.utils.json;
 
 public enum Value {
-    
-    SUGGEST_COMMAND("suggest_command"),
-    ;
+
+    SUGGEST_COMMAND("suggest_command"),;
 
     private String value;
 

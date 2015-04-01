@@ -14,13 +14,12 @@ import java.util.*;
 
 public abstract class CommandListener {
 
+    public Map<String, String> modifiers;
+    public CommandSender       commandSender;
+    public String[]            args;
     private List<String> testForPermissions = new ArrayList<>();
     private boolean canConsoleSend;
     private Map<String, Command> subCommands = new HashMap<>();
-
-    public void testForPermissions(String... permissions) {
-        Collections.addAll(testForPermissions, permissions);
-    }
 
     public CommandListener(boolean canConsoleSend, String... testForPermissions) {
         this.canConsoleSend = canConsoleSend;
@@ -29,6 +28,10 @@ public abstract class CommandListener {
 
     public CommandListener(String... testForPermissions) {
         this(true, testForPermissions);
+    }
+
+    public void testForPermissions(String... permissions) {
+        Collections.addAll(testForPermissions, permissions);
     }
 
     public Map<String, Command> getSubCommands() {
@@ -59,23 +62,19 @@ public abstract class CommandListener {
                 return true;
             }
         }
-        
+
         setValues(commandSender, args, modifiers);
         onRun();
         clearValues();
         return true;
     }
 
-    public Map<String, String> modifiers;
-    public CommandSender       commandSender;
-    public String[]            args;
-
     private void setValues(CommandSender commandSender, String[] args, Map<String, String> modifiers) {
         this.commandSender = commandSender;
         this.args = args;
         this.modifiers = modifiers;
     }
-    
+
     public void sub(Command... commands) {
         for (Command command : commands) {
             for (String name : command.getNames()) {

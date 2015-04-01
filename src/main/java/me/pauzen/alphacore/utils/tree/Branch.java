@@ -10,7 +10,7 @@ import java.util.Map;
 public class Branch<T> {
 
     private Map<T, Branch> branchMap = new HashMap<>();
-    
+
     private T value;
 
     public Branch(T value) {
@@ -20,7 +20,7 @@ public class Branch<T> {
     public void addBranch(Branch<T> branch) {
         branchMap.put(branch.value, branch);
     }
-    
+
     public Branch getBranch(T value) {
         return branchMap.get(value);
     }

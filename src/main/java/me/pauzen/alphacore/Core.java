@@ -31,12 +31,20 @@ import java.util.jar.JarFile;
 public class Core extends JavaPlugin {
 
     private static Core core;
+    private List<Registrable> registrables = new ArrayList<>();
+    private EnumMap<LoadPriority, List<Class>> loadPriorityList = new EnumMap<>(LoadPriority.class);
 
     public static Core getCore() {
         return core;
     }
 
-    private List<Registrable> registrables = new ArrayList<>();
+    public static File getData() {
+        return Core.getCore().getDataFolder();
+    }
+
+    public static JAREntryFile getZipped(String name) {
+        return new JAREntryFile(name);
+    }
 
     @Todo("Fix support for reloading")
     @Override
@@ -48,7 +56,7 @@ public class Core extends JavaPlugin {
         getRegistrables();
 
         registerManagers();
-        
+
         PremadeEffects.values();
         ListenerRegisterer.register();
 
@@ -65,8 +73,6 @@ public class Core extends JavaPlugin {
         core = null;
         registrables.forEach(Nullifiable::nullify);
     }
-
-    private EnumMap<LoadPriority, List<Class>> loadPriorityList = new EnumMap<>(LoadPriority.class);
 
     public void generatePriorities() {
         for (LoadPriority loadPriority : LoadPriority.values()) {
@@ -112,7 +118,8 @@ public class Core extends JavaPlugin {
 
             if (annotation == null) {
                 loadPriority = LoadPriority.NORMAL;
-            } else {
+            }
+            else {
                 loadPriority = annotation.value();
             }
 
@@ -123,10 +130,10 @@ public class Core extends JavaPlugin {
             if (loadPriority == LoadPriority.NEVER) {
                 return;
             }
-            
+
             loadPriorityList.get(loadPriority).add(clazz);
         });
-        
+
     }
 
     public void registerManager(Class clazz) {
@@ -143,13 +150,5 @@ public class Core extends JavaPlugin {
 
     public List<Registrable> getManagers() {
         return registrables;
-    }
-    
-    public static File getData() {
-        return Core.getCore().getDataFolder();
-    }
-    
-    public static JAREntryFile getZipped(String name) {
-        return new JAREntryFile(name);
     }
 }

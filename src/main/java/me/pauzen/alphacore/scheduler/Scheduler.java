@@ -15,29 +15,24 @@ import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.event.EventHandler;
 
-import java.lang.Runnable;
 import java.util.*;
 
 @Priority(LoadPriority.LAST)
 public class Scheduler extends ListenerImplementation implements Registrable {
-    
+
     private static Scheduler manager;
-    
+    private NavigableMap<Time, List<Runnable>> timeSchedule = new TreeMap<>();
+    private NavigableMap<Date, List<Runnable>> dateSchedule = new TreeMap<>();
+    private Map<Time, List<String>> timeScheduleDescriptions = new HashMap<>();
+    private Map<Date, List<String>> dateScheduleDescriptions = new HashMap<>();
+
     public static void register() {
         manager = new Scheduler();
     }
-    
+
     public static Scheduler getManager() {
         return manager;
     }
-
-    private NavigableMap<Time, List<Runnable>> timeSchedule = new TreeMap<>();
-
-    private NavigableMap<Date, List<Runnable>> dateSchedule = new TreeMap<>();
-
-    private Map<Time, List<String>> timeScheduleDescriptions = new HashMap<>();
-    
-    private Map<Date, List<String>> dateScheduleDescriptions = new HashMap<>();
 
     @EventHandler
     public void onUpdate(UpdateEvent e) {
@@ -70,11 +65,11 @@ public class Scheduler extends ListenerImplementation implements Registrable {
         timeSchedule.get(time).add(runnable);
         timeScheduleDescriptions.get(time).add(description);
     }
-    
+
     public void schedule(Date date, Runnable runnable) {
         schedule(date, runnable, "");
     }
-    
+
     public void schedule(Date date, Runnable runnable, String description) {
         dateSchedule.putIfAbsent(date, new ArrayList<>());
         dateScheduleDescriptions.putIfAbsent(date, new ArrayList<>());
@@ -87,13 +82,13 @@ public class Scheduler extends ListenerImplementation implements Registrable {
         Set<Time> times = timeSchedule.keySet();
 
         SortedSet<Time> scheduled = new TreeSet<>(new Comparator<Time>() {
-            
+
             @Override
             public int compare(Time o1, Time o2) {
                 return (int) (o1.toMilliseconds() - o2.toMilliseconds());
             }
         });
-        
+
         scheduled.addAll(times);
 
         for (Time time : times) {
@@ -101,7 +96,7 @@ public class Scheduler extends ListenerImplementation implements Registrable {
                 scheduled.remove(time);
             }
         }
-        
+
         return scheduled;
     }
 

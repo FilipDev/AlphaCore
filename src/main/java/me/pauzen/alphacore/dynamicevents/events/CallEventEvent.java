@@ -9,22 +9,21 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class CallEventEvent<E extends Event> extends CallableEvent {
-    
-    private static final HandlerList handlers = new HandlerList();
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
+    private static final HandlerList handlers = new HandlerList();
+    private E event;
+
+    public CallEventEvent(E event) {
+        this.event = event;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    private E event;
-
-    public CallEventEvent(E event) {
-        this.event = event;
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public E getEvent() {

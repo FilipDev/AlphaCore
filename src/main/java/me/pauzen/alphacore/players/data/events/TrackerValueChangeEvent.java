@@ -11,24 +11,21 @@ import org.bukkit.event.HandlerList;
 public class TrackerValueChangeEvent extends CallableEvent {
 
     private static final HandlerList handlers = new HandlerList();
-
-    public HandlerList getHandlers() {
-        return handlers;
+    private int oldValue;
+    private int newValue;
+    private Tracker tracker;
+    public TrackerValueChangeEvent(int oldValue, int newValue, Tracker tracker) {
+        this.oldValue = oldValue;
+        this.newValue = newValue;
+        this.tracker = tracker;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    private int oldValue;
-    private int newValue;
-
-    private Tracker tracker;
-
-    public TrackerValueChangeEvent(int oldValue, int newValue, Tracker tracker) {
-        this.oldValue = oldValue;
-        this.newValue = newValue;
-        this.tracker = tracker;
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public int getOldValue() {

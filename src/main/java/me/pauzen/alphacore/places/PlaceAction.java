@@ -31,26 +31,8 @@ public enum PlaceAction {
     //CHAT
     CHAT(AsyncPlayerChatEvent.class, e -> e.event().getPlayer()),;
 
-    public static PlaceAction getPlaceAction(Class<? extends Event> eventClass) {
-        for (PlaceAction placeAction : PlaceAction.values()) {
-            if (placeAction.getEventClass().equals(eventClass)) {
-                return placeAction;
-            }
-        }
-        return null;
-    }
-
     private Class eventClass;
-
-    public Class getEventClass() {
-        return eventClass;
-    }
-
     private PlayerGetter playerGetter;
-
-    public PlayerGetter getPlayerGetter() {
-        return playerGetter;
-    }
 
     <E> PlaceAction(Class<E> eventClass, PlayerGetter<E> playerGetter) {
         this.eventClass = eventClass;
@@ -60,7 +42,24 @@ public enum PlaceAction {
         }, Core.getCore());
     }
 
+    public static PlaceAction getPlaceAction(Class<? extends Event> eventClass) {
+        for (PlaceAction placeAction : PlaceAction.values()) {
+            if (placeAction.getEventClass().equals(eventClass)) {
+                return placeAction;
+            }
+        }
+        return null;
+    }
+
     public static Place getPlace(Player player) {
         return CorePlayer.get(player).getCurrentPlace();
+    }
+
+    public Class getEventClass() {
+        return eventClass;
+    }
+
+    public PlayerGetter getPlayerGetter() {
+        return playerGetter;
     }
 }

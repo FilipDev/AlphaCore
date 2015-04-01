@@ -16,15 +16,6 @@ import java.util.List;
 public class PlayerLoadEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
-
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     private List<Tracker> defaultTrackers  = new ArrayList<>();
     private List<Ability> defaultAbilities = new ArrayList<>();
 
@@ -32,10 +23,18 @@ public class PlayerLoadEvent extends CallablePlayerContainerEvent {
         super(corePlayer);
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
     public boolean addDefault(Tracker tracker) {
         return defaultTrackers.add(tracker);
     }
-    
+
     public boolean addDefault(Ability ability) {
         return defaultAbilities.add(ability);
     }

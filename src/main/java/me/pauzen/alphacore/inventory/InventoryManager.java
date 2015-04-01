@@ -26,7 +26,17 @@ public class InventoryManager extends ListenerImplementation implements Registra
 
     @Nullify
     private static InventoryManager manager;
-    
+    private Map<String, InventoryMenu> menus = new HashMap<>();
+
+    public static void register() {
+        manager = new InventoryManager();
+
+    }
+
+    public static InventoryManager getManager() {
+        return manager;
+    }
+
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {
         InventoryMenu menu = getMenu(e.getInventory());
@@ -49,24 +59,17 @@ public class InventoryManager extends ListenerImplementation implements Registra
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         InventoryMenu menu = getMenu(e.getInventory());
-        
+
         if (menu != null) {
             menu.process(e);
         }
     }
-    
+
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent e) {
         if (getMenu(e.getInventory()) != null) {
             e.setCancelled(true);
         }
-    }
-
-    private Map<String, InventoryMenu> menus = new HashMap<>();
-
-    public static void register() {
-        manager = new InventoryManager();
-        
     }
 
     public void registerMenu(InventoryMenu menu) {
@@ -80,9 +83,5 @@ public class InventoryManager extends ListenerImplementation implements Registra
         }
 
         return null;
-    }
-
-    public static InventoryManager getManager() {
-        return manager;
     }
 }

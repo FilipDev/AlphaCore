@@ -10,11 +10,11 @@ public enum WarningMessage implements Message {
 
     EXAMPLE("Example warning message."),;
 
+    String warningMessage;
+
     WarningMessage(String warningMessage) {
         this.warningMessage = warningMessage;
     }
-
-    String warningMessage;
 
     @Override
     public String getPrefix() {

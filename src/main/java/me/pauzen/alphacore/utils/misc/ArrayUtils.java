@@ -6,25 +6,26 @@ package me.pauzen.alphacore.utils.misc;
 
 public final class ArrayUtils {
 
-    private ArrayUtils() {}
-    
+    private ArrayUtils() {
+    }
+
     public static boolean contains(Object[] objects, Object object) {
         for (Object o : objects) {
             if (o == object) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     public static boolean weakContains(Object[] objects, Object object) {
         for (Object o : objects) {
             if (o.equals(object)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 

@@ -12,21 +12,20 @@ import org.bukkit.event.HandlerList;
 public class PlaceMoveEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
-
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     private Place newPlace, oldPlace;
 
     public PlaceMoveEvent(CorePlayer corePlayer, Place oldPlace, Place newPlace) {
         super(corePlayer);
         this.oldPlace = oldPlace;
         this.newPlace = newPlace;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public Place getNewPlace() {

@@ -17,10 +17,6 @@ public enum ClientVersion {
         this.clientVersion = clientVersion;
     }
 
-    public int getClientVersion() {
-        return clientVersion;
-    }
-
     public static ClientVersion valueOf(int clientVersion) {
         for (ClientVersion version : values()) {
             if (version.getClientVersion() == clientVersion) {
@@ -28,5 +24,9 @@ public enum ClientVersion {
             }
         }
         return null;
+    }
+
+    public int getClientVersion() {
+        return clientVersion;
     }
 }

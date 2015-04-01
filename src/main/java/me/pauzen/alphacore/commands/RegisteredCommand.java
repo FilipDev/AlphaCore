@@ -15,6 +15,12 @@ public enum RegisteredCommand {
     ACTIVE(new ActiveCommand());
 
     private static Map<String, Command> commandMap;
+    private Command command;
+
+    RegisteredCommand(Command command) {
+        this.command = command;
+        registerCommand(this.getCommand());
+    }
 
     public static Command getCommand(String name) {
         return commandMap.get(name);
@@ -28,13 +34,6 @@ public enum RegisteredCommand {
         for (String name : command.getNames()) {
             commandMap.put(name.toLowerCase(), command);
         }
-    }
-
-    private Command command;
-
-    RegisteredCommand(Command command) {
-        this.command = command;
-        registerCommand(this.getCommand());
     }
 
     public static Map<String, Command> getCommands() {

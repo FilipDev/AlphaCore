@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 public class Tool {
 
     public static Tool EMPTY_TOOL = new Tool(null, null);
-    
+
     private long cooldown = 0;
     private long lastInteract;
 
@@ -28,14 +28,15 @@ public class Tool {
     public Interactable<PlayerInteractEvent> getListener() {
         return listener;
     }
-    
+
     public void onInteract(PlayerInteractEvent event, ClickType clickType) {
         if (System.currentTimeMillis() / 50 - lastInteract < cooldown) {
             lastInteract = System.currentTimeMillis() / 50;
         }
-        
+
         getListener().onInteract(event, clickType);
     }
+
     public ItemStack getItemStack() {
         return itemStack;
     }

@@ -13,13 +13,26 @@ import java.util.*;
 
 public class CommandManager implements Registrable {
 
+    @Nullify
+    private static CommandManager manager;
+
+    public static void register() {
+        manager = new CommandManager();
+        new CommandRunner();
+        RegisteredCommand.values();
+    }
+
+    public static CommandManager getManager() {
+        return manager;
+    }
+
     public Command getCommand(String commandName) {
         String[] names = commandName.split(" ");
         Command command = RegisteredCommand.getCommand(names[0].toLowerCase());
         if (names.length > 1) {
             for (int i = 1; i < names.length; i++) {
                 String name = names[i];
-                
+
                 command = command.defaultListener().getSubCommands().get(name);
             }
         }
@@ -47,19 +60,6 @@ public class CommandManager implements Registrable {
         }
 
         return new Tuple<>(modifiers, newArgs.toArray(new String[newArgs.size()]));
-    }
-
-    @Nullify
-    private static CommandManager manager;
-
-    public static void register() {
-        manager = new CommandManager();
-        new CommandRunner();
-        RegisteredCommand.values();
-    }
-
-    public static CommandManager getManager() {
-        return manager;
     }
 
     public void registerCommand(Command command) {

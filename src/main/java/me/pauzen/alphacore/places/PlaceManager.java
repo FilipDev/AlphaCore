@@ -16,6 +16,22 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
 
     @Nullify
     private static Place DEFAULT_PLACE;
+    @Nullify
+    private static PlaceManager manager;
+
+    public static PlaceManager getManager() {
+        return manager;
+    }
+
+    public static void register() {
+        manager = new PlaceManager();
+        DEFAULT_PLACE = new Place("DEFAULT");
+        PlaceAction.values();
+    }
+
+    public static Place getDefaultPlace() {
+        return DEFAULT_PLACE;
+    }
 
     public void onEvent(Event e) {
         if (!(e instanceof PlayerMoveEvent) && !(e instanceof BlockFromToEvent) && e instanceof Cancellable) {
@@ -39,22 +55,5 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
                 ((Cancellable) e).setCancelled(true);
             }
         }
-    }
-
-    @Nullify
-    private static PlaceManager manager;
-
-    public static PlaceManager getManager() {
-        return manager;
-    }
-
-    public static void register() {
-        manager = new PlaceManager();
-        DEFAULT_PLACE = new Place("DEFAULT");
-        PlaceAction.values();
-    }
-
-    public static Place getDefaultPlace() {
-        return DEFAULT_PLACE;
     }
 }

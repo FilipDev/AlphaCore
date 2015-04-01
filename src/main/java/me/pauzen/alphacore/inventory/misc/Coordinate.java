@@ -13,14 +13,6 @@ public class Coordinate {
         this.y = y;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public static Coordinate coordinate(int x, int y) {
         return new Coordinate(x, y);
     }
@@ -29,6 +21,18 @@ public class Coordinate {
         int x = Math.max(0, (inventorySlot) % 9);
         int y = Math.max(0, inventorySlot / 9);
         return new Coordinate(x, y);
+    }
+
+    public static int asSlot(int x, int y) {
+        return y * 9 + x;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     @Override
@@ -55,8 +59,12 @@ public class Coordinate {
         return asSlot(x, y);
     }
 
-    public static int asSlot(int x, int y) {
-        return y * 9 + x;
+    @Override
+    public String toString() {
+        return "Coordinate{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 
     public static enum Direction {
@@ -79,13 +87,5 @@ public class Coordinate {
         public Coordinate getRelative(Coordinate coordinate) {
             return new Coordinate(coordinate.getX() + addendX, coordinate.getY() + addendY);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Coordinate{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
     }
 }

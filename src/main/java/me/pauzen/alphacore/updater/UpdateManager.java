@@ -17,20 +17,20 @@ public class UpdateManager implements Registrable {
     @Nullify
     private static UpdateManager manager;
 
-    public static void register() {
-        manager = new UpdateManager();
-    }
-
-    public static UpdateManager getManager() {
-        return manager;
-    }
-
     public UpdateManager() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Core.getCore(), () -> {
             for (UpdateType updateType : UpdateType.values())
                 if (updateType.elapsed())
                     new UpdateEvent(updateType).call();
         }, 1L, 1L);
+    }
+
+    public static void register() {
+        manager = new UpdateManager();
+    }
+
+    public static UpdateManager getManager() {
+        return manager;
     }
 
 }

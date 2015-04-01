@@ -20,12 +20,12 @@ public class Element {
     public Element(ItemStack itemStack) {
         this.representation = itemStack;
     }
-    
-    protected void setRepresentation(ItemStack itemStack) {
-        this.representation = itemStack;
-    }
 
     public ItemStack getRepresentation() {
         return representation;
+    }
+
+    protected void setRepresentation(ItemStack itemStack) {
+        this.representation = itemStack;
     }
 }

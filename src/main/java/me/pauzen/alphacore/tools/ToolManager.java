@@ -27,6 +27,15 @@ public class ToolManager extends ListenerImplementation implements Registrable {
 
     @Nullify
     private static ToolManager manager;
+    private Map<String, Tool> tools = new HashMap<>();
+
+    public static void register() {
+        manager = new ToolManager();
+    }
+
+    public static ToolManager getManager() {
+        return manager;
+    }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
@@ -55,10 +64,10 @@ public class ToolManager extends ListenerImplementation implements Registrable {
             Action action = e.getAction();
 
             tool.onInteract(e, ClickType.fromAction(action));
-            
+
         }
     }
-    
+
     public Tool registerTool(String type) {
         ToolRegisterEvent register = new ToolRegisterEvent(type);
         register.call();
@@ -79,15 +88,5 @@ public class ToolManager extends ListenerImplementation implements Registrable {
 
         return itemStack.getItemMeta().getDisplayName();
 
-    }
-
-    private Map<String, Tool> tools = new HashMap<>();
-
-    public static void register() {
-        manager = new ToolManager();
-    }
-
-    public static ToolManager getManager() {
-        return manager;
     }
 }

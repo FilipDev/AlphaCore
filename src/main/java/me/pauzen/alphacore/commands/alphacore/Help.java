@@ -23,7 +23,8 @@ import java.util.Map;
 public class Help extends Command {
 
     private String defaultDescription = "AlphaCore command.";
-    
+    private JSONMessage jsonMessage = new JSONMessage("help");
+
     @Override
     public CommandListener defaultListener() {
         return new CommandListener(true) {
@@ -35,13 +36,15 @@ public class Help extends Command {
                         if (hasPermissions(commandSender, command.getValue().defaultListener().getPermissions())) {
                             if (ArrayUtils.contains(command.getValue().getAliases(), command.getKey())) {
                                 send(commandSender, command.getKey(), ChatColor.RED + "" + ChatColor.BOLD + "[ALIAS] " + ChatColor.RESET + getDescription(command.getValue()));
-                            } else {
+                            }
+                            else {
                                 send(commandSender, command.getKey(), getDescription(command.getValue()));
                             }
                         }
 
                     }
-                } else {
+                }
+                else {
                     StringBuilder rest = new StringBuilder();
 
                     for (int i = 1; i < args.length; i++) {
@@ -69,7 +72,7 @@ public class Help extends Command {
                             }
                         }
                     }
-                    
+
                     if (!foundAny) {
                         commandSender.sendMessage(ChatColor.RED + "No subcommands found for this command chain (" + ChatColor.DARK_RED + restArgs + ChatColor.RED + ").");
                     }
@@ -80,21 +83,19 @@ public class Help extends Command {
     }
 
     private boolean hasPermissions(CommandSender sender, List<String> permissions) {
-        
+
         if (permissions.isEmpty()) {
             return true;
         }
-        
+
         for (String permission : permissions) {
             if (sender.hasPermission(permission)) {
                 return true;
             }
         }
-        
+
         return false;
     }
-
-    private JSONMessage jsonMessage = new JSONMessage("help");
 
     private void send(CommandSender commandSender, String name, String description) {
         if (commandSender instanceof Player) {

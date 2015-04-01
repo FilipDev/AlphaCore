@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class EntityPlayer {
 
+    protected static Class entityPlayerClass, playerConnectionClass, craftPlayerClass;
     private Player           player;
     private Object           entityPlayer;
     private PlayerConnection playerConnection;
@@ -38,8 +39,6 @@ public class EntityPlayer {
     public Object getEntityPlayer() {
         return this.entityPlayer;
     }
-
-    protected static Class entityPlayerClass, playerConnectionClass, craftPlayerClass;
 
     public PlayerConnection getPlayerConnection() {
         if (playerConnection == null) {

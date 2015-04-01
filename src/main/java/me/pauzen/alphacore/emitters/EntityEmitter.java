@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 public class EntityEmitter extends Emitter {
 
     private Consumer<Entity> entityConsumer;
-    private EntityType entityType;
+    private EntityType       entityType;
 
     public EntityEmitter(Consumer<Entity> entityConsumer, EntityType entityType) {
         this.entityConsumer = entityConsumer;

@@ -13,8 +13,7 @@ public enum LoadPriority implements Comparable<LoadPriority> {
     LOW(4),
     LOWEST(5),
     LAST(6),
-    NEVER(-1),
-    ;
+    NEVER(-1),;
 
     int position;
 

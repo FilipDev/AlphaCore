@@ -9,9 +9,9 @@ import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
 import java.io.InputStream;
 
 public class JAREntryFile {
-    
+
     private String path;
-    
+
     private Class creatorClass;
 
     public JAREntryFile(String path) {

@@ -9,11 +9,7 @@ import java.util.Map;
 
 public final class Primitives {
 
-    private Primitives() {
-    }
-
     private static Map<Class, Class> unboxedPrimitives = new HashMap<>();
-
     static {
         unboxedPrimitives.put(Integer.class, int.class);
         unboxedPrimitives.put(Long.class, long.class);
@@ -24,6 +20,9 @@ public final class Primitives {
         unboxedPrimitives.put(Short.class, short.class);
         unboxedPrimitives.put(Character.class, char.class);
         unboxedPrimitives.put(Void.class, void.class);
+    }
+
+    private Primitives() {
     }
 
     /**

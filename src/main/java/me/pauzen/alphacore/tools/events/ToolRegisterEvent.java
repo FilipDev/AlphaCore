@@ -11,32 +11,31 @@ import org.bukkit.event.HandlerList;
 public class ToolRegisterEvent extends CallableEvent {
 
     private static final HandlerList handlers = new HandlerList();
-
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-    
-    private Tool tool;
+    private Tool   tool;
     private String id;
 
     public ToolRegisterEvent(String id) {
         this.id = id;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
     public Tool getTool() {
         return tool;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public void setTool(Tool tool) {
         this.tool = tool;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setId(String id) {

@@ -8,6 +8,9 @@ import me.pauzen.alphacore.utils.misc.Range;
 
 public final class ExperienceUtils {
 
+    private static Range initialRange = new Range(0, 15);
+    private static Range middleRange  = new Range(16, 30);
+
     private ExperienceUtils() {
     }
 
@@ -20,7 +23,4 @@ public final class ExperienceUtils {
         }
         return 9 * level - 158;
     }
-
-    private static Range initialRange = new Range(0, 15);
-    private static Range middleRange  = new Range(16, 30);
 }

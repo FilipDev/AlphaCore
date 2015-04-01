@@ -14,14 +14,15 @@ public class AlphaCoreCommand extends Command {
 
     @Override
     public CommandListener defaultListener() {
-        return new CommandListener(true) {{
-                sub(new Modules(), new Help());
-            }
-
+        return new CommandListener(true) {
             @Override
             public void onRun() {
                 ChatMessage.ABOUT.send(commandSender);
+            }            {
+                sub(new Modules(), new Help());
             }
+
+
         };
     }
 }

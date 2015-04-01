@@ -11,19 +11,18 @@ import org.bukkit.event.HandlerList;
 public class MessageSendEvent extends CallableEvent {
 
     private static final HandlerList handlers = new HandlerList();
+    private CommandSender commandSender;
 
-    public HandlerList getHandlers() {
-        return handlers;
+    public MessageSendEvent(CommandSender commandSender) {
+        this.commandSender = commandSender;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    private CommandSender commandSender;
-
-    public MessageSendEvent(CommandSender commandSender) {
-        this.commandSender = commandSender;
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public CommandSender getCommandSender() {

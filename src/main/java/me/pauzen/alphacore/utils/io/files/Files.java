@@ -127,7 +127,7 @@ public final class Files {
             e.printStackTrace();
         }
     }
-    
+
     public static String getContents(File file) throws IOException {
         return StringReader.read(new BufferedReader(new FileReader(file))).getContents();
     }

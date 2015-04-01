@@ -38,12 +38,12 @@ public class InvisibleID {
         return string.substring(string.indexOf(HEADER));
     }
 
-    public String getId() {
-        return id;
-    }
-
     public static InvisibleID generate() {
         return new InvisibleID();
+    }
+
+    public String getId() {
+        return id;
     }
 
 }

@@ -14,15 +14,15 @@ import org.bukkit.entity.Player;
 public class JSONMessage implements Message {
 
     private String message;
-    
+
     public JSONMessage(String name) {
         this.message = StringReader.read(Core.getZipped("json/" + name + ".json").stream()).getContents();
     }
-    
+
     public JSONMessage(JAREntryFile jar) {
         this.message = StringReader.read(jar.stream()).getContents();
     }
-    
+
     @Override
     public String getPrefix() {
         return "";
@@ -42,7 +42,8 @@ public class JSONMessage implements Message {
     public void send(CommandSender commandSender, String... strings) {
         if (commandSender instanceof Player) {
             send(CorePlayer.get((Player) commandSender), strings);
-        } else {
+        }
+        else {
             commandSender.sendMessage(String.format(getMessage(), strings));
         }
     }

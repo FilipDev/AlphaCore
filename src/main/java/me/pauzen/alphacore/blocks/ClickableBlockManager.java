@@ -17,37 +17,39 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ClickableBlockManager implements Registrable {
-    
+
     @Nullify
     private static ClickableBlockManager manager;
-    
+    private Map<Location, ClickableBlock> clickableBlockMap = new HashMap<>();
+    private Map<UUID, Long>               clickTimeMap      = new HashMap<>();
+    private long    cooldown    = 200; //4 ticks
+    private boolean alwaysReset = true;
+
     public static void register() {
         manager = new ClickableBlockManager();
     }
-    
+
     public static ClickableBlockManager getManager() {
         return manager;
     }
 
-    private Map<Location, ClickableBlock> clickableBlockMap = new HashMap<>();
-    private Map<UUID, Long>               clickTimeMap      = new HashMap<>();
-
-    private long cooldown = 200; //4 ticks
-    private boolean alwaysReset = true;
+    public static void registerBlock(ClickableBlock clickableBlock) {
+        getManager().clickableBlockMap.put(clickableBlock.getLocation(), clickableBlock);
+    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent e) {
-        
+
         if (!e.getClickedBlock().getType().isSolid()) {
             return;
         }
-        
+
         clickTimeMap.putIfAbsent(e.getPlayer().getUniqueId(), System.currentTimeMillis());
-        
+
         boolean ran = false;
-        
+
         if (System.currentTimeMillis() - clickTimeMap.get(e.getPlayer().getUniqueId()) < cooldown) {
-            
+
             ClickableBlock clickableBlock = clickableBlockMap.get(e.getClickedBlock().getLocation());
 
             if (clickableBlock != null) {
@@ -60,10 +62,6 @@ public class ClickableBlockManager implements Registrable {
         if (alwaysReset || ran) {
             clickTimeMap.put(e.getPlayer().getUniqueId(), System.currentTimeMillis());
         }
-    }
-    
-    public static void registerBlock(ClickableBlock clickableBlock) {
-        getManager().clickableBlockMap.put(clickableBlock.getLocation(), clickableBlock);
     }
 
 }

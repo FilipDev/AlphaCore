@@ -42,7 +42,7 @@ public interface Message {
     default void sendConsole(String... strings) {
         send(Bukkit.getConsoleSender(), strings);
     }
-    
+
     default void sendIntermittently(CommandSender commandSender, long delay, String... strings) {
         Bukkit.getScheduler().runTaskTimer(Core.getCore(), () -> {
             send(commandSender, strings);

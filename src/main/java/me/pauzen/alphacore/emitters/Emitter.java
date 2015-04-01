@@ -34,7 +34,7 @@ public abstract class Emitter {
     public void start() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Core.getCore(), this::emit, getFrequency(), getFrequency());
     }
-    
+
     public abstract void emit();
-    
+
 }

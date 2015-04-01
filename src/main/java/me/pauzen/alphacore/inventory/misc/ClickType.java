@@ -10,9 +10,8 @@ public enum ClickType {
 
     LEFT,
     RIGHT,
-    OTHER,
-    ;
-    
+    OTHER,;
+
     public static ClickType fromAction(Action action) {
         return action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK ? ClickType.LEFT : ClickType.RIGHT;
     }

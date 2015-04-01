@@ -12,20 +12,19 @@ import org.bukkit.event.HandlerList;
 public class PlaceJoinEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
+    private Place place;
 
-    public HandlerList getHandlers() {
-        return handlers;
+    public PlaceJoinEvent(CorePlayer corePlayer, Place place) {
+        super(corePlayer);
+        this.place = place;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    private Place place;
-
-    public PlaceJoinEvent(CorePlayer corePlayer, Place place) {
-        super(corePlayer);
-        this.place = place;
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public Place getPlace() {

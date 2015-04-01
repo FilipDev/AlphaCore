@@ -22,9 +22,18 @@ public class PlayerManager extends ListenerImplementation implements Registrable
 
     @Nullify
     private static PlayerManager manager;
+    private Map<UUID, CorePlayer> players = new HashMap<>();
 
     public static Collection<CorePlayer> getCorePlayers() {
         return manager.players.values();
+    }
+
+    public static void register() {
+        manager = new PlayerManager();
+    }
+
+    public static PlayerManager getManager() {
+        return manager;
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -39,21 +48,11 @@ public class PlayerManager extends ListenerImplementation implements Registrable
         destroyWrapper(e.getPlayer());
     }
 
-    public static void register() {
-        manager = new PlayerManager();
-    }
-
-    public static PlayerManager getManager() {
-        return manager;
-    }
-
-    private Map<UUID, CorePlayer> players = new HashMap<>();
-
     public void registerPlayer(Player player) {
         this.players.put(player.getUniqueId(), new CorePlayer(player));
         CorePlayer.get(player).load();
     }
-    
+
     public CorePlayer getWrapper(Player player) {
         return players.get(player.getUniqueId());
     }
