@@ -11,23 +11,22 @@ import org.bukkit.event.HandlerList;
 public class AbilityStateChangeEvent extends CallablePlayerContainerEvent {
 
     private static final HandlerList handlers = new HandlerList();
+    private Ability ability;
+    private boolean state;
 
-    public HandlerList getHandlers() {
-        return handlers;
+    public AbilityStateChangeEvent(CorePlayer corePlayer, Ability ability, boolean state) {
+        super(corePlayer);
+
+        this.ability = ability;
+        this.state = state;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
-    
-    private Ability ability;
-    private boolean state;
-    
-    public AbilityStateChangeEvent(CorePlayer corePlayer, Ability ability, boolean state) {
-        super(corePlayer);
-        
-        this.ability = ability;
-        this.state = state;
+
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
     public Ability getAbility() {

@@ -5,7 +5,7 @@
 package me.pauzen.alphacore.abilities;
 
 public class RestrictionBypass extends Ability {
-    
+
     public RestrictionBypass() {
         super("Restriction Bypass");
     }

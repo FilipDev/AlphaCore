@@ -21,11 +21,11 @@ import java.util.List;
 
 public class Ability extends ListenerImplementation implements Applyable {
 
-    private Effect  effect;
-    private String  abilityName;
-    
+    private Effect effect;
+    private String abilityName;
+
     private boolean invisible = false;
-    
+
     public Ability(String abilityName) {
         this.abilityName = abilityName;
         this.effect = new Effect(abilityName) {
@@ -45,10 +45,29 @@ public class Ability extends ListenerImplementation implements Applyable {
             }
         };
     }
-    
+
     public Ability(String abilityName, boolean invisible) {
         this(abilityName);
         this.invisible = invisible;
+    }
+
+    public static String booleanToState(boolean toggled) {
+        return toggled ? ChatColor.GREEN + "activated" : ChatColor.RED + "deactivated";
+    }
+
+    public static void setAbilityState(Ability ability, CorePlayer corePlayer, boolean newState) {
+        ChatMessage.SET.send(corePlayer, ability.getName(), Ability.booleanToState(corePlayer.setAbilityState(ability, newState)));
+    }
+
+    public static void toggleAbilityState(Ability ability, CorePlayer corePlayer) {
+
+        boolean state = corePlayer.toggleAbilityState(ability);
+
+        AbilityStateChangeEvent stateChangeEvent = new AbilityStateChangeEvent(corePlayer, ability, state);
+
+        stateChangeEvent.call();
+
+        ChatMessage.TOGGLED.send(corePlayer, ability.getName(), Ability.booleanToState(state));
     }
 
     @Override
@@ -58,10 +77,6 @@ public class Ability extends ListenerImplementation implements Applyable {
 
     public Effect asEffect() {
         return this.effect;
-    }
-
-    public static String booleanToState(boolean toggled) {
-        return toggled ? ChatColor.GREEN + "activated" : ChatColor.RED + "deactivated";
     }
 
     @Override
@@ -77,21 +92,6 @@ public class Ability extends ListenerImplementation implements Applyable {
     @Override
     public boolean hasActivated(CorePlayer corePlayer) {
         return corePlayer.hasActivated(this);
-    }
-
-    public static void setAbilityState(Ability ability, CorePlayer corePlayer, boolean newState) {
-        ChatMessage.SET.send(corePlayer, ability.getName(), Ability.booleanToState(corePlayer.setAbilityState(ability, newState)));
-    }
-
-    public static void toggleAbilityState(Ability ability, CorePlayer corePlayer) {
-
-        boolean state = corePlayer.toggleAbilityState(ability);
-
-        AbilityStateChangeEvent stateChangeEvent = new AbilityStateChangeEvent(corePlayer, ability, state);
-        
-        stateChangeEvent.call();
-        
-        ChatMessage.TOGGLED.send(corePlayer, ability.getName(), Ability.booleanToState(state));
     }
 
     public void setAbilityState(CorePlayer corePlayer, boolean newState) {
@@ -124,7 +124,7 @@ public class Ability extends ListenerImplementation implements Applyable {
                         toggle(Ability.this, CorePlayer.get((Player) commandSender));
                     }
 
-                    private void set(Ability ability, CorePlayer corePlayer,  boolean state) {
+                    private void set(Ability ability, CorePlayer corePlayer, boolean state) {
                         ability.setAbilityState(corePlayer, state);
                     }
 
