@@ -4,8 +4,6 @@
 
 package me.pauzen.alphacore.abilities;
 
-import me.pauzen.alphacore.abilities.Ability;
-
 public class RestrictionBypass extends Ability {
     
     public RestrictionBypass() {

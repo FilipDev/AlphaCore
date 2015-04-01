@@ -21,7 +21,7 @@ public class ScriptRunner {
     }
 
     public void runScript(Player runner, Script script) {
-        javaScript.put("me", runner);
+        javaScript.put("src/main/java/me", runner);
         javaScript.put("world", runner.getWorld());
         try {
             javaScript.eval(script.getCompleteScript());

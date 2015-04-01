@@ -18,7 +18,7 @@ public class AttackListener extends ListenerImplementation {
         CorePlayer aDamager = CorePlayer.get(e.getAttacker());
         CorePlayer aReceiver = CorePlayer.get(e.getDefender());
 
-        if (aDamager.getTeam() == aReceiver.getTeam()) {
+        if (aDamager.getTeam().equals(aReceiver.getTeam())) {
             ErrorMessage.SAME_TEAM.send(aDamager);
             e.setCancelled(true);
         }

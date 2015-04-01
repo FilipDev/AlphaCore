@@ -66,9 +66,7 @@ public class CommandManager implements Registrable {
         RegisteredCommand.registerCommand(command);
     }
 
-    public List<Command> getCommands() {
-        ArrayList<Command> list = new ArrayList<>();
-        list.addAll(RegisteredCommand.getCommands());
-        return list;
+    public Map<String, Command> getCommands() {
+        return RegisteredCommand.getCommands();
     }
 }

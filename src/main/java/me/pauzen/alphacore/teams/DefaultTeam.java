@@ -22,4 +22,9 @@ public class DefaultTeam extends Team {
     public List<CorePlayer> getMembers() {
         return emptyCorePlayerList;
     }
+ 
+    @Override
+    public boolean equals(Object o) {
+        return (TeamManager.getManager().getDefaultTeamPreventPVP() && super.equals(o));
+    }
 }

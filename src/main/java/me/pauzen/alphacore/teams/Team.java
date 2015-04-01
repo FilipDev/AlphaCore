@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Todo("Load teams from file.")
-public class Team extends Group {
+public abstract class Team extends Group {
 
     private String    name;
     private ChatColor chatColor;

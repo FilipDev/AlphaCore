@@ -10,7 +10,7 @@ import me.pauzen.alphacore.utils.date.time.TimeFactory;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
-public class Date {
+public class Date implements Comparable<Date> {
 
     private Day  day;
     private Time inaccurateTime;
@@ -87,5 +87,10 @@ public class Date {
         result = 31 * result + inaccurateTime.hashCode();
         result = 31 * result + (tomorrow ? 1 : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Date o) {
+        return (int) (getInaccurateTime().toMilliseconds() - o.getInaccurateTime().toMilliseconds());
     }
 }

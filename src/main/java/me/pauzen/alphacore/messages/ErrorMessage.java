@@ -12,7 +12,7 @@ public enum ErrorMessage implements Message {
     SAME_TEAM("Player is on the same team as you."),
     PERMISSIONS("No permissions for %s."),
     SQL("Could not connect to SQL database."),
-    COMMAND_NOT_FOUND("Command %s non-existent."),
+    COMMAND_NOT_FOUND("Command chain %s non-existent."),
     ;
 
     private String errorMessage;

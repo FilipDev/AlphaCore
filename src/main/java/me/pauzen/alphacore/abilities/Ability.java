@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.abilities;
 
+import me.pauzen.alphacore.applyable.Applyable;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
 import me.pauzen.alphacore.commands.CommandManager;
@@ -18,10 +19,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Ability extends ListenerImplementation {
+public class Ability extends ListenerImplementation implements Applyable {
 
     private Effect  effect;
     private String  abilityName;
+    
+    private boolean invisible = false;
     
     public Ability(String abilityName) {
         this.abilityName = abilityName;
@@ -43,6 +46,12 @@ public class Ability extends ListenerImplementation {
         };
     }
     
+    public Ability(String abilityName, boolean invisible) {
+        this(abilityName);
+        this.invisible = invisible;
+    }
+
+    @Override
     public String getName() {
         return abilityName;
     }
@@ -55,20 +64,19 @@ public class Ability extends ListenerImplementation {
         return toggled ? ChatColor.GREEN + "activated" : ChatColor.RED + "deactivated";
     }
 
+    @Override
     public void apply(CorePlayer corePlayer) {
         corePlayer.activateAbility(this);
     }
 
+    @Override
     public void remove(CorePlayer corePlayer) {
         corePlayer.deactivateAbility(this);
     }
 
+    @Override
     public boolean hasActivated(CorePlayer corePlayer) {
         return corePlayer.hasActivated(this);
-    }
-
-    public boolean hasActivated(Player player) {
-        return hasActivated(CorePlayer.get(player));
     }
 
     public static void setAbilityState(Ability ability, CorePlayer corePlayer, boolean newState) {
@@ -93,9 +101,14 @@ public class Ability extends ListenerImplementation {
     public void toggleAbilityState(CorePlayer corePlayer) {
         toggleAbilityState(this, corePlayer);
     }
-    
-    public Command asCommand(String name, String... permissions) {
-        Command command = new Command(name) {
+
+    @Override
+    public boolean isInvisible() {
+        return invisible;
+    }
+
+    public Command asCommand(String name, String[] aliases, String description, String... permissions) {
+        Command command = new Command(name, aliases, description) {
             @Override
             public CommandListener defaultListener() {
                 return new CommandListener(false, permissions) {
@@ -107,21 +120,21 @@ public class Ability extends ListenerImplementation {
                             set(Ability.this, CorePlayer.get((Player) commandSender), setState);
                             return;
                         }
-                        
+
                         toggle(Ability.this, CorePlayer.get((Player) commandSender));
                     }
-                    
+
                     private void set(Ability ability, CorePlayer corePlayer,  boolean state) {
                         ability.setAbilityState(corePlayer, state);
                     }
-                    
+
                     private void toggle(Ability ability, CorePlayer corePlayer) {
                         ability.toggleAbilityState(corePlayer);
                     }
                 };
             }
         };
-        
+
         List<String> names = new ArrayList<>();
         Collections.addAll(names, name.split(" "));
 
@@ -133,7 +146,14 @@ public class Ability extends ListenerImplementation {
             }
         }
 
-
         return command;
+    }
+
+    public Command asCommand(String name, String... permissions) {
+        return asCommand(name, new String[]{}, "%default%", permissions);
+    }
+
+    public Command asCommand(String name, String[] aliases, String... permissions) {
+        return asCommand(name, aliases, "%default%", permissions);
     }
 }

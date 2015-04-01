@@ -4,7 +4,6 @@
 
 package me.pauzen.alphacore;
 
-import me.pauzen.alphacore.abilities.PremadeAbilities;
 import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.listeners.ListenerRegisterer;
 import me.pauzen.alphacore.players.CorePlayer;
@@ -50,7 +49,6 @@ public class Core extends JavaPlugin {
 
         registerManagers();
         
-        PremadeAbilities.values();
         PremadeEffects.values();
         ListenerRegisterer.register();
 

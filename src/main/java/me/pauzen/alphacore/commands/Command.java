@@ -42,6 +42,9 @@ public abstract class Command extends ListenerImplementation {
     public Command() {
         addListener(defaultListener());
         CommandMeta commandMeta = getClass().getAnnotation(CommandMeta.class);
+        if (commandMeta == null) {
+            throw new IllegalStateException("Class does not have a CommandMeta annotation.");
+        }
         name = commandMeta.value();
         description = commandMeta.description();
         aliases = commandMeta.aliases();

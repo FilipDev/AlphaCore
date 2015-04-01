@@ -62,7 +62,7 @@ public class ClickableBlockManager implements Registrable {
         }
     }
     
-    public static void register(ClickableBlock clickableBlock) {
+    public static void registerBlock(ClickableBlock clickableBlock) {
         getManager().clickableBlockMap.put(clickableBlock.getLocation(), clickableBlock);
     }
 

@@ -4,17 +4,21 @@
 
 package me.pauzen.alphacore.effects;
 
+import me.pauzen.alphacore.applyable.Applyable;
+import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Effect {
+public abstract class Effect extends ListenerImplementation implements Applyable {
 
     private Map<CorePlayer, Long> affectedPlayers = new HashMap<>();
 
     private long effectLength;
     private String name;
+    
+    private boolean invisible = false;
 
     /**
      * Define amount of ticks the effect lasts.
@@ -31,6 +35,11 @@ public abstract class Effect {
         this.name = name;
         this.effectLength = -1;
         EffectManager.getManager().registerEffect(this);
+    }
+    
+    public Effect(String name, boolean invisible) {
+        this(name);
+        this.invisible = invisible;
     }
 
     public long getEffectLength() {
@@ -52,15 +61,22 @@ public abstract class Effect {
         onApply(corePlayer);
     }
 
+    @Override
     public void apply(CorePlayer corePlayer) {
         apply(corePlayer, this.effectLength);
     }
 
+    @Override
     public void remove(CorePlayer corePlayer) {
         corePlayer.deactivateEffect(this);
         affectedPlayers.remove(corePlayer);
         new EffectRemoveEvent(corePlayer, this).call();
         onRemove(corePlayer);
+    }
+
+    @Override
+    public boolean hasActivated(CorePlayer corePlayer) {
+        return corePlayer.hasActivated(this);
     }
 
     public void update() {
@@ -76,7 +92,13 @@ public abstract class Effect {
         return getEffectLength() == -1 ? 1 : getEffectLength() - (System.currentTimeMillis() - affectedPlayers.get(corePlayer));
     }
 
+    @Override
     public String getName() {
         return name;
+    }
+    
+    @Override
+    public boolean isInvisible() {
+        return invisible;
     }
 }

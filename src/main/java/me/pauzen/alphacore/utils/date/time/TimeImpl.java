@@ -4,7 +4,9 @@
 
 package me.pauzen.alphacore.utils.date.time;
 
-class TimeImpl implements Time {
+import javax.annotation.Nonnull;
+
+class TimeImpl implements Time, Comparable<Time> {
 
     long hours, minutes, seconds;
 
@@ -70,5 +72,10 @@ class TimeImpl implements Time {
         result = 31 * result + (int) (minutes ^ (minutes >>> 32));
         result = 31 * result + (int) (seconds ^ (seconds >>> 32));
         return result;
+    }
+
+    @Override
+    public int compareTo(@Nonnull Time compared) {
+        return (int) (toMilliseconds() - compared.toMilliseconds());
     }
 }

@@ -52,4 +52,10 @@ public class TeamManager implements Registrable {
         manager.teams.values().forEach(Team::clean);
         Registrable.super.nullify();
     }
+    
+    private boolean defaultTeamPreventPVP = false;
+
+    public boolean getDefaultTeamPreventPVP() {
+        return defaultTeamPreventPVP;
+    }
 }

@@ -96,4 +96,7 @@ public abstract class CommandListener {
 
     public abstract void onRun();
 
+    public List<String> getPermissions() {
+        return testForPermissions;
+    }
 }
