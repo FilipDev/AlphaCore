@@ -4,14 +4,14 @@
 
 package me.pauzen.alphacore.effects;
 
-import me.pauzen.alphacore.applyable.Applyable;
+import me.pauzen.alphacore.applicable.Applicable;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Effect extends ListenerImplementation implements Applyable {
+public abstract class Effect extends ListenerImplementation implements Applicable {
 
     private Map<CorePlayer, Long> affectedPlayers = new HashMap<>();
 

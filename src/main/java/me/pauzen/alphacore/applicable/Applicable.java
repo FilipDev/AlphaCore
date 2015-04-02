@@ -2,12 +2,12 @@
  *  Created by Filip P. on 4/1/15 6:17 PM.
  */
 
-package me.pauzen.alphacore.applyable;
+package me.pauzen.alphacore.applicable;
 
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.entity.Player;
 
-public interface Applyable {
+public interface Applicable {
 
     void apply(CorePlayer corePlayer);
 

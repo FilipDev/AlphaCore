@@ -4,7 +4,7 @@
 
 package me.pauzen.alphacore.abilities;
 
-import me.pauzen.alphacore.applyable.Applyable;
+import me.pauzen.alphacore.applicable.Applicable;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
 import me.pauzen.alphacore.commands.CommandManager;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Ability extends ListenerImplementation implements Applyable {
+public class Ability extends ListenerImplementation implements Applicable {
 
     private Effect effect;
     private String abilityName;
