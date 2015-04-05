@@ -9,6 +9,7 @@ import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.tools.events.ToolRegisterEvent;
 import me.pauzen.alphacore.utils.GeneralUtils;
 import me.pauzen.alphacore.utils.InvisibleEncoder;
+import me.pauzen.alphacore.utils.Properties;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Nullify;
@@ -41,9 +42,12 @@ public class ToolManager extends ListenerImplementation implements Registrable {
     public void onInteract(PlayerInteractEvent e) {
         String itemName = getItemName(e.getItem());
         if (InvisibleEncoder.contains(itemName, "-tool")) {
-            String type = itemName.substring(InvisibleEncoder.indexOf(itemName, "-tool-") + "-tool-".length());
 
-            Tool tool = tools.get(getItemName(e.getItem()));
+            Map<String, String> properties = Properties.getProperties(itemName.substring(InvisibleEncoder.indexOf(itemName, "-tool-") + "-tool-".length()));
+            
+            String type = properties.get("type");
+
+            Tool tool = tools.get(type);
 
             if (tool == Tool.EMPTY_TOOL) {
                 return;
