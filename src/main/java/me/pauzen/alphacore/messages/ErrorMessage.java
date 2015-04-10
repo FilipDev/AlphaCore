@@ -4,8 +4,10 @@
 
 package me.pauzen.alphacore.messages;
 
+import me.pauzen.alphacore.utils.misc.Todo;
 import org.bukkit.ChatColor;
 
+@Todo("Make elements static and normal class")
 public enum ErrorMessage implements Message {
 
     CONSOLESENDER("Command can only be sent by a player."),

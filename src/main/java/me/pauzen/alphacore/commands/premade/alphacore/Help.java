@@ -2,7 +2,7 @@
  *  Created by Filip P. on 3/8/15 3:07 PM.
  */
 
-package me.pauzen.alphacore.commands.alphacore;
+package me.pauzen.alphacore.commands.premade.alphacore;
 
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;

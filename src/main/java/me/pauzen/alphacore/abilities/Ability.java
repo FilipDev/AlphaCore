@@ -107,7 +107,7 @@ public class Ability extends ListenerImplementation implements Applicable {
         return invisible;
     }
 
-    public Command asCommand(String name, String[] aliases, String description, String... permissions) {
+    public Command asCommand(String name, String[] aliases, String description, String[] permissions) {
         Command command = new Command(name, aliases, description) {
             @Override
             public CommandListener defaultListener() {
@@ -156,4 +156,8 @@ public class Ability extends ListenerImplementation implements Applicable {
     public Command asCommand(String name, String[] aliases, String... permissions) {
         return asCommand(name, aliases, "%default%", permissions);
     }
+    
+    public void onApply(CorePlayer corePlayer, int level) {}
+    
+    public void onRemove(CorePlayer corePlayer) {}
 }

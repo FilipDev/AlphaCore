@@ -4,7 +4,8 @@
 
 package me.pauzen.alphacore.commands;
 
-import me.pauzen.alphacore.commands.alphacore.AlphaCoreCommand;
+import me.pauzen.alphacore.commands.premade.ActiveCommand;
+import me.pauzen.alphacore.commands.premade.alphacore.AlphaCoreCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ public enum RegisteredCommand {
     ACTIVE(new ActiveCommand());
 
     private static Map<String, Command> commandMap;
-    private Command command;
+    private        Command              command;
 
     RegisteredCommand(Command command) {
         this.command = command;

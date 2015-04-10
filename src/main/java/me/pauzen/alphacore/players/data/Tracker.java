@@ -18,6 +18,8 @@ public class Tracker {
     private int value = 0;
     private String     id;
     private CorePlayer corePlayer;
+    
+    private boolean persistant = true;
 
     private Map<Integer, List<Milestone>> mileStones = new HashMap<>();
 
@@ -29,6 +31,14 @@ public class Tracker {
     public Tracker(CorePlayer corePlayer, String id, int initialValue) {
         this(id, initialValue);
         this.corePlayer = corePlayer;
+    }
+
+    public boolean isPersistant() {
+        return persistant;
+    }
+
+    public void setPersistant(boolean persistant) {
+        this.persistant = persistant;
     }
 
     public void addValue(int value) {

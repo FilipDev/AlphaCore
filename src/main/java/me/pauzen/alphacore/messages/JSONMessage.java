@@ -11,6 +11,7 @@ import me.pauzen.alphacore.utils.reflection.jar.JAREntryFile;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@Deprecated
 public class JSONMessage implements Message {
 
     private String message;
@@ -36,6 +37,10 @@ public class JSONMessage implements Message {
     @Override
     public String getMessage() {
         return message;
+    }
+    
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override

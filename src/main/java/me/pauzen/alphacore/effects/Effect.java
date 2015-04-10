@@ -27,7 +27,7 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
      */
     public Effect(String name, long effectLength) {
         this.name = name;
-        this.effectLength = effectLength * 50;
+        this.effectLength = effectLength == -1 ? -1 : effectLength * 50;
         EffectManager.getManager().registerEffect(this);
     }
 
@@ -45,6 +45,10 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
     public long getEffectLength() {
         return this.effectLength;
     }
+    
+    public boolean isForever(CorePlayer corePlayer) {
+        return affectedPlayers.get(corePlayer) == -1;
+    }
 
     public abstract void onApply(CorePlayer corePlayer);
 
@@ -57,7 +61,7 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
             return;
         }
         corePlayer.activateEffect(this);
-        affectedPlayers.put(corePlayer, System.currentTimeMillis() + effectLength);
+        affectedPlayers.put(corePlayer, effectLength == -1 ? -1 : System.currentTimeMillis() + effectLength);
         onApply(corePlayer);
     }
 
@@ -89,7 +93,7 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
     }
 
     public long getTimeLeft(CorePlayer corePlayer) {
-        return getEffectLength() == -1 ? 1 : getEffectLength() - (System.currentTimeMillis() - affectedPlayers.get(corePlayer));
+        return isForever(corePlayer) ? 1 : getEffectLength() - (System.currentTimeMillis() - affectedPlayers.get(corePlayer));
     }
 
     @Override

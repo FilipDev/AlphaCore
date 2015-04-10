@@ -23,4 +23,6 @@ public interface Time {
     public boolean equals(Time time);
 
     public String toString();
+    
+    public String asTimeStamp();
 }

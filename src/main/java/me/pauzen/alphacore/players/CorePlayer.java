@@ -67,6 +67,10 @@ public class CorePlayer {
     public <T> T getAttribute(Class<T> attributeType, String attributeName) {
         return (T) attributes.get(attributeName);
     }
+    
+    public Object getAttribute(String attributeName) {
+        return attributes.get(attributeName);
+    }
 
     public EntityPlayer getEntityPlayer() {
         return entityPlayer;
@@ -131,16 +135,19 @@ public class CorePlayer {
     }
 
     public boolean deactivateAbility(Ability ability) {
+        ability.onRemove(this);
         activatedAbilities.remove(ability);
         return false;
     }
 
     public boolean activateAbility(Ability ability, int level) {
+        ability.onApply(this, level);
         activatedAbilities.put(ability, level);
         return true;
     }
 
     public boolean activateAbility(Ability ability) {
+        ability.onApply(this, 1);
         activatedAbilities.put(ability, 1);
         return true;
     }
@@ -204,7 +211,11 @@ public class CorePlayer {
     }
 
     public void save() {
-        this.trackers.entrySet().forEach(entry -> getPlayerData().getYamlWriter().saveTracker(this, entry.getValue()));
+        this.trackers.entrySet().forEach(entry -> {
+            if (entry.getValue().isPersistant()) {
+                getPlayerData().getYamlWriter().saveTracker(this, entry.getValue());
+            }
+        });
 
         getPlayerData().getYamlBuilder().save();
         //TODO: Create save function that saves to YAML file. Do not save abilities.

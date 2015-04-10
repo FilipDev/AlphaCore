@@ -56,6 +56,11 @@ class TimeImpl implements Time, Comparable<Time> {
     }
 
     @Override
+    public String asTimeStamp() {
+        return hours + ":" + minutes + ":" + seconds;
+    }
+
+    @Override
     public boolean equals(Time time1) {
         if (this == time1) return true;
         if (time1 == null || getClass() != time1.getClass()) return false;

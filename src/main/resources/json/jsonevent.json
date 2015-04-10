@@ -1,0 +1,12 @@
+{
+  "text": "",
+  "extra": [
+    {
+      "text": "%message%",
+      "%event%": {
+        "action": "%action%",
+        "value": "%value%"
+      }
+    }
+  ]
+}
