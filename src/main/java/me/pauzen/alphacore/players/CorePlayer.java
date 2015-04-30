@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.players;
 
+import me.pauzen.alphacore.AlphaCoreModule;
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.messages.JSONMessage;
@@ -18,17 +19,13 @@ import me.pauzen.alphacore.teams.TeamManager;
 import me.pauzen.alphacore.utils.GeneralUtils;
 import me.pauzen.alphacore.utils.commonnms.ClientVersion;
 import me.pauzen.alphacore.utils.commonnms.EntityPlayer;
-import me.pauzen.alphacore.utils.misc.Todo;
 import net.minecraft.util.io.netty.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class CorePlayer {
+public class CorePlayer implements AlphaCoreModule {
 
     private String       playerName;
     private EntityPlayer entityPlayer;
@@ -39,9 +36,10 @@ public class CorePlayer {
     /**
      * String is Tracker id.
      */
-    private Map<String, Tracker> trackers = new HashMap<>();
+    private Map<String, Tracker>  trackers           = new HashMap<>();
     private Map<Effect, Integer>  activeEffects      = new HashMap<>();
     private Map<Ability, Integer> activatedAbilities = new HashMap<>();
+
     public CorePlayer(Player player) {
         this.playerName = player.getName();
         this.entityPlayer = new EntityPlayer(player);
@@ -67,7 +65,7 @@ public class CorePlayer {
     public <T> T getAttribute(Class<T> attributeType, String attributeName) {
         return (T) attributes.get(attributeName);
     }
-    
+
     public Object getAttribute(String attributeName) {
         return attributes.get(attributeName);
     }
@@ -84,14 +82,17 @@ public class CorePlayer {
         return trackers.get(trackerName);
     }
 
+    @Deprecated
     public void activateEffect(Effect effect) {
         this.activeEffects.put(effect, 1);
     }
 
+    @Deprecated
     public void activateEffect(Effect effect, int level) {
         this.activeEffects.put(effect, level);
     }
 
+    @Deprecated
     public void deactivateEffect(Effect effect) {
         this.activeEffects.remove(effect);
     }
@@ -104,14 +105,17 @@ public class CorePlayer {
         return this.activeEffects.keySet();
     }
 
+    @Deprecated
     public boolean setEffectState(Effect effect, boolean newState, int level) {
         return GeneralUtils.setContainment(activeEffects, effect, newState, level);
     }
 
+    @Deprecated
     public boolean toggleEffectState(Effect effect, int level) {
         return GeneralUtils.toggleContainment(activeEffects, effect, level);
     }
 
+    @Deprecated
     public boolean toggleEffectState(Effect effect) {
         return GeneralUtils.toggleContainment(activeEffects, effect, 1);
     }
@@ -134,19 +138,24 @@ public class CorePlayer {
         return Bukkit.getPlayer(playerName);
     }
 
+    @Deprecated
     public boolean deactivateAbility(Ability ability) {
+        ability.removeAffected(getPlayer().getUniqueId());
         ability.onRemove(this);
         activatedAbilities.remove(ability);
         return false;
     }
 
+    @Deprecated
     public boolean activateAbility(Ability ability, int level) {
         ability.onApply(this, level);
         activatedAbilities.put(ability, level);
         return true;
     }
 
+    @Deprecated
     public boolean activateAbility(Ability ability) {
+        ability.addAffected(getPlayer().getUniqueId());
         ability.onApply(this, 1);
         activatedAbilities.put(ability, 1);
         return true;
@@ -170,18 +179,22 @@ public class CorePlayer {
         return activatedAbilities.keySet();
     }
 
+    @Deprecated
     public boolean setAbilityState(Ability ability, boolean newState) {
         return GeneralUtils.setContainment(activatedAbilities, ability, newState, 1);
     }
 
+    @Deprecated
     public boolean setAbilityState(Ability ability, boolean newState, int level) {
         return GeneralUtils.setContainment(activatedAbilities, ability, newState, level);
     }
 
+    @Deprecated
     public boolean toggleAbilityState(Ability ability, int level) {
         return GeneralUtils.toggleContainment(activatedAbilities, ability, level);
     }
 
+    @Deprecated
     public boolean toggleAbilityState(Ability ability) {
         return GeneralUtils.toggleContainment(activatedAbilities, ability, 1);
     }
@@ -189,23 +202,28 @@ public class CorePlayer {
     public String getUUID() {
         return getPlayer().getUniqueId().toString();
     }
+    
+    public UUID uuid() {
+        return getPlayer().getUniqueId();
+    }
 
-    @Todo("Create loading/saving system.")
     public void load() {
         this.playerData = new PlayerData(this);
         this.team = playerData.getYamlReader().getTeam(this);
         if (this.team == null) {
             this.team = TeamManager.getDefaultTeam();
         }
-        List<Tracker> trackers = getPlayerData().getYamlReader().getTrackers(this);
+        List<Tracker> trackers = getPlayerData().getYamlReader().getTrackers();
         PlayerLoadEvent playerLoadEvent = new PlayerLoadEvent(this);
         playerLoadEvent.call();
         playerLoadEvent.getDefaultAbilities().forEach(this::activateAbility);
-        if (trackers == null) {
-            playerLoadEvent.getDefaultTrackers().forEach((tracker) -> tracker.addTracker(this));
+        if (trackers != null) {
+            trackers.forEach(tracker -> tracker.addTracker(this));
         }
-        else {
-            getPlayerData().getYamlReader().getTrackers(this).forEach(tracker -> tracker.addTracker(this));
+        for (Tracker tracker : playerLoadEvent.getDefaultTrackers()) {
+            if (!this.getTrackers().containsKey(tracker.getId())) {
+                tracker.addTracker(this);
+            }
         }
         this.place = PlaceManager.getDefaultPlace();
     }
@@ -213,10 +231,9 @@ public class CorePlayer {
     public void save() {
         this.trackers.entrySet().forEach(entry -> {
             if (entry.getValue().isPersistant()) {
-                getPlayerData().getYamlWriter().saveTracker(this, entry.getValue());
+                getPlayerData().getYamlWriter().saveTracker(entry.getValue());
             }
         });
-
         getPlayerData().getYamlBuilder().save();
         //TODO: Create save function that saves to YAML file. Do not save abilities.
     }
@@ -284,6 +301,17 @@ public class CorePlayer {
 
     public void sendJSON(JSONMessage message) {
         sendJSON(message.getMessage());
+    }
+
+    @Override
+    public void unload() {
+        for (Ability ability : getActivatedAbilities()) {
+            ability.remove(this);
+        }
+        for (Effect effect : getActiveEffects()) {
+            effect.remove(this);
+        }
+        save();
     }
 }
 

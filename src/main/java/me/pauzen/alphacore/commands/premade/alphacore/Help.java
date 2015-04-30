@@ -22,8 +22,8 @@ import java.util.Map;
 @CommandMeta(value = "help", aliases = {"?"}, description = "Gets all AlphaCore commands.")
 public class Help extends Command {
 
-    private String defaultDescription = "AlphaCore command.";
-    private JSONMessage jsonMessage = new JSONMessage("help");
+    public static String      DEFAULT_DESCRIPTION = "AlphaCore command.";
+    private       JSONMessage jsonMessage         = new JSONMessage("help");
 
     @Override
     public CommandListener defaultListener() {
@@ -39,6 +39,7 @@ public class Help extends Command {
                             }
                             else {
                                 send(commandSender, command.getKey(), getDescription(command.getValue()));
+         
                             }
                         }
 
@@ -109,6 +110,6 @@ public class Help extends Command {
     }
 
     private String getDescription(Command command) {
-        return command.getDescription().replace("%default%", defaultDescription);
+        return command.getDescription().replace("%default%", DEFAULT_DESCRIPTION);
     }
 }

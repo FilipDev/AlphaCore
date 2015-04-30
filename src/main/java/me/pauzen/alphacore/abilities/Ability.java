@@ -15,9 +15,7 @@ import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Ability extends ListenerImplementation implements Applicable {
 
@@ -25,6 +23,8 @@ public class Ability extends ListenerImplementation implements Applicable {
     private String abilityName;
 
     private boolean invisible = false;
+
+    private Set<UUID> affected = new HashSet<>();
 
     public Ability(String abilityName) {
         this.abilityName = abilityName;
@@ -46,19 +46,62 @@ public class Ability extends ListenerImplementation implements Applicable {
         };
     }
 
+    /**
+     * @param abilityName Name to give Ability. Refer to getName.
+     * @param invisible Whether or not the ability appears on ActiveCommand.
+     */
     public Ability(String abilityName, boolean invisible) {
         this(abilityName);
         this.invisible = invisible;
     }
 
+    /**
+     * Adds player to set of affected players.
+     * @param uuid Player uuid.
+     */
+    public void addAffected(UUID uuid) {
+        affected.add(uuid);
+    }
+
+    /**
+     * Removes player from set of affected players.
+     * @param uuid Player uuid.
+     */
+    public void removeAffected(UUID uuid) {
+        affected.remove(uuid);
+    }
+
+    /**
+     * Set of Players with the Ability.
+     * @return Player set.
+     */
+    public Set<UUID> getAffected() {
+        return affected;
+    }
+
+    /**
+     * Returns ability boolean state in form to be used in chat.
+     * @param toggled Toggle state.
+     * @return Formatted string according to toggle state.
+     */
     public static String booleanToState(boolean toggled) {
         return toggled ? ChatColor.GREEN + "activated" : ChatColor.RED + "deactivated";
     }
 
+    /**
+     * Sets state of ability for specific player.
+     * @param ability Ability to set.
+     * @param corePlayer Player to set ability for.
+     */
     public static void setAbilityState(Ability ability, CorePlayer corePlayer, boolean newState) {
         ChatMessage.SET.send(corePlayer, ability.getName(), Ability.booleanToState(corePlayer.setAbilityState(ability, newState)));
     }
 
+    /**
+     * Toggles state of ability for specific player.
+     * @param ability Ability to toggle.
+     * @param corePlayer Player to toggle ability for.
+     */
     public static void toggleAbilityState(Ability ability, CorePlayer corePlayer) {
 
         boolean state = corePlayer.toggleAbilityState(ability);
@@ -70,25 +113,46 @@ public class Ability extends ListenerImplementation implements Applicable {
         ChatMessage.TOGGLED.send(corePlayer, ability.getName(), Ability.booleanToState(state));
     }
 
+    /**
+     * Returns name of Ability used in ActiveCommand and other times when referring to Ability.
+     * @return Ability name.
+     */
     @Override
     public String getName() {
         return abilityName;
     }
 
+    /**
+     * Returns Ability in Effect form which when applied to a player applies the ability and vice versa.
+     * @return Ability in Effect form.
+     */
     public Effect asEffect() {
         return this.effect;
     }
 
+    /**
+     * Applies ability to a player.
+     * @param corePlayer Player to apply ability to.
+     */
     @Override
     public void apply(CorePlayer corePlayer) {
         corePlayer.activateAbility(this);
     }
 
+    /**
+     * Removes ability from player.
+     * @param corePlayer Player to remove ability from.
+     */
     @Override
     public void remove(CorePlayer corePlayer) {
         corePlayer.deactivateAbility(this);
     }
 
+    /**
+     * If the player has the ability activated.
+     * @param corePlayer Player to check.
+     * @return Whether or not the player has the ability activated.
+     */
     @Override
     public boolean hasActivated(CorePlayer corePlayer) {
         return corePlayer.hasActivated(this);
@@ -107,6 +171,15 @@ public class Ability extends ListenerImplementation implements Applicable {
         return invisible;
     }
 
+    /**
+     * Creates a command based on the state of the ability. Running the command toggles the ability, can use the modifier -set (state)
+     * to set the ability state.
+     * @param name The command name.
+     * @param aliases Aliases for the command name.
+     * @param description Command description.
+     * @param permissions Permissions required to run command.
+     * @return The new command based on the given parameters.
+     */
     public Command asCommand(String name, String[] aliases, String description, String[] permissions) {
         Command command = new Command(name, aliases, description) {
             @Override

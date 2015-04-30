@@ -49,8 +49,8 @@ public class YamlWriter {
         return this.yamlConfiguration;
     }
 
-    public void saveTracker(CorePlayer corePlayer, Tracker tracker) {
-        setInt(combine(corePlayer.getUUID(), "trackers"), tracker.getValue());
+    public void saveTracker(Tracker tracker) {
+        setInt(combine("trackers", tracker.getId()), tracker.getValue());
     }
 
     private String combine(String... locations) {

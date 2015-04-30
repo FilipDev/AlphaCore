@@ -4,14 +4,17 @@
 
 package me.pauzen.alphacore.commands;
 
+import me.pauzen.alphacore.AlphaCoreModule;
+import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.messages.ErrorMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
-public abstract class Command extends ListenerImplementation {
+public abstract class Command extends ListenerImplementation implements AlphaCoreModule {
 
     private List<CommandListener> commandListeners = new ArrayList<>();
 
@@ -122,6 +125,10 @@ public abstract class Command extends ListenerImplementation {
     public String getDescription() {
         return description;
     }
+    
+    public boolean shouldSuggestPlayerNames() {
+        return false;
+    }
 
     /**
      * Gets the list of registered CommandListeners.
@@ -148,8 +155,13 @@ public abstract class Command extends ListenerImplementation {
         return false;
     }
 
+    public void register(Plugin plugin) {
+        CommandManager.getManager().registerCommand(this, plugin);
+    }
+    
+    @Deprecated
     public void register() {
-        CommandManager.getManager().registerCommand(this);
+        CommandManager.getManager().registerCommand(this, Core.getCore());
     }
 
     public Command getParent() {
@@ -158,5 +170,10 @@ public abstract class Command extends ListenerImplementation {
 
     public void setParent(Command parent) {
         this.parent = parent;
+    }
+    
+    @Override
+    public void unload() {
+        RegisteredCommand.unregisterCommand(this);
     }
 }

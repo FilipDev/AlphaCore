@@ -29,8 +29,8 @@ public class YamlReader {
         return new Location(world, x, y, z, pitch, yaw);
     }
 
-    public Tracker getTracker(CorePlayer corePlayer, String trackerName) {
-        return new Tracker(trackerName, getInt(corePlayer.getUUID(), "trackers", trackerName));
+    public Tracker getTracker(String trackerName) {
+        return new Tracker(trackerName, getInt("trackers", trackerName));
     }
 
     public Team getTeam(CorePlayer corePlayer) {
@@ -66,8 +66,8 @@ public class YamlReader {
         return locationBuilder.toString();
     }
 
-    public List<Tracker> getTrackers(CorePlayer corePlayer) {
-        ConfigurationSection configurationSection = getYamlConfiguration().getConfigurationSection(corePlayer.getUUID() + ".trackers");
+    public List<Tracker> getTrackers() {
+        ConfigurationSection configurationSection = getYamlConfiguration().getConfigurationSection("trackers");
         if (configurationSection == null) {
             return null;
         }
@@ -77,7 +77,7 @@ public class YamlReader {
         }
         List<Tracker> trackerList = new ArrayList<>(trackerNames.size());
         for (String name : trackerNames) {
-            trackerList.add(getTracker(corePlayer, name));
+            trackerList.add(getTracker(name));
         }
         return trackerList;
     }

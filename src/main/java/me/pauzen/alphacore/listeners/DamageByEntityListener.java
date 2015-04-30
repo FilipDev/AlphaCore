@@ -46,7 +46,7 @@ public class DamageByEntityListener extends ListenerImplementation {
     }
 
     private boolean playerAttack(EntityDamageByEntityEvent e) {
-        return new AttackEvent(AttackType.MELEE, e.getDamage(), e.getCause(), (Player) e.getDamager(), (Player) e.getEntity()).call().isCancelled();
+        return new AttackEvent(AttackType.MELEE, e.getDamage(), e.getCause(), (Player) e.getDamager(), (Player) e.getEntity(), e).call().isCancelled();
     }
 
     private boolean arrowAttack(EntityDamageByEntityEvent e) {
@@ -56,14 +56,14 @@ public class DamageByEntityListener extends ListenerImplementation {
             return false;
         }
 
-        return new AttackEvent(AttackType.ARROW, e.getDamage(), e.getCause(), (Player) attackingArrow.getShooter(), (Player) e.getEntity()).call().isCancelled();
+        return new AttackEvent(AttackType.ARROW, e.getDamage(), e.getCause(), (Player) attackingArrow.getShooter(), (Player) e.getEntity(), e).call().isCancelled();
     }
 
     private boolean potionAttack(PotionSplashEvent e) {
         Player thrower = (Player) e.getEntity().getShooter();
 
         e.getAffectedEntities().stream().filter(entity -> entity instanceof Player).forEach(receiver -> e.getPotion().getEffects().stream().forEach(potionEffect -> {
-                            AttackEvent attackEvent = new AttackEvent(thrower, (Player) receiver, potionEffect);
+                            AttackEvent attackEvent = new AttackEvent(thrower, (Player) receiver, potionEffect, e);
                             if (attackEvent.call().isCancelled()) {
                                 e.getAffectedEntities().remove(receiver);
                             }

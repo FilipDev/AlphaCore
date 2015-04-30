@@ -5,6 +5,8 @@
 package me.pauzen.alphacore.messages;
 
 import me.pauzen.alphacore.messages.json.MessagePart;
+import me.pauzen.alphacore.players.CorePlayer;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,10 @@ public class JSONMessageBuilder {
         stringBuilder.append("\n  ]");
         stringBuilder.append("\n}");
         return stringBuilder.toString();
+    }
+    
+    public void send(Player player) {
+        CorePlayer.get(player).sendJSON(build());
     }
 
 }

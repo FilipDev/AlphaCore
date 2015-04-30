@@ -6,6 +6,7 @@ package me.pauzen.alphacore.combat;
 
 import me.pauzen.alphacore.events.CallableEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
@@ -18,18 +19,28 @@ public class AttackEvent extends CallableEvent {
     private EntityDamageEvent.DamageCause damageCause;
     private double                        damage;
     private PotionEffect                  potionEffect;
-    public AttackEvent(AttackType attackType, double damage, EntityDamageEvent.DamageCause damageCause, Player attacker, Player defender) {
+
+    private Event event;
+
+    public AttackEvent(AttackType attackType, double damage, EntityDamageEvent.DamageCause damageCause, Player attacker, Player defender, Event event) {
         this.damageCause = damageCause;
         this.attacker = attacker;
         this.defender = defender;
         this.damage = damage;
         this.attackType = attackType;
+        this.event = event;
     }
-    public AttackEvent(Player thrower, Player defender, PotionEffect potionEffect) {
+
+    public AttackEvent(Player thrower, Player defender, PotionEffect potionEffect, Event event) {
         this.attacker = thrower;
         this.defender = defender;
         this.potionEffect = potionEffect;
+        this.event = event;
         this.attackType = AttackType.POTION;
+    }
+
+    public Event getEvent() {
+        return event;
     }
 
     public static HandlerList getHandlerList() {

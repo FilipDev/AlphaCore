@@ -8,6 +8,7 @@ import me.pauzen.alphacore.utils.misc.Tuple;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
@@ -21,7 +22,7 @@ public class CommandManager implements Registrable {
         new CommandRunner();
         RegisteredCommand.values();
     }
-
+    
     public static CommandManager getManager() {
         return manager;
     }
@@ -62,8 +63,8 @@ public class CommandManager implements Registrable {
         return new Tuple<>(modifiers, newArgs.toArray(new String[newArgs.size()]));
     }
 
-    public void registerCommand(Command command) {
-        RegisteredCommand.registerCommand(command);
+    public void registerCommand(Command command, Plugin plugin) {
+        RegisteredCommand.registerCommand(command, plugin);
     }
 
     public Map<String, Command> getCommands() {

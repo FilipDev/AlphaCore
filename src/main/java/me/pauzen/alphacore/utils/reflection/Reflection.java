@@ -165,7 +165,7 @@ public class Reflection<T> {
         Method method = ReflectionFactory.getMethod(clazz, name, paramTypes);
         if (method != null) {
             try {
-                return method.invoke(args);
+                return method.invoke(getObject(), args);
             } catch (IllegalAccessException | InvocationTargetException ignored) {
             }
         }

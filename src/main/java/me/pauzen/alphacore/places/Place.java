@@ -80,7 +80,6 @@ public class Place {
         return commandChecker;
     }
 
-    @Todo("Adapt to use getName too...")
     public boolean shouldRun(Command command) {
         for (String name : command.getNames()) {
             if (!commandChecker.isAllowed(name)) {

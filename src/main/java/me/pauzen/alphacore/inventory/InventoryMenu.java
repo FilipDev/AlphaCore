@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -38,6 +39,8 @@ public abstract class InventoryMenu {
     private String     name;
     private int        size;
     private Coordinate endCoordinate;
+    
+    private InventoryType inventoryType;
 
     /**
      * Creates new Inventory with null holder, size and name as specified with the name getting an invisible unique ID appended to the end of it.
@@ -47,7 +50,19 @@ public abstract class InventoryMenu {
      */
     public InventoryMenu(String name, int rows) {
         this.name = name;
+        inventoryType = InventoryType.CHEST;
         this.size = rows * 9;
+        endCoordinate = Coordinate.fromSlot(size - 1);
+        inventoryID = InvisibleID.generate();
+        registerElements();
+        fillRemaining();
+        InventoryManager.getManager().registerMenu(this);
+    }
+    
+    public InventoryMenu(String name) {
+        this.name = name;
+        this.inventoryType = InventoryType.HOPPER;
+        this.size = 5;
         endCoordinate = Coordinate.fromSlot(size - 1);
         inventoryID = InvisibleID.generate();
         registerElements();
@@ -72,9 +87,15 @@ public abstract class InventoryMenu {
     }
 
     public Inventory generateInventory(Player player) {
+        
+        Inventory inventory;
 
-        Inventory inventory = Bukkit.createInventory(null, size, name + inventoryID.getId());
-
+        if (inventoryType == InventoryType.HOPPER) {
+            inventory = Bukkit.createInventory(null, inventoryType, name + inventoryID.getId());
+        } else {
+            inventory = Bukkit.createInventory(null, size, name + inventoryID.getId());
+        }
+        
         elementMap.entrySet().forEach(entry -> {
 
             int i = entry.getKey().toSlot();
@@ -162,10 +183,12 @@ public abstract class InventoryMenu {
      *
      * @param player Player to show the inventory to.
      */
-    public void show(Player player) {
+    public Inventory show(Player player) {
         Inventory inventory = generateInventory(player);
-        player.openInventory(inventory);
         openInventory(player, inventory);
+        onOpen(CorePlayer.get(player));
+        player.openInventory(inventory);
+        return inventory;
     }
 
     /**
@@ -373,6 +396,10 @@ public abstract class InventoryMenu {
         }
         return element.getRepresentation();
     }
+    
+    public ItemStack getItemAt(Coordinate coordinate) {
+        return getItemAt(coordinate.getX(), coordinate.getY());
+    }
 
     public Material getTypeAt(int x, int y) {
         return getItemAt(x, y).getType();
@@ -418,5 +445,9 @@ public abstract class InventoryMenu {
 
     public Collection<Inventory> getOpen() {
         return openedInventories.values();
+    }
+
+    public Inventory getOpen(UUID key) {
+        return openedInventories.get(key);
     }
 }

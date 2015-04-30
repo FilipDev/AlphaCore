@@ -58,8 +58,14 @@ public class PlayerManager extends ListenerImplementation implements Registrable
     }
 
     public void destroyWrapper(Player player) {
-        this.players.get(player.getUniqueId()).save();
+        CorePlayer.get(player).unload();
         this.players.remove(player.getUniqueId());
     }
-
+    
+    @Override
+    public void nullify() {
+        getCorePlayers().forEach(player -> destroyWrapper(player.getPlayer()));
+        Registrable.super.nullify();
+    }
+    
 }

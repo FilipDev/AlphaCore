@@ -80,7 +80,13 @@ public class ItemBuilder {
     }
 
     public ItemBuilder lore(int index, String lore) {
-        this.lore.set(index, lore);
+        
+        if (this.lore.size() > index) {
+            this.lore.set(index, lore);
+        } else {
+            this.lore.add(index, lore);
+        }
+        
         return this;
     }
 

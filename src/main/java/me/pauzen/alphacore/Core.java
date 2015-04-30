@@ -6,7 +6,6 @@ package me.pauzen.alphacore;
 
 import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.listeners.ListenerRegisterer;
-import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.players.PlayerManager;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
@@ -17,22 +16,25 @@ import me.pauzen.alphacore.utils.reflection.Registrable;
 import me.pauzen.alphacore.utils.reflection.jar.JAREntryFile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarFile;
 
-public class Core extends JavaPlugin {
+public class Core extends JavaPlugin implements Listener {
 
     private static Core core;
-    private List<Registrable> registrables = new ArrayList<>();
+    private List<Registrable>                  registrables     = new ArrayList<>();
     private EnumMap<LoadPriority, List<Class>> loadPriorityList = new EnumMap<>(LoadPriority.class);
+
+    private Map<JavaPlugin, List<AlphaCoreModule>> elements = new HashMap<>();
 
     public static Core getCore() {
         return core;
@@ -50,10 +52,12 @@ public class Core extends JavaPlugin {
     @Override
     public void onEnable() {
         core = this;
+        
+        Bukkit.getPluginManager().registerEvents(this, this);
 
         generatePriorities();
 
-        getRegistrables();
+        computeRegisterables(loadPriorityList);
 
         registerManagers();
 
@@ -64,14 +68,16 @@ public class Core extends JavaPlugin {
             PlayerManager.getManager().registerPlayer(player);
         }
     }
+    
+    @EventHandler
+    public void onPluginDisable(PluginDisableEvent event) {
+        getModules().getOrDefault(event.getPlugin(), new ArrayList<>()).forEach(AlphaCoreModule::unload);
+    }
 
     @Override
     public void onDisable() {
-        for (CorePlayer corePlayer : PlayerManager.getCorePlayers()) {
-            PlayerManager.getManager().destroyWrapper(corePlayer.getPlayer());
-        }
-        core = null;
         registrables.forEach(Nullifiable::nullify);
+        core = null;
     }
 
     public void generatePriorities() {
@@ -84,7 +90,8 @@ public class Core extends JavaPlugin {
         loadPriorityList.entrySet().forEach((entry) -> entry.getValue().forEach(this::registerManager));
     }
 
-    public void getRegistrables() {
+    public void computeRegisterables(EnumMap<LoadPriority, List<Class>> loadPriorityList) {
+
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
@@ -102,7 +109,7 @@ public class Core extends JavaPlugin {
 
             Class clazz = null;
             try {
-                clazz = this.getClass().getClassLoader().loadClass(className);
+                clazz = Class.forName(className, true, getClass().getClassLoader());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 return;
@@ -133,7 +140,6 @@ public class Core extends JavaPlugin {
 
             loadPriorityList.get(loadPriority).add(clazz);
         });
-
     }
 
     public void registerManager(Class clazz) {
@@ -150,5 +156,14 @@ public class Core extends JavaPlugin {
 
     public List<Registrable> getManagers() {
         return registrables;
+    }
+
+    public Map<JavaPlugin, List<AlphaCoreModule>> getModules() {
+        return elements;
+    }
+
+    public static void registerModule(JavaPlugin javaPlugin, AlphaCoreModule alphaCoreModule) {
+        getCore().getModules().putIfAbsent(javaPlugin, new ArrayList<>());
+        getCore().getModules().get(javaPlugin).add(alphaCoreModule);
     }
 }

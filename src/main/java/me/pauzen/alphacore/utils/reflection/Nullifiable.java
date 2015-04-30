@@ -7,7 +7,7 @@ package me.pauzen.alphacore.utils.reflection;
 public interface Nullifiable {
 
     public default void nullify() {
-        Reflection thisReflection = new Reflection(this);
+        Reflection thisReflection = new Reflection<>(this);
         ReflectionFactory.getFields(getClass()).stream().filter(field -> field.isAnnotationPresent(Nullify.class)).forEach(field -> thisReflection.setValue(field, null));
     }
 

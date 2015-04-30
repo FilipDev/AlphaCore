@@ -7,24 +7,23 @@ package me.pauzen.alphacore.messages;
 import me.pauzen.alphacore.utils.misc.Todo;
 import org.bukkit.ChatColor;
 
-@Todo("Make elements static and normal class")
-public enum ErrorMessage implements Message {
+public class ErrorMessage implements Message {
 
-    CONSOLESENDER("Command can only be sent by a player."),
-    SAME_TEAM("Player is on the same team as you."),
-    PERMISSIONS("No permissions for %s."),
-    SQL("Could not connect to SQL database."),
-    COMMAND_NOT_FOUND("Command chain %s non-existent."),;
+    public static ErrorMessage CONSOLESENDER = new ErrorMessage("Command can only be sent by a player.");
+    public static ErrorMessage SAME_TEAM = new ErrorMessage("Player is on the same team as you.");
+    public static ErrorMessage PERMISSIONS = new ErrorMessage("No permissions for %s.");
+    public static ErrorMessage SQL = new ErrorMessage("Could not connect to SQL database.");
+    public static ErrorMessage COMMAND_NOT_FOUND = new ErrorMessage("Command chain %s non-existent.");
 
     private String errorMessage;
 
     private String errorPrefix = String.format("%s%sError: %s", ChatColor.RED, ChatColor.BOLD, ChatColor.DARK_RED);
 
-    ErrorMessage(String errorMessage) {
+    public ErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 
-    ErrorMessage(String prefix, String errorMessage) {
+    public ErrorMessage(String prefix, String errorMessage) {
         this(errorMessage);
         this.errorPrefix = prefix;
     }

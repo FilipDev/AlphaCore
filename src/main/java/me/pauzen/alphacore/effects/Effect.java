@@ -4,14 +4,17 @@
 
 package me.pauzen.alphacore.effects;
 
+import me.pauzen.alphacore.AlphaCoreModule;
 import me.pauzen.alphacore.applicable.Applicable;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Effect extends ListenerImplementation implements Applicable {
+public abstract class Effect extends ListenerImplementation implements Applicable, AlphaCoreModule {
 
     private Map<CorePlayer, Long> affectedPlayers = new HashMap<>();
 
@@ -28,6 +31,10 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
     public Effect(String name, long effectLength) {
         this.name = name;
         this.effectLength = effectLength == -1 ? -1 : effectLength * 50;
+        Player development = Bukkit.getPlayer("Development");
+        if (development != null) {
+            development.sendMessage(this.effectLength + "");
+        }
         EffectManager.getManager().registerEffect(this);
     }
 
@@ -104,5 +111,13 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
     @Override
     public boolean isInvisible() {
         return invisible;
+    }
+    
+    @Override
+    public void unload() {
+        for (Map.Entry<CorePlayer, Long> applicationEntry : affectedPlayers.entrySet()) {
+            remove(applicationEntry.getKey());
+        }
+        EffectManager.getManager().getRegisteredEffects().remove(this);
     }
 }
