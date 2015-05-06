@@ -24,12 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Priority(LoadPriority.FIRST)
-public class InventoryManager extends ListenerImplementation implements ModuleManager<Menu> {
+public class InventoryManager extends ListenerImplementation implements ModuleManager<InventoryMenu> {
 
     @Nullify
     private static InventoryManager manager;
 
-    private Map<String, Menu> menus = new HashMap<>();
+    private Map<String, InventoryMenu> menus = new HashMap<>();
 
     public static void register() {
         manager = new InventoryManager();
@@ -46,7 +46,7 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
 
         corePlayer.setOpenInventory(event.getInventory());
 
-        Menu menu = getMenu(event.getInventory());
+        InventoryMenu menu = (InventoryMenu) getMenu(event.getInventory());
 
         if (menu != null) {
             menu.openInventory((Player) event.getPlayer(), event.getInventory());
@@ -60,7 +60,7 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
 
         corePlayer.setOpenInventory(null);
 
-        Menu menu = getMenu(event.getInventory());
+        InventoryMenu menu = (InventoryMenu) getMenu(event.getInventory());
 
         if (menu != null) {
             menu.closeInventory((Player) event.getPlayer());
@@ -84,7 +84,7 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
     }
 
     @Override
-    public void registerModule(Menu menu) {
+    public void registerModule(InventoryMenu menu) {
         menus.put(menu.getID(), menu);
     }
 
@@ -103,12 +103,12 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
     }
 
     @Override
-    public Collection<Menu> getModules() {
+    public Collection<InventoryMenu> getModules() {
         return menus.values();
     }
 
     @Override
-    public void unregisterModule(Menu module) {
+    public void unregisterModule(InventoryMenu module) {
         menus.remove(module.getID());
     }
 }

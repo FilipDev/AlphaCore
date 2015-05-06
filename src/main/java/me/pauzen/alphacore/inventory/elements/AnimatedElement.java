@@ -5,7 +5,7 @@
 package me.pauzen.alphacore.inventory.elements;
 
 import me.pauzen.alphacore.Core;
-import me.pauzen.alphacore.inventory.Menu;
+import me.pauzen.alphacore.inventory.InventoryMenu;
 import me.pauzen.alphacore.inventory.elements.listeners.UpdateListener;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
 import org.bukkit.Bukkit;
@@ -14,29 +14,29 @@ import org.bukkit.inventory.ItemStack;
 
 public class AnimatedElement extends Element {
 
-    private Menu           menu;
+    private InventoryMenu  menu;
     private UpdateListener updateListener;
     private Coordinate     location;
 
-    public AnimatedElement(Material material, Menu menu, UpdateListener updateListener, Coordinate location) {
+    public AnimatedElement(Material material, InventoryMenu menu, UpdateListener updateListener, Coordinate location) {
         super(material);
         this.menu = menu;
         this.updateListener = updateListener;
         this.location = location;
     }
 
-    public AnimatedElement(ItemStack itemStack, Menu menu, UpdateListener updateListener, Coordinate location) {
+    public AnimatedElement(ItemStack itemStack, InventoryMenu menu, UpdateListener updateListener, Coordinate location) {
         super(itemStack);
         this.menu = menu;
         this.updateListener = updateListener;
         this.location = location;
     }
 
-    public AnimatedElement(Material material, Menu menu, UpdateListener updateListener, long delay) {
+    public AnimatedElement(Material material, InventoryMenu menu, UpdateListener updateListener, long delay) {
         this(new ItemStack(material), menu, updateListener, delay);
     }
 
-    public AnimatedElement(ItemStack itemStack, Menu menu, UpdateListener updateListener, long delay) {
+    public AnimatedElement(ItemStack itemStack, InventoryMenu menu, UpdateListener updateListener, long delay) {
         super(itemStack);
         this.menu = menu;
         this.updateListener = updateListener;

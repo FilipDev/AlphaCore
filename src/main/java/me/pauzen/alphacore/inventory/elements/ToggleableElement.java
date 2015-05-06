@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.inventory.elements;
 
+import me.pauzen.alphacore.inventory.InventoryMenu;
 import me.pauzen.alphacore.inventory.Menu;
 import me.pauzen.alphacore.inventory.elements.listeners.ToggleListener;
 import me.pauzen.alphacore.inventory.items.ItemBuilder;
@@ -78,7 +79,7 @@ public class ToggleableElement extends Element {
      */
     public void toggle(Player player, Inventory inventory) {
         currentState = !currentState;
-        menu.updateElement(inventory, inventoryCoordinate, toState(currentState));
+        ((InventoryMenu) menu).updateElement(inventory, inventoryCoordinate, toState(currentState));
         onToggle(player, currentState);
     }
 

@@ -155,7 +155,6 @@ public abstract class Command extends ListenerImplementation implements ManagerM
         return false;
     }
 
-    @Deprecated
     public void register() {
         CommandManager.getManager().registerCommand(this);
     }

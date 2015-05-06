@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.inventory.misc;
 
+import me.pauzen.alphacore.inventory.InventoryMenu;
 import me.pauzen.alphacore.inventory.Menu;
 import me.pauzen.alphacore.inventory.elements.Element;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -93,13 +94,13 @@ public class Selection {
 
     public void createClickAllowanceCondition(Menu menu, Predicate<InventoryClickEvent> predicate) {
         for (Coordinate coordinate : coordinates) {
-            menu.getAllowedClicking().put(coordinate, predicate);
+            ((InventoryMenu) menu).getAllowedClicking().put(coordinate, predicate);
         }
     }
 
     public void allowClicking(Menu menu) {
         for (Coordinate coordinate : coordinates) {
-            menu.getAllowedClicking().put(coordinate, (clickEvent) -> true);
+            ((InventoryMenu) menu).getAllowedClicking().put(coordinate, (clickEvent) -> true);
         }
     }
 }

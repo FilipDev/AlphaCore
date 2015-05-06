@@ -6,10 +6,9 @@ package me.pauzen.alphacore;
 
 import me.pauzen.alphacore.core.managers.Manager;
 import me.pauzen.alphacore.core.managers.ModuleManager;
+import me.pauzen.alphacore.core.modules.PluginModule;
 import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.listeners.ListenerRegisterer;
-import me.pauzen.alphacore.core.modules.Module;
-import me.pauzen.alphacore.core.modules.PluginModule;
 import me.pauzen.alphacore.players.PlayerManager;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
@@ -98,7 +97,7 @@ public class Core extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPluginDisable(PluginDisableEvent event) {
-        getModules().getOrDefault(event.getPlugin(), new ArrayList<>()).forEach(Module::unload);
+        getModules().getOrDefault(event.getPlugin(), new ArrayList<>()).forEach(PluginModule::unload);
 
     }
 
@@ -163,7 +162,7 @@ public class Core extends JavaPlugin implements Listener {
                 return;
             }
 
-            if (clazz == Manager.class) {
+            if (clazz == Manager.class || clazz == ModuleManager.class) {
                 return;
             }
 
@@ -189,6 +188,7 @@ public class Core extends JavaPlugin implements Listener {
 
     public void registerManager(Class clazz) {
         try {
+            System.out.println("Loaded module " + clazz.getName());
             ReflectionFactory.getMethod(clazz, "register").invoke(null);
             Manager manager = (Manager) ReflectionFactory.getField(clazz, "manager").get(null);
             if (manager != null) {
@@ -205,4 +205,11 @@ public class Core extends JavaPlugin implements Listener {
     }
 
     //UTILITY METHODS
+    public static Optional<JavaPlugin> getOwner(Object object) {
+        return Optional.ofNullable(JavaPlugin.getProvidingPlugin(object.getClass()));
+    }
+    
+    public static Optional<JavaPlugin> getOwner() {
+        return Optional.ofNullable(JavaPlugin.getProvidingPlugin(ReflectionFactory.getCallerClasses()[1]));
+    }
 }
