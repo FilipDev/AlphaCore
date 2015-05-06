@@ -39,12 +39,12 @@ public class AttackEvent extends CallableEvent {
         this.attackType = AttackType.POTION;
     }
 
-    public Event getEvent() {
-        return event;
-    }
-
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    public Event getEvent() {
+        return event;
     }
 
     public HandlerList getHandlers() {

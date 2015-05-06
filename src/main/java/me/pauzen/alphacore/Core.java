@@ -4,15 +4,17 @@
 
 package me.pauzen.alphacore;
 
+import me.pauzen.alphacore.core.managers.Manager;
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.effects.PremadeEffects;
 import me.pauzen.alphacore.listeners.ListenerRegisterer;
+import me.pauzen.alphacore.core.modules.Module;
+import me.pauzen.alphacore.core.modules.PluginModule;
 import me.pauzen.alphacore.players.PlayerManager;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.misc.Todo;
-import me.pauzen.alphacore.utils.reflection.Nullifiable;
 import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import me.pauzen.alphacore.utils.reflection.jar.JAREntryFile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -31,10 +33,10 @@ import java.util.jar.JarFile;
 public class Core extends JavaPlugin implements Listener {
 
     private static Core core;
-    private List<Registrable>                  registrables     = new ArrayList<>();
+    private Map<String, Manager>         managers         = new HashMap<>();
     private EnumMap<LoadPriority, List<Class>> loadPriorityList = new EnumMap<>(LoadPriority.class);
 
-    private Map<JavaPlugin, List<AlphaCoreModule>> elements = new HashMap<>();
+    private Map<JavaPlugin, List<PluginModule>> elements = new HashMap<>();
 
     public static Core getCore() {
         return core;
@@ -44,20 +46,45 @@ public class Core extends JavaPlugin implements Listener {
         return Core.getCore().getDataFolder();
     }
 
+    public static void registerManager(Manager manager) {
+        manager.onEnable();
+        getCore().managers.put(manager.getName(), manager);
+    }
+
+    public static void unregisterManager(Manager manager) {
+        if (manager instanceof ModuleManager) {
+            ((ModuleManager) manager).unregister();
+        }
+        manager.onDisable();
+        getCore().managers.remove(manager.getName());
+    }
+
     public static JAREntryFile getZipped(String name) {
         return new JAREntryFile(name);
+    }
+
+    //MANAGERS
+
+    @Deprecated
+    public static void registerModule(JavaPlugin javaPlugin, PluginModule module) {
+        getCore().getModules().putIfAbsent(javaPlugin, new ArrayList<>());
+        getCore().getModules().get(javaPlugin).add(module);
+    }
+
+    public static JavaPlugin getCallerPlugin() {
+        return JavaPlugin.getProvidingPlugin(ReflectionFactory.getCallerClasses()[1]);
     }
 
     @Todo("Fix support for reloading")
     @Override
     public void onEnable() {
         core = this;
-        
+
         Bukkit.getPluginManager().registerEvents(this, this);
 
         generatePriorities();
 
-        computeRegisterables(loadPriorityList);
+        computeRegisterables();
 
         registerManagers();
 
@@ -68,16 +95,30 @@ public class Core extends JavaPlugin implements Listener {
             PlayerManager.getManager().registerPlayer(player);
         }
     }
-    
+
     @EventHandler
     public void onPluginDisable(PluginDisableEvent event) {
-        getModules().getOrDefault(event.getPlugin(), new ArrayList<>()).forEach(AlphaCoreModule::unload);
+        getModules().getOrDefault(event.getPlugin(), new ArrayList<>()).forEach(Module::unload);
+
     }
+
+    //DYNAMIC LOADING
 
     @Override
     public void onDisable() {
-        registrables.forEach(Nullifiable::nullify);
+        managers.entrySet().iterator().forEachRemaining(entry -> {
+            entry.getValue().nullify();
+            managers.remove(entry.getKey());
+        });
         core = null;
+    }
+
+    public JavaPlugin getOwner(Manager manager) {
+        return JavaPlugin.getProvidingPlugin(manager.getClass());
+    }
+
+    public Map<String, Manager> getManagers() {
+        return managers;
     }
 
     public void generatePriorities() {
@@ -90,7 +131,9 @@ public class Core extends JavaPlugin implements Listener {
         loadPriorityList.entrySet().forEach((entry) -> entry.getValue().forEach(this::registerManager));
     }
 
-    public void computeRegisterables(EnumMap<LoadPriority, List<Class>> loadPriorityList) {
+    //MODULES (BACKWARDS COMPAT.)
+
+    public void computeRegisterables() {
 
         JarFile jarFile = null;
         try {
@@ -103,19 +146,24 @@ public class Core extends JavaPlugin implements Listener {
             return;
         }
 
+
         jarFile.stream().filter((currentEntry) -> currentEntry.getName().endsWith(".class")).forEach((currentEntry) -> {
             String className = currentEntry.getName().substring(0, currentEntry.getName().length() - 6);
             className = className.replace("/", ".");
 
             Class clazz = null;
             try {
-                clazz = Class.forName(className, true, getClass().getClassLoader());
+                clazz = getClass().getClassLoader().loadClass(className);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 return;
             }
 
-            if (!Registrable.class.isAssignableFrom(clazz)) {
+            if (!Manager.class.isAssignableFrom(clazz)) {
+                return;
+            }
+
+            if (clazz == Manager.class) {
                 return;
             }
 
@@ -130,9 +178,6 @@ public class Core extends JavaPlugin implements Listener {
                 loadPriority = annotation.value();
             }
 
-            if (clazz == Registrable.class) {
-                return;
-            }
 
             if (loadPriority == LoadPriority.NEVER) {
                 return;
@@ -145,25 +190,19 @@ public class Core extends JavaPlugin implements Listener {
     public void registerManager(Class clazz) {
         try {
             ReflectionFactory.getMethod(clazz, "register").invoke(null);
-            Registrable registrable = (Registrable) ReflectionFactory.getField(clazz, "manager").get(null);
-            if (registrable != null) {
-                registrables.add(registrable);
+            Manager manager = (Manager) ReflectionFactory.getField(clazz, "manager").get(null);
+            if (manager != null) {
+                managers.put(manager.getName(), manager);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Registrable> getManagers() {
-        return registrables;
-    }
-
-    public Map<JavaPlugin, List<AlphaCoreModule>> getModules() {
+    @Deprecated
+    public Map<JavaPlugin, List<PluginModule>> getModules() {
         return elements;
     }
 
-    public static void registerModule(JavaPlugin javaPlugin, AlphaCoreModule alphaCoreModule) {
-        getCore().getModules().putIfAbsent(javaPlugin, new ArrayList<>());
-        getCore().getModules().get(javaPlugin).add(alphaCoreModule);
-    }
+    //UTILITY METHODS
 }

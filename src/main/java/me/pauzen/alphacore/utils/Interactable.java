@@ -9,8 +9,9 @@ import me.pauzen.alphacore.inventory.misc.ClickType;
 public interface Interactable<T> {
 
     /**
-     * Called when T value is interacted with. 
-     * @param value Object interacted with.
+     * Called when T value is interacted with.
+     *
+     * @param value     Object interacted with.
      * @param clickType Type of click used to interact with object.
      */
     public void onInteract(T value, ClickType clickType);

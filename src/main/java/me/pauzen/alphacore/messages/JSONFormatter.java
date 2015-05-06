@@ -7,9 +7,10 @@ package me.pauzen.alphacore.messages;
 import me.pauzen.alphacore.messages.json.Action;
 
 public final class JSONFormatter {
-    
-    private JSONFormatter() {}
-    
+
+    private JSONFormatter() {
+    }
+
     public static JSONMessage addHover(String message, Action action, String value) {
         return format("hoverEvent", message, action, value);
     }

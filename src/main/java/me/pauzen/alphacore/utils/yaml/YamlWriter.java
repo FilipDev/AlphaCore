@@ -1,7 +1,6 @@
 package me.pauzen.alphacore.utils.yaml;
 
-import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.players.data.Tracker;
+import me.pauzen.alphacore.players.data.trackers.Tracker;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 

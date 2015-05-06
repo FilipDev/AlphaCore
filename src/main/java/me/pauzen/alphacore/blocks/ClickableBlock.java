@@ -5,10 +5,11 @@
 package me.pauzen.alphacore.blocks;
 
 import me.pauzen.alphacore.inventory.misc.ClickType;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.Location;
 
-public abstract class ClickableBlock {
+public abstract class ClickableBlock implements ManagerModule {
 
     private Location location;
 
@@ -20,5 +21,10 @@ public abstract class ClickableBlock {
 
     public Location getLocation() {
         return location;
+    }
+
+    @Override
+    public void unload() {
+        ClickableBlockManager.getManager().unregisterModule(this);
     }
 }

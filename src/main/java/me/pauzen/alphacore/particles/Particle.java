@@ -5,10 +5,9 @@
 package me.pauzen.alphacore.particles;
 
 public enum Particle {
-    
+
     REDSTONE_DUST("reddust"),
-    HEART("heart")
-    ;
+    HEART("heart");
 
     private String particle;
 

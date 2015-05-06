@@ -7,16 +7,19 @@ package me.pauzen.alphacore.places;
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.effects.Effect;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.places.events.PlaceJoinEvent;
 import me.pauzen.alphacore.places.events.PlaceLeaveEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.AllowanceChecker;
-import me.pauzen.alphacore.utils.misc.Todo;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
-public class Place {
+public class Place implements ManagerModule {
+
+    private Place superPlace;
 
     private Set<CorePlayer> players = new HashSet<>();
 
@@ -28,8 +31,9 @@ public class Place {
     private Set<Ability> placeAbilities = new HashSet<>();
     private Set<Effect>  placeEffects   = new HashSet<>();
 
-    public Place(String name) {
+    public Place(String name, Place superPlace) {
         this.name = name;
+        this.superPlace = superPlace;
     }
 
     public void activateAbility(Ability ability) {
@@ -108,10 +112,35 @@ public class Place {
     }
 
     public boolean isAllowed(PlaceAction placeAction) {
-        return placeActionChecker.isAllowed(placeAction);
+        Stack<Place> placeStack = new Stack<>();
+        Place currentPlace = this;
+        while (currentPlace != null) {
+            placeStack.add(currentPlace);
+            currentPlace = currentPlace.getSuperPlace();
+        }
+
+        boolean allowed = true;
+        for (Place place : placeStack) {
+            if (place.getPlaceActionChecker().allowed(placeAction)) {
+                allowed = false;
+            }
+            if (place.getPlaceActionChecker().disallowed(placeAction)) {
+                allowed = false;
+            }
+        }
+        return allowed;
     }
 
     public AllowanceChecker<PlaceAction> getPlaceActionChecker() {
         return placeActionChecker;
+    }
+
+    @Override
+    public void unload() {
+        PlaceManager.getManager().unregisterModule(this);
+    }
+
+    public Place getSuperPlace() {
+        return superPlace;
     }
 }

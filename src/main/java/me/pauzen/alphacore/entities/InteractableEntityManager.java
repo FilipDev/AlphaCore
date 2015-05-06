@@ -4,10 +4,10 @@
 
 package me.pauzen.alphacore.entities;
 
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,10 +15,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InteractableEntityManager extends ListenerImplementation implements Registrable {
+public class InteractableEntityManager extends ListenerImplementation implements ModuleManager<InteractableEntity> {
 
     @Nullify
     private static InteractableEntityManager manager;
@@ -30,10 +31,6 @@ public class InteractableEntityManager extends ListenerImplementation implements
 
     public static InteractableEntityManager getManager() {
         return manager;
-    }
-
-    public void registerInteractableEntity(InteractableEntity interactableEntity) {
-        interactableEntities.put(interactableEntity.getEntity().getUniqueId().toString(), interactableEntity);
     }
 
     public InteractableEntity getInteractableEntity(String UUID) {
@@ -71,5 +68,25 @@ public class InteractableEntityManager extends ListenerImplementation implements
                 }
             }
         }
+    }
+
+    @Override
+    public String getName() {
+        return "interactable_entities";
+    }
+
+    @Override
+    public Collection<InteractableEntity> getModules() {
+        return interactableEntities.values();
+    }
+
+    @Override
+    public void registerModule(InteractableEntity module) {
+        interactableEntities.put(module.getEntity().getUniqueId().toString(), module);
+    }
+
+    @Override
+    public void unregisterModule(InteractableEntity module) {
+        interactableEntities.remove(module.getEntity().getUniqueId().toString());
     }
 }

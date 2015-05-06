@@ -4,26 +4,30 @@
 
 package me.pauzen.alphacore.blocks;
 
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ClickableBlockManager implements Registrable {
+public class ClickableBlockManager implements ModuleManager<ClickableBlock> {
 
     @Nullify
     private static ClickableBlockManager manager;
     private Map<Location, ClickableBlock> clickableBlockMap = new HashMap<>();
     private Map<UUID, Long>               clickTimeMap      = new HashMap<>();
-    private long    cooldown    = 200; //4 ticks
-    private boolean alwaysReset = true;
+    
+    @Todo("OOPify")
+    private long                          cooldown          = 200; //4 ticks
+    private boolean                       alwaysReset       = true;
 
     public static void register() {
         manager = new ClickableBlockManager();
@@ -31,10 +35,6 @@ public class ClickableBlockManager implements Registrable {
 
     public static ClickableBlockManager getManager() {
         return manager;
-    }
-
-    public static void registerBlock(ClickableBlock clickableBlock) {
-        getManager().clickableBlockMap.put(clickableBlock.getLocation(), clickableBlock);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -62,6 +62,26 @@ public class ClickableBlockManager implements Registrable {
         if (alwaysReset || ran) {
             clickTimeMap.put(e.getPlayer().getUniqueId(), System.currentTimeMillis());
         }
+    }
+
+    @Override
+    public String getName() {
+        return "click_block";
+    }
+
+    @Override
+    public Collection<ClickableBlock> getModules() {
+        return clickableBlockMap.values();
+    }
+
+    @Override
+    public void registerModule(ClickableBlock module) {
+        clickableBlockMap.put(module.getLocation(), module);
+    }
+
+    @Override
+    public void unregisterModule(ClickableBlock module) {
+        clickableBlockMap.remove(module.getLocation());
     }
 
 }

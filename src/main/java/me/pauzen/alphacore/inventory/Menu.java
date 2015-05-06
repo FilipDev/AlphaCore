@@ -9,12 +9,12 @@ import me.pauzen.alphacore.inventory.elements.InteractableElement;
 import me.pauzen.alphacore.inventory.elements.ToggleableElement;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
-import me.pauzen.alphacore.inventory.misc.ElementGetter;
 import me.pauzen.alphacore.inventory.misc.ElementInteraction;
+import me.pauzen.alphacore.inventory.misc.Selection;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.InvisibleID;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryAction;
@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 import java.util.function.Predicate;
 
-public abstract class InventoryMenu {
+public abstract class Menu implements ManagerModule {
 
     private Map<Coordinate, Element> elementMap = new HashMap<>();
 
@@ -36,10 +36,9 @@ public abstract class InventoryMenu {
 
     private Map<UUID, Inventory> openedInventories = new HashMap<>();
 
-    private String     name;
-    private int        size;
-    private Coordinate endCoordinate;
-    
+    private String name;
+    private int    size;
+
     private InventoryType inventoryType;
 
     /**
@@ -48,26 +47,24 @@ public abstract class InventoryMenu {
      * @param name The desired name of the inventory.
      * @param rows The desired amount of rows in the inventory.
      */
-    public InventoryMenu(String name, int rows) {
+    public Menu(String name, int rows) {
         this.name = name;
         inventoryType = InventoryType.CHEST;
         this.size = rows * 9;
-        endCoordinate = Coordinate.fromSlot(size - 1);
         inventoryID = InvisibleID.generate();
         registerElements();
         fillRemaining();
-        InventoryManager.getManager().registerMenu(this);
+        InventoryManager.getManager().registerModule(this);
     }
-    
-    public InventoryMenu(String name) {
+
+    public Menu(String name) {
         this.name = name;
         this.inventoryType = InventoryType.HOPPER;
         this.size = 5;
-        endCoordinate = Coordinate.fromSlot(size - 1);
         inventoryID = InvisibleID.generate();
         registerElements();
         fillRemaining();
-        InventoryManager.getManager().registerMenu(this);
+        InventoryManager.getManager().registerModule(this);
     }
 
     private static Coordinate toCoordinate(int x, int y) {
@@ -87,15 +84,16 @@ public abstract class InventoryMenu {
     }
 
     public Inventory generateInventory(Player player) {
-        
+
         Inventory inventory;
 
         if (inventoryType == InventoryType.HOPPER) {
             inventory = Bukkit.createInventory(null, inventoryType, name + inventoryID.getId());
-        } else {
+        }
+        else {
             inventory = Bukkit.createInventory(null, size, name + inventoryID.getId());
         }
-        
+
         elementMap.entrySet().forEach(entry -> {
 
             int i = entry.getKey().toSlot();
@@ -220,89 +218,6 @@ public abstract class InventoryMenu {
     }
 
     /**
-     * Creates a condition that must be met if shouldAllowClick were to return true.
-     *
-     * @param inventoryCoordinate The coordinates where the allowance condition should be checking.
-     * @param predicate           The condition that must be met.
-     */
-    public void createAllowanceConditionForClickingAt(Coordinate inventoryCoordinate, Predicate<InventoryClickEvent> predicate) {
-        allowedClicking.put(inventoryCoordinate, predicate);
-    }
-
-    /**
-     * Creates a condition that must be met if shouldAllowClick were to return true.
-     *
-     * @param predicate The condition that must be met.
-     */
-    public void createAllowanceConditionForClickingAt(int x, int y, Predicate<InventoryClickEvent> predicate) {
-        createAllowanceConditionForClickingAt(new Coordinate(x, y), predicate);
-    }
-
-    public void createAllowanceConditionForClickingAt(int x, int y) {
-        createAllowanceConditionForClickingAt(x, y, (clickEvent) -> true);
-    }
-
-    public void allowClickingWithin(Coordinate coordinate1, Coordinate coordinate2, Predicate<InventoryClickEvent> predicate) {
-        for (Coordinate coordinate : getCoordinatesWithin(coordinate1, coordinate2)) {
-            createAllowanceConditionForClickingAt(coordinate, predicate);
-        }
-    }
-
-    public Coordinate[] getCoordinatesWithin(Coordinate coordinate1, Coordinate coordinate2) {
-        int minX = Math.min(coordinate1.getX(), coordinate2.getX());
-        int minY = Math.min(coordinate1.getY(), coordinate2.getY());
-        int maxX = Math.max(coordinate1.getX(), coordinate2.getX());
-        int maxY = Math.max(coordinate1.getY(), coordinate2.getY());
-
-        Coordinate[] coordinates = new Coordinate[(maxX - minX + 1) * (maxY - minY + 1)];
-
-        int curr = 0;
-
-        for (int y = minY; y <= maxY; y++) {
-            for (int x = minX; x <= maxX; x++) {
-                coordinates[curr] = Coordinate.coordinate(x, y);
-                curr++;
-            }
-        }
-        return coordinates;
-    }
-
-    public Coordinate[] getBorder(Coordinate a, Coordinate b) {
-
-        int minX = Math.min(a.getX(), b.getX());
-        int minY = Math.min(a.getY(), b.getY());
-
-        int maxX = Math.max(a.getX(), b.getX());
-        int maxY = Math.max(a.getY(), b.getY());
-
-        Coordinate[] coordinates = new Coordinate[(maxX - minX) * 2 + (maxY - minY) * 2];
-
-        int curr = 0;
-
-        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(minX, minY), Coordinate.coordinate(minX, maxY))) {
-            coordinates[curr] = coordinate;
-            curr++;
-        }
-
-        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(maxX, minY), Coordinate.coordinate(maxX, maxY))) {
-            coordinates[curr] = coordinate;
-            curr++;
-        }
-
-        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(minX + 1, maxY), Coordinate.coordinate(maxX - 1, maxY))) {
-            coordinates[curr] = coordinate;
-            curr++;
-        }
-
-        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(minX + 1, minY), Coordinate.coordinate(maxX - 1, minY))) {
-            coordinates[curr] = coordinate;
-            curr++;
-        }
-
-        return coordinates;
-    }
-
-    /**
      * Gets all elements surrounding a coordinate.
      *
      * @param coordinate The coordinate to get the elements around.
@@ -317,22 +232,18 @@ public abstract class InventoryMenu {
     }
 
     /**
-     * Gets all elements between two points.
+     * Gets all elements in a Selection.
      *
-     * @param x1 x value of first point.
-     * @param y1 y value of first point.
-     * @param x2 x value of second point.
-     * @param y2 y value of second point.
      * @return An array of elements found between the two points.
      */
 
-    public Element[] getElementsBetween(int x1, int y1, int x2, int y2) {
+    public Element[] getElementsIn(Selection selection) {
 
         Element[] elements = new Element[size];
 
         int slot = 0;
 
-        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(x1, y1), Coordinate.coordinate(x2, y2))) {
+        for (Coordinate coordinate : selection.getCoordinates()) {
             elements[slot] = getElementAt(coordinate);
             slot++;
         }
@@ -350,83 +261,6 @@ public abstract class InventoryMenu {
 
     public Element getElementAt(Coordinate coordinate) {
         return elementMap.get(coordinate);
-    }
-
-    public Element getElementAt(int x, int y) {
-        return elementMap.get(new Coordinate(x, y));
-    }
-
-    public void setTypeAt(int x, int y, Material type) {
-        setElementAt(x, y, new Element(type));
-    }
-
-    public void setItemAt(int x, int y, ItemStack itemStack) {
-        setElementAt(x, y, new Element(itemStack));
-    }
-
-    /**
-     * Set all elements between two points to an element.
-     *
-     * @param x1            x value of first point.
-     * @param y1            y value of first point.
-     * @param x2            x value of second point.
-     * @param y2            y value of second point.
-     * @param elementGetter A functional element that retrieves to do element based on a coordinate.
-     */
-    public void setElementsBetween(int x1, int y1, int x2, int y2, ElementGetter elementGetter) {
-        for (Coordinate coordinate : getCoordinatesWithin(Coordinate.coordinate(x1, y1), Coordinate.coordinate(x2, y2))) {
-            setElementAt(coordinate, elementGetter.getElement(coordinate));
-        }
-    }
-
-    public void setElementsBetween(Coordinate coordinate1, Coordinate coordinate2, ElementGetter elementGetter) {
-        setElementsBetween(coordinate1.getX(), coordinate1.getY(), coordinate2.getX(), coordinate2.getY(), elementGetter);
-    }
-
-    public void setBorder(ElementGetter elementGetter) {
-        for (Coordinate coordinate : getBorder(Coordinate.coordinate(0, 0), endCoordinate)) {
-            setElementAt(coordinate, elementGetter.getElement(coordinate));
-        }
-    }
-
-    public ItemStack getItemAt(int x, int y) {
-        Element element = getElementAt(x, y);
-        if (element == null) {
-            return new ItemStack(Material.AIR);
-        }
-        return element.getRepresentation();
-    }
-    
-    public ItemStack getItemAt(Coordinate coordinate) {
-        return getItemAt(coordinate.getX(), coordinate.getY());
-    }
-
-    public Material getTypeAt(int x, int y) {
-        return getItemAt(x, y).getType();
-    }
-
-    public ItemStack getItemAt(Inventory inventory, int x, int y) {
-        return inventory.getItem(Coordinate.asSlot(x, y));
-    }
-
-    public Material getTypeAt(Inventory inventory, int x, int y) {
-        return getItemAt(inventory, x, y).getType();
-    }
-
-    public ItemStack getItemAt(Inventory inventory, Coordinate coordinate) {
-        return getItemAt(inventory, coordinate.getX(), coordinate.getY());
-    }
-
-    public Material getTypeAt(Inventory inventory, Coordinate coordinate) {
-        return getItemAt(inventory, coordinate).getType();
-    }
-
-    public void setElementAt(Coordinate coordinate, Element element) {
-        this.elementMap.put(coordinate, element);
-    }
-
-    public void setElementAt(int x, int y, Element element) {
-        this.elementMap.put(new Coordinate(x, y), element);
     }
 
     /**
@@ -447,7 +281,12 @@ public abstract class InventoryMenu {
         return openedInventories.values();
     }
 
-    public Inventory getOpen(UUID key) {
-        return openedInventories.get(key);
+    public Map<Coordinate, Predicate<InventoryClickEvent>> getAllowedClicking() {
+        return allowedClicking;
+    }
+
+    @Override
+    public void unload() {
+        InventoryManager.getManager().unregisterModule(this);
     }
 }

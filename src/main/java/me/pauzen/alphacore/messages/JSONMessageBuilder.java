@@ -43,7 +43,7 @@ public class JSONMessageBuilder {
         stringBuilder.append("\n}");
         return stringBuilder.toString();
     }
-    
+
     public void send(Player player) {
         CorePlayer.get(player).sendJSON(build());
     }

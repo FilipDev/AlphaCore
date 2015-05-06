@@ -4,11 +4,11 @@
 
 package me.pauzen.alphacore.abilities;
 
-import me.pauzen.alphacore.events.CallablePlayerContainerEvent;
+import me.pauzen.alphacore.events.CallablePlayerEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.HandlerList;
 
-public class AbilityStateChangeEvent extends CallablePlayerContainerEvent {
+public class AbilityStateChangeEvent extends CallablePlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
     private Ability ability;

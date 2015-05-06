@@ -4,11 +4,11 @@
 
 package me.pauzen.alphacore.effects;
 
-import me.pauzen.alphacore.events.CallablePlayerContainerEvent;
+import me.pauzen.alphacore.events.CallablePlayerEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.HandlerList;
 
-public class EffectGetEvent extends CallablePlayerContainerEvent {
+public class EffectGetEvent extends CallablePlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
     private Effect effect;

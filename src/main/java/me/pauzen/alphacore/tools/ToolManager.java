@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.tools;
 
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.tools.events.ToolRegisterEvent;
@@ -13,18 +14,18 @@ import me.pauzen.alphacore.utils.Properties;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Priority(LoadPriority.FIRST)
-public class ToolManager extends ListenerImplementation implements Registrable {
+public class ToolManager extends ListenerImplementation implements ModuleManager<Tool> {
 
     @Nullify
     private static ToolManager manager;
@@ -41,10 +42,10 @@ public class ToolManager extends ListenerImplementation implements Registrable {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         String itemName = getItemName(e.getItem());
-        if (InvisibleEncoder.contains(itemName, "-tool")) {
+        if (InvisibleEncoder.contains(itemName, "-tool-")) {
 
             Map<String, String> properties = Properties.getProperties(itemName.substring(InvisibleEncoder.indexOf(itemName, "-tool-") + "-tool-".length()));
-            
+
             String type = properties.get("type");
 
             Tool tool = tools.get(type);
@@ -68,8 +69,11 @@ public class ToolManager extends ListenerImplementation implements Registrable {
             Action action = e.getAction();
 
             tool.onInteract(e, ClickType.fromAction(action));
-
         }
+    }
+
+    public boolean isTool(ItemStack itemStack) {
+        return InvisibleEncoder.contains(getItemName(itemStack), "-tool-");
     }
 
     public Tool registerTool(String type) {
@@ -92,5 +96,25 @@ public class ToolManager extends ListenerImplementation implements Registrable {
 
         return itemStack.getItemMeta().getDisplayName();
 
+    }
+
+    @Override
+    public String getName() {
+        return "tools";
+    }
+
+    @Override
+    public Collection<Tool> getModules() {
+        return tools.values();
+    }
+
+    @Override
+    public void registerModule(Tool module) {
+        tools.put(module.getType(), module);
+    }
+
+    @Override
+    public void unregisterModule(Tool module) {
+        tools.remove(module.getType());
     }
 }

@@ -15,16 +15,14 @@ import java.util.*;
 
 public abstract class CommandListener {
 
+    private static ErrorMessage NOT_COOLEDDOWN = new ErrorMessage("Command is still on cooldown." + ChatColor.RED + " (%s remaining)");
     public Map<String, String> modifiers;
     public CommandSender       commandSender;
     public String[]            args;
     private List<String> testForPermissions = new ArrayList<>();
     private boolean canConsoleSend;
     private Map<String, Command> subCommands = new HashMap<>();
-
-    private Map<UUID, Long> cooldowns = new HashMap<>();
-
-    private static ErrorMessage NOT_COOLEDDOWN = new ErrorMessage("Command is still on cooldown." + ChatColor.RED + " (%s remaining)");
+    private Map<UUID, Long>      cooldowns   = new HashMap<>();
 
     public CommandListener(boolean canConsoleSend, String... testForPermissions) {
         this.canConsoleSend = canConsoleSend;
@@ -51,7 +49,7 @@ public abstract class CommandListener {
                 NOT_COOLEDDOWN.send(commandSender, getRemaining(uniqueId) + "ms");
                 return false;
             }
-            
+
             CorePlayer corePlayer = CorePlayer.get((Player) commandSender);
             if (!corePlayer.hasActivated(RestrictionBypass.class)) {
                 if (corePlayer.getCurrentPlace().shouldRun(command)) {
@@ -66,7 +64,7 @@ public abstract class CommandListener {
                 }
             }
         }
-        
+
         if (args.length != 0) {
             Command subCommand = subCommands.get(args[0]);
             if (subCommand != null) {
@@ -110,18 +108,18 @@ public abstract class CommandListener {
     public List<String> getPermissions() {
         return testForPermissions;
     }
-    
+
     public void addCooldown(UUID uuid, long length) {
         cooldowns.put(uuid, System.currentTimeMillis() + length);
     }
-    
+
     public void addCooldown(CommandSender commandSender, long length) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             addCooldown(player.getUniqueId(), length);
         }
     }
-    
+
     public boolean cooledDown(UUID uuid) {
         boolean cooledDown = cooldowns.getOrDefault(uuid, 0L) - System.currentTimeMillis() <= 0;
         if (cooledDown) {
@@ -129,10 +127,10 @@ public abstract class CommandListener {
         }
         return cooledDown;
     }
-    
+
     public long getRemaining(UUID uuid) {
         return cooldowns.getOrDefault(uuid, 0L) - System.currentTimeMillis();
     }
-    
-    
+
+
 }

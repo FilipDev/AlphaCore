@@ -5,7 +5,6 @@
 package me.pauzen.alphacore.listeners;
 
 import me.pauzen.alphacore.players.data.AutoSaver;
-import me.pauzen.alphacore.utils.misc.Todo;
 
 public class ListenerRegisterer {
 

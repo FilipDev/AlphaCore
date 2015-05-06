@@ -8,7 +8,7 @@ import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.players.PlayerManager;
-import me.pauzen.alphacore.players.data.Tracker;
+import me.pauzen.alphacore.players.data.trackers.Tracker;
 import me.pauzen.alphacore.updater.UpdateEvent;
 import me.pauzen.alphacore.updater.UpdateType;
 import org.bukkit.event.EventHandler;
@@ -20,6 +20,7 @@ public class TrackerDisplayer extends ListenerImplementation {
     private Place      place;
     private int        oldLevel;
 
+    @Deprecated()
     public TrackerDisplayer(Place place, CorePlayer corePlayer, Tracker tracker) {
         super();
         this.corePlayer = corePlayer;

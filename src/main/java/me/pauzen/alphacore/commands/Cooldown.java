@@ -14,7 +14,7 @@ import java.util.function.Function;
 public abstract class Cooldown {
 
     private Function<Player, Boolean> cooldownCondition;
-    
+
     public Cooldown(Function<Player, Boolean> cooldownCondition) {
         this.cooldownCondition = cooldownCondition;
     }
@@ -41,9 +41,9 @@ public abstract class Cooldown {
         };
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Core.getCore(), runnable, 5, 5);
     }
-    
+
     public abstract void cancel(Player player);
-    
+
     public abstract void complete(Player player);
 
 }

@@ -4,8 +4,8 @@
 
 package me.pauzen.alphacore.listeners;
 
-import me.pauzen.alphacore.AlphaCoreModule;
 import me.pauzen.alphacore.Core;
+import me.pauzen.alphacore.core.modules.PluginModule;
 import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -17,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public abstract class ListenerImplementation implements Listener, AlphaCoreModule {
+public abstract class ListenerImplementation implements Listener, PluginModule {
 
     public ListenerImplementation() {
         JavaPlugin providingPlugin = JavaPlugin.getProvidingPlugin(getClass());
@@ -28,11 +28,11 @@ public abstract class ListenerImplementation implements Listener, AlphaCoreModul
     public void unregister(HandlerList handlerList) {
         handlerList.unregister(this);
     }
-    
+
     public void unregister(Event event) {
         event.getHandlers().unregister(this);
     }
-    
+
     @Override
     public void unload() {
         ReflectionFactory.getMethodsHierarchic(getClass()).stream().filter(method -> method.getAnnotation(EventHandler.class) != null).forEach(method -> {

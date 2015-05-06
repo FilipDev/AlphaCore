@@ -74,19 +74,28 @@ public class ItemBuilder {
         return this;
     }
 
+    public String getName() {
+        return itemMeta.getDisplayName();
+    }
+
+    public List<String> getLore() {
+        return itemMeta.getLore();
+    }
+
     public ItemBuilder lore(String lore) {
         this.lore.add(lore);
         return this;
     }
 
     public ItemBuilder lore(int index, String lore) {
-        
+
         if (this.lore.size() > index) {
             this.lore.set(index, lore);
-        } else {
+        }
+        else {
             this.lore.add(index, lore);
         }
-        
+
         return this;
     }
 

@@ -14,7 +14,7 @@ public final class CommandBuilder {
     private Set<String> aliases = new HashSet<>();
     private String name;
     private Set<String> permissions = new HashSet<>();
-    private String description = "%default%";
+    private String      description = "%default%";
 
     private CommandListener commandListener;
 
@@ -36,7 +36,7 @@ public final class CommandBuilder {
         Collections.addAll(this.permissions, permissions);
         return this;
     }
-    
+
     public CommandBuilder description(String description) {
         this.description = description;
         return this;

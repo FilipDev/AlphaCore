@@ -5,14 +5,14 @@
 package me.pauzen.alphacore.updater;
 
 import me.pauzen.alphacore.Core;
+import me.pauzen.alphacore.core.managers.Manager;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Bukkit;
 
 @Priority(LoadPriority.LAST)
-public class UpdateManager implements Registrable {
+public class UpdateManager implements Manager {
 
     @Nullify
     private static UpdateManager manager;
@@ -31,6 +31,11 @@ public class UpdateManager implements Registrable {
 
     public static UpdateManager getManager() {
         return manager;
+    }
+
+    @Override
+    public String getName() {
+        return "updater";
     }
 
 }

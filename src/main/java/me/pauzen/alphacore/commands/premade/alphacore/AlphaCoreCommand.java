@@ -18,7 +18,9 @@ public class AlphaCoreCommand extends Command {
             @Override
             public void onRun() {
                 ChatMessage.ABOUT.send(commandSender);
-            }            {
+            }
+
+            {
                 sub(new Modules(), new Help());
             }
 

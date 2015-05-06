@@ -4,7 +4,7 @@
 
 package me.pauzen.alphacore.inventory.elements;
 
-import me.pauzen.alphacore.inventory.InventoryMenu;
+import me.pauzen.alphacore.inventory.Menu;
 import me.pauzen.alphacore.inventory.elements.listeners.ToggleListener;
 import me.pauzen.alphacore.inventory.items.ItemBuilder;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
@@ -22,12 +22,12 @@ public class ToggleableElement extends Element {
 
     public static Element ON_ELEMENT  = new Element(ItemBuilder.from(Material.INK_SACK).durability(10).name("%s%sEnabled", ChatColor.GREEN, ChatColor.BOLD).build());
     public static Element OFF_ELEMENT = new Element(ItemBuilder.from(Material.INK_SACK).durability(8).name("%s%sDisabled", ChatColor.RED, ChatColor.BOLD).build());
-    private Coordinate inventoryCoordinate;
+    private Coordinate                              inventoryCoordinate;
     private boolean                                 currentState;
     private Predicate<Tuple<CorePlayer, Inventory>> predicate;
 
 
-    private InventoryMenu  menu;
+    private Menu           menu;
     private ToggleListener toggleListener;
 
     /**
@@ -35,7 +35,7 @@ public class ToggleableElement extends Element {
      * @param coordinate   Coordinate where to modify the ItemStack.
      * @param defaultState The default state of the element.
      */
-    public ToggleableElement(ToggleListener toggleListener, InventoryMenu menu, Coordinate coordinate, boolean defaultState) {
+    public ToggleableElement(ToggleListener toggleListener, Menu menu, Coordinate coordinate, boolean defaultState) {
         super(defaultState ? ON_ELEMENT.getRepresentation() : OFF_ELEMENT.getRepresentation());
         currentState = defaultState;
         inventoryCoordinate = coordinate;
@@ -43,14 +43,14 @@ public class ToggleableElement extends Element {
         this.toggleListener = toggleListener;
     }
 
-    public ToggleableElement(ToggleListener toggleListener, InventoryMenu menu, Coordinate coordinate, Predicate<Tuple<CorePlayer, Inventory>> predicate) {
+    public ToggleableElement(ToggleListener toggleListener, Menu menu, Coordinate coordinate, Predicate<Tuple<CorePlayer, Inventory>> predicate) {
         super(Material.AIR);
         inventoryCoordinate = coordinate;
         this.menu = menu;
         this.predicate = predicate;
     }
 
-    public static void toggleAt(InventoryMenu menu, Coordinate coordinate, Player player, Inventory inventory) {
+    public static void toggleAt(Menu menu, Coordinate coordinate, Player player, Inventory inventory) {
 
         Element element = menu.getElementAt(coordinate);
 

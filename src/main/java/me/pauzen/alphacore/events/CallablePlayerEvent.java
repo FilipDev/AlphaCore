@@ -6,11 +6,11 @@ package me.pauzen.alphacore.events;
 
 import me.pauzen.alphacore.players.CorePlayer;
 
-public abstract class CallablePlayerContainerEvent extends CallableEvent {
+public abstract class CallablePlayerEvent extends CallableEvent {
 
     private CorePlayer corePlayer;
 
-    public CallablePlayerContainerEvent(CorePlayer corePlayer) {
+    public CallablePlayerEvent(CorePlayer corePlayer) {
         this.corePlayer = corePlayer;
     }
 

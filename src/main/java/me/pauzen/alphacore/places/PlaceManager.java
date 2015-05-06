@@ -4,18 +4,23 @@
 
 package me.pauzen.alphacore.places;
 
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.misc.Tuple;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
+import me.pauzen.alphacore.worlds.WorldManager;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class PlaceManager extends ListenerImplementation implements Registrable {
+import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Predicate;
 
-    @Nullify
-    private static Place DEFAULT_PLACE;
+public class PlaceManager extends ListenerImplementation implements ModuleManager<Place> {
+
     @Nullify
     private static PlaceManager manager;
 
@@ -25,18 +30,15 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
 
     public static void register() {
         manager = new PlaceManager();
-        DEFAULT_PLACE = new Place("DEFAULT");
+    }
+    
+    @Override
+    public void onEnable() {
         PlaceAction.values();
     }
 
-    public static Place getDefaultPlace() {
-        return DEFAULT_PLACE;
-    }
-
-    public void onEvent(Event e) {
+    public void onEvent(Event e, PlaceAction placeAction, Predicate<Tuple> shouldRun) {
         if (!(e instanceof PlayerMoveEvent) && !(e instanceof BlockFromToEvent) && e instanceof Cancellable) {
-            PlaceAction placeAction = PlaceAction.getPlaceAction(e.getClass());
-
             if (placeAction == null) {
                 return;
             }
@@ -51,9 +53,36 @@ public class PlaceManager extends ListenerImplementation implements Registrable 
                 return;
             }
 
-            if (!place.isAllowed(placeAction)) {
-                ((Cancellable) e).setCancelled(true);
+            if (shouldRun.test(new Tuple<>(e, place))) {
+                if (!place.isAllowed(placeAction)) {
+                    ((Cancellable) e).setCancelled(true);
+                }
             }
         }
+    }
+
+    @Override
+    public String getName() {
+        return "places";
+    }
+
+    @Override
+    public Collection<Place> getModules() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void registerModule(Place module) {
+    }
+
+    @Override
+    public void unregisterModule(Place module) {
+    }
+
+    public Place getPlace(CorePlayer corePlayer) {
+        if (corePlayer.getCurrentPlace() == null) {
+            corePlayer.setPlace(WorldManager.getManager().getCoreWorld(corePlayer.getPlayer().getWorld()).getWorldPlace());
+        }
+        return corePlayer.getCurrentPlace();
     }
 }

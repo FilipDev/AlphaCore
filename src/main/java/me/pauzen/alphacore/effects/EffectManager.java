@@ -4,13 +4,14 @@
 
 package me.pauzen.alphacore.effects;
 
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EffectManager implements Registrable {
+public class EffectManager implements ModuleManager<Effect> {
 
     @Nullify
     private static EffectManager manager;
@@ -18,6 +19,10 @@ public class EffectManager implements Registrable {
 
     public static void register() {
         manager = new EffectManager();
+    }
+    
+    @Override
+    public void onEnable() {
         new EffectUpdater();
     }
 
@@ -25,12 +30,27 @@ public class EffectManager implements Registrable {
         return manager;
     }
 
-    public void registerEffect(Effect effect) {
-        registeredEffects.add(effect);
-    }
-
     public Set<Effect> getRegisteredEffects() {
         return registeredEffects;
     }
 
+    @Override
+    public String getName() {
+        return "effects";
+    }
+
+    @Override
+    public Collection<Effect> getModules() {
+        return registeredEffects;
+    }
+
+    @Override
+    public void registerModule(Effect effect) {
+        registeredEffects.add(effect);
+    }
+
+    @Override
+    public void unregisterModule(Effect module) {
+        registeredEffects.remove(module);
+    }
 }

@@ -38,7 +38,7 @@ public class JSONMessage implements Message {
     public String getMessage() {
         return message;
     }
-    
+
     public void setMessage(String message) {
         this.message = message;
     }

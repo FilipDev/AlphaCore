@@ -4,20 +4,21 @@
 
 package me.pauzen.alphacore.teams;
 
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TeamManager implements Registrable {
+public class TeamManager implements ModuleManager<Team> {
 
     private static final Team DEFAULT_TEAM = new DefaultTeam();
     @Nullify
     private static TeamManager manager;
-    private Map<String, Team> teams = new HashMap<>();
-    private boolean defaultTeamPreventPVP = false;
+    private Map<String, Team> teams                 = new HashMap<>();
+    private boolean           defaultTeamPreventPVP = false;
 
     public static void register() {
         manager = new TeamManager();
@@ -47,12 +48,32 @@ public class TeamManager implements Registrable {
         return this.teams.get(teamName);
     }
 
-    public void nullify() {
+    @Override
+    public void onDisable() {
         manager.teams.values().forEach(Team::clean);
-        Registrable.super.nullify();
     }
 
     public boolean getDefaultTeamPreventPVP() {
         return defaultTeamPreventPVP;
+    }
+
+    @Override
+    public Collection<Team> getModules() {
+        return teams.values();
+    }
+
+    @Override
+    public void registerModule(Team module) {
+        teams.put(module.getName(), module);
+    }
+
+    @Override
+    public void unregisterModule(Team module) {
+        teams.remove(module.getName());
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }

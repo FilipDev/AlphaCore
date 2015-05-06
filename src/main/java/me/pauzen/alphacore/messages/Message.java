@@ -44,7 +44,7 @@ public interface Message {
     }
 
     default void sendIntermittently(CommandSender commandSender, long delay, String... strings) {
-        Bukkit.getScheduler().runTaskTimer(Core.getCore(), () -> {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(Core.getCore(), () -> {
             send(commandSender, strings);
         }, 0, delay);
     }

@@ -4,12 +4,12 @@
 
 package me.pauzen.alphacore.combat;
 
-import me.pauzen.alphacore.events.CallablePlayerContainerEvent;
+import me.pauzen.alphacore.events.CallablePlayerEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public class AutoRespawnEvent extends CallablePlayerContainerEvent {
+public class AutoRespawnEvent extends CallablePlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
     private EntityDamageEvent.DamageCause damageCause;

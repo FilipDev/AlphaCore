@@ -8,7 +8,6 @@ import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
 import me.pauzen.alphacore.commands.CommandMeta;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.ChatColor;
 
 @CommandMeta("modules")
@@ -18,15 +17,29 @@ public class Modules extends Command {
     public CommandListener defaultListener() {
         return new CommandListener(true, "alphacore.admin") {
 
+            {
+                sub(new Command("unload") {
+                    @Override
+                    public CommandListener defaultListener() {
+                        return new CommandListener("alphacore.admin") {
+                            @Override
+                            public void onRun() {
+                                //TODO: Make this work.
+                            }
+                        };
+                    }
+                });
+            }
+            
             @Override
             public void onRun() {
                 String managersHeader = ChatColor.GREEN + "" + ChatColor.BOLD + "Managers: ";
                 StringBuilder managers = new StringBuilder();
-                for (Registrable registrable : Core.getCore().getManagers()) {
+                for (String name : Core.getCore().getManagers().keySet()) {
                     if (!managers.toString().isEmpty()) {
                         managers.append(", ");
                     }
-                    managers.append(registrable.getClass().getSimpleName());
+                    managers.append(name);
                 }
                 commandSender.sendMessage(managersHeader + ChatColor.WHITE + managers.toString());
             }

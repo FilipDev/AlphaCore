@@ -4,16 +4,16 @@
 
 package me.pauzen.alphacore.players;
 
-import me.pauzen.alphacore.AlphaCoreModule;
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.messages.JSONMessage;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.places.PlaceManager;
 import me.pauzen.alphacore.places.events.PlaceMoveEvent;
 import me.pauzen.alphacore.players.data.PlayerData;
-import me.pauzen.alphacore.players.data.Tracker;
 import me.pauzen.alphacore.players.data.events.PlayerLoadEvent;
+import me.pauzen.alphacore.players.data.trackers.Tracker;
 import me.pauzen.alphacore.teams.Team;
 import me.pauzen.alphacore.teams.TeamManager;
 import me.pauzen.alphacore.utils.GeneralUtils;
@@ -22,23 +22,25 @@ import me.pauzen.alphacore.utils.commonnms.EntityPlayer;
 import net.minecraft.util.io.netty.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.util.*;
 
-public class CorePlayer implements AlphaCoreModule {
+public class CorePlayer implements ManagerModule {
 
-    private String       playerName;
-    private EntityPlayer entityPlayer;
-    private Team         team;
-    private Place        place;
-    private Map<String, Object> attributes = new HashMap<>();
-    private PlayerData playerData;
+    private final String       playerName;
+    private final EntityPlayer entityPlayer;
+    private final Map<String, Object>   attributes         = new HashMap<>();
     /**
      * String is Tracker id.
      */
-    private Map<String, Tracker>  trackers           = new HashMap<>();
-    private Map<Effect, Integer>  activeEffects      = new HashMap<>();
-    private Map<Ability, Integer> activatedAbilities = new HashMap<>();
+    private final Map<String, Tracker>  trackers           = new HashMap<>();
+    private final Map<Effect, Integer>  activeEffects      = new HashMap<>();
+    private final Map<Ability, Integer> activatedAbilities = new HashMap<>();
+    private Team       team;
+    private Place      place;
+    private PlayerData playerData;
+    private Inventory  openInventory;
 
     public CorePlayer(Player player) {
         this.playerName = player.getName();
@@ -202,7 +204,7 @@ public class CorePlayer implements AlphaCoreModule {
     public String getUUID() {
         return getPlayer().getUniqueId().toString();
     }
-    
+
     public UUID uuid() {
         return getPlayer().getUniqueId();
     }
@@ -225,7 +227,7 @@ public class CorePlayer implements AlphaCoreModule {
                 tracker.addTracker(this);
             }
         }
-        this.place = PlaceManager.getDefaultPlace();
+        this.place = PlaceManager.getManager().getPlace(this);
     }
 
     public void save() {
@@ -312,6 +314,14 @@ public class CorePlayer implements AlphaCoreModule {
             effect.remove(this);
         }
         save();
+    }
+
+    public Inventory getOpenInventory() {
+        return openInventory;
+    }
+
+    public void setOpenInventory(Inventory openInventory) {
+        this.openInventory = openInventory;
     }
 }
 

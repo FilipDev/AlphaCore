@@ -39,7 +39,7 @@ public class Help extends Command {
                             }
                             else {
                                 send(commandSender, command.getKey(), getDescription(command.getValue()));
-         
+
                             }
                         }
 

@@ -10,6 +10,7 @@ import java.util.Map;
 public final class Primitives {
 
     private static Map<Class, Class> unboxedPrimitives = new HashMap<>();
+
     static {
         unboxedPrimitives.put(Integer.class, int.class);
         unboxedPrimitives.put(Long.class, long.class);

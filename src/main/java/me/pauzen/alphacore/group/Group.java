@@ -14,8 +14,8 @@ import java.util.List;
 
 public class Group {
 
-    private List<CorePlayer> members = new ArrayList<>();
-    private Message cannotJoin = new ChatMessage(ChatColor.RED + "You cannot join this group right now.");
+    private List<CorePlayer> members    = new ArrayList<>();
+    private Message          cannotJoin = new ChatMessage(ChatColor.RED + "You cannot join this group right now.");
 
     public void addPlayer(CorePlayer corePlayer) {
         members.add(corePlayer);

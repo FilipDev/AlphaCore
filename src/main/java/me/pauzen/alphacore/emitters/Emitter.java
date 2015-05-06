@@ -4,14 +4,14 @@
 
 package me.pauzen.alphacore.emitters;
 
-import me.pauzen.alphacore.Core;
-import org.bukkit.Bukkit;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import org.bukkit.Location;
 
-public abstract class Emitter {
+public abstract class Emitter implements ManagerModule {
 
     private Location location;
     private long     frequency;
+    private long lastRun = 0;
 
     public Emitter at(Location location) {
         this.location = location;
@@ -23,6 +23,14 @@ public abstract class Emitter {
         return this;
     }
 
+    public boolean elapsed() {
+        boolean elapsed = System.currentTimeMillis() - lastRun >= getFrequency() * 50;
+        if (elapsed) {
+            lastRun = System.currentTimeMillis();
+        }
+        return elapsed;
+    }
+
     public Location getLocation() {
         return location;
     }
@@ -31,10 +39,11 @@ public abstract class Emitter {
         return frequency;
     }
 
-    public void start() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(Core.getCore(), this::emit, getFrequency(), getFrequency());
-    }
-
     public abstract void emit();
+
+    @Override
+    public void unload() {
+        EmitterManager.getManager().unregisterModule(this);
+    }
 
 }

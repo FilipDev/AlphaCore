@@ -41,4 +41,19 @@ public class AllowanceChecker<T> {
         return true;
     }
 
+    public boolean allowed(T object) {
+        return !allowed.isEmpty() && allowed.contains(object);
+    }
+
+    public boolean disallowed(T object) {
+        return !disallowed.isEmpty() && disallowed.contains(object);
+    }
+
+    public AllowanceChecker<T> copy() {
+        AllowanceChecker<T> allowanceChecker = new AllowanceChecker<>();
+        allowanceChecker.disallowed.addAll(disallowed);
+        allowanceChecker.allowed.addAll(allowed);
+        return allowanceChecker;
+    }
+
 }

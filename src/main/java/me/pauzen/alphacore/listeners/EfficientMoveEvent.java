@@ -4,12 +4,12 @@
 
 package me.pauzen.alphacore.listeners;
 
-import me.pauzen.alphacore.events.CallablePlayerContainerEvent;
+import me.pauzen.alphacore.events.CallablePlayerEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class EfficientMoveEvent extends CallablePlayerContainerEvent {
+public class EfficientMoveEvent extends CallablePlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
     private PlayerMoveEvent event;

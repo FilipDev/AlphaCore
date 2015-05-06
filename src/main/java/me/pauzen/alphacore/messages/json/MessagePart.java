@@ -29,21 +29,21 @@ public class MessagePart {
         add(event.toString());
         return this;
     }
-    
+
     public MessagePart setColor(ChatColor color) {
         add("color", color.name().toLowerCase());
         return this;
     }
-    
+
     public MessagePart addFormat(ChatColor format) {
         if (!format.isFormat()) {
             throw new IllegalArgumentException("ChatColor must be a format.");
         }
-        
+
         add(format.name().toLowerCase(), "true");
         return this;
     }
-    
+
     public MessagePart add(String key, String value) {
         add(key + ":" + "'" + value + "'");
         return this;

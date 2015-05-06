@@ -1,7 +1,7 @@
 package me.pauzen.alphacore.utils.yaml;
 
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.players.data.Tracker;
+import me.pauzen.alphacore.players.data.trackers.Tracker;
 import me.pauzen.alphacore.teams.Team;
 import me.pauzen.alphacore.teams.TeamManager;
 import org.bukkit.Bukkit;

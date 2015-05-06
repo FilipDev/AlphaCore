@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.teams;
 
+import me.pauzen.alphacore.core.modules.PluginModule;
 import me.pauzen.alphacore.group.Group;
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.players.CorePlayer;
@@ -14,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Todo("Load teams from file.")
-public abstract class Team extends Group {
+public abstract class Team extends Group implements PluginModule {
 
     private String    name;
     private ChatColor chatColor;
@@ -49,11 +50,9 @@ public abstract class Team extends Group {
     }
 
     public void save() {
-        //TODO: Add save functionality
     }
 
     public void load() {
-        //TODO: Add load functionality
     }
 
     @Override
@@ -74,5 +73,10 @@ public abstract class Team extends Group {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (chatColor != null ? chatColor.hashCode() : 0);
         return result;
+    }
+    
+    @Override
+    public void unload() {
+        TeamManager.getManager().unregisterModule(this);
     }
 }

@@ -4,9 +4,9 @@
 
 package me.pauzen.alphacore.effects;
 
-import me.pauzen.alphacore.AlphaCoreModule;
 import me.pauzen.alphacore.applicable.Applicable;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Effect extends ListenerImplementation implements Applicable, AlphaCoreModule {
+public abstract class Effect extends ListenerImplementation implements Applicable, ManagerModule {
 
     private Map<CorePlayer, Long> affectedPlayers = new HashMap<>();
 
@@ -35,13 +35,13 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
         if (development != null) {
             development.sendMessage(this.effectLength + "");
         }
-        EffectManager.getManager().registerEffect(this);
+        EffectManager.getManager().registerModule(this);
     }
 
     public Effect(String name) {
         this.name = name;
         this.effectLength = -1;
-        EffectManager.getManager().registerEffect(this);
+        EffectManager.getManager().registerModule(this);
     }
 
     public Effect(String name, boolean invisible) {
@@ -52,7 +52,7 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
     public long getEffectLength() {
         return this.effectLength;
     }
-    
+
     public boolean isForever(CorePlayer corePlayer) {
         return affectedPlayers.get(corePlayer) == -1;
     }
@@ -112,7 +112,7 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
     public boolean isInvisible() {
         return invisible;
     }
-    
+
     @Override
     public void unload() {
         for (Map.Entry<CorePlayer, Long> applicationEntry : affectedPlayers.entrySet()) {

@@ -4,12 +4,13 @@
 
 package me.pauzen.alphacore.inventory;
 
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.InvisibleID;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,19 +19,20 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Priority(LoadPriority.FIRST)
-public class InventoryManager extends ListenerImplementation implements Registrable {
+public class InventoryManager extends ListenerImplementation implements ModuleManager<Menu> {
 
     @Nullify
     private static InventoryManager manager;
-    private Map<String, InventoryMenu> menus = new HashMap<>();
+
+    private Map<String, Menu> menus = new HashMap<>();
 
     public static void register() {
         manager = new InventoryManager();
-
     }
 
     public static InventoryManager getManager() {
@@ -38,27 +40,36 @@ public class InventoryManager extends ListenerImplementation implements Registra
     }
 
     @EventHandler
-    public void onInventoryOpen(InventoryOpenEvent e) {
-        InventoryMenu menu = getMenu(e.getInventory());
+    public void onInventoryOpen(InventoryOpenEvent event) {
+
+        CorePlayer corePlayer = CorePlayer.get((Player) event.getPlayer());
+
+        corePlayer.setOpenInventory(event.getInventory());
+
+        Menu menu = getMenu(event.getInventory());
 
         if (menu != null) {
-            menu.openInventory((Player) e.getPlayer(), e.getInventory());
+            menu.openInventory((Player) event.getPlayer(), event.getInventory());
         }
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent e) {
+    public void onInventoryClose(InventoryCloseEvent event) {
 
-        InventoryMenu menu = getMenu(e.getInventory());
+        CorePlayer corePlayer = CorePlayer.get((Player) event.getPlayer());
+
+        corePlayer.setOpenInventory(null);
+
+        Menu menu = getMenu(event.getInventory());
 
         if (menu != null) {
-            menu.closeInventory((Player) e.getPlayer());
+            menu.closeInventory((Player) event.getPlayer());
         }
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        InventoryMenu menu = getMenu(e.getInventory());
+        Menu menu = getMenu(e.getInventory());
 
         if (menu != null) {
             menu.process(e);
@@ -72,16 +83,32 @@ public class InventoryManager extends ListenerImplementation implements Registra
         }
     }
 
-    public void registerMenu(InventoryMenu menu) {
+    @Override
+    public void registerModule(Menu menu) {
         menus.put(menu.getID(), menu);
     }
 
-    public InventoryMenu getMenu(Inventory inventory) {
+    public Menu getMenu(Inventory inventory) {
 
         if (InvisibleID.hasInvisibleID(inventory.getName())) {
             return menus.get(InvisibleID.getIDFrom(inventory.getName()));
         }
 
         return null;
+    }
+
+    @Override
+    public String getName() {
+        return "inventories";
+    }
+
+    @Override
+    public Collection<Menu> getModules() {
+        return menus.values();
+    }
+
+    @Override
+    public void unregisterModule(Menu module) {
+        menus.remove(module.getID());
     }
 }

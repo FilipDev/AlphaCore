@@ -4,25 +4,28 @@
 
 package me.pauzen.alphacore.commands;
 
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.utils.misc.Tuple;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
-public class CommandManager implements Registrable {
+public class CommandManager implements ModuleManager<Command> {
 
     @Nullify
     private static CommandManager manager;
 
     public static void register() {
         manager = new CommandManager();
+    }
+    
+    @Override
+    public void onEnable() {
         new CommandRunner();
         RegisteredCommand.values();
     }
-    
+
     public static CommandManager getManager() {
         return manager;
     }
@@ -63,11 +66,31 @@ public class CommandManager implements Registrable {
         return new Tuple<>(modifiers, newArgs.toArray(new String[newArgs.size()]));
     }
 
-    public void registerCommand(Command command, Plugin plugin) {
-        RegisteredCommand.registerCommand(command, plugin);
+    public void registerCommand(Command command) {
+        RegisteredCommand.registerCommand(command, command.getOwner());
     }
 
     public Map<String, Command> getCommands() {
         return RegisteredCommand.getCommands();
+    }
+
+    @Override
+    public String getName() {
+        return "commands";
+    }
+
+    @Override
+    public Collection<Command> getModules() {
+        return getCommands().values();
+    }
+
+    @Override
+    public void registerModule(Command module) {
+        registerCommand(module);
+    }
+
+    @Override
+    public void unregisterModule(Command module) {
+        RegisteredCommand.unregisterCommand(module);
     }
 }

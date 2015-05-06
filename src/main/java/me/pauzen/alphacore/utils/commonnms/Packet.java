@@ -15,8 +15,8 @@ public class Packet {
     private Object     packet;
     private Class      packetClass;
     private Reflection reflection;
-    private Class[]  params;
-    private Object[] values;
+    private Class[]    params;
+    private Object[]   values;
 
     public Packet(String packet) throws IllegalAccessException, InstantiationException {
         this.packetClass = UnsafeBukkitClasses.getNMSClass(packet);

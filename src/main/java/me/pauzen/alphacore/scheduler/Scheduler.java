@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.scheduler;
 
+import me.pauzen.alphacore.core.managers.Manager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.updater.UpdateEvent;
 import me.pauzen.alphacore.updater.UpdateType;
@@ -12,19 +13,18 @@ import me.pauzen.alphacore.utils.date.time.Time;
 import me.pauzen.alphacore.utils.date.time.TimeFactory;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.event.EventHandler;
 
 import java.util.*;
 
 @Priority(LoadPriority.LAST)
-public class Scheduler extends ListenerImplementation implements Registrable {
+public class Scheduler extends ListenerImplementation implements Manager {
 
     private static Scheduler manager;
-    private NavigableMap<Time, List<Runnable>> timeSchedule = new TreeMap<>();
-    private NavigableMap<Date, List<Runnable>> dateSchedule = new TreeMap<>();
-    private Map<Time, List<String>> timeScheduleDescriptions = new HashMap<>();
-    private Map<Date, List<String>> dateScheduleDescriptions = new HashMap<>();
+    private NavigableMap<Time, List<Runnable>> timeSchedule             = new TreeMap<>();
+    private NavigableMap<Date, List<Runnable>> dateSchedule             = new TreeMap<>();
+    private Map<Time, List<String>>            timeScheduleDescriptions = new HashMap<>();
+    private Map<Date, List<String>>            dateScheduleDescriptions = new HashMap<>();
 
     public static void register() {
         manager = new Scheduler();
@@ -100,4 +100,16 @@ public class Scheduler extends ListenerImplementation implements Registrable {
         return scheduled;
     }
 
+    @Override
+    public String getName() {
+        return "schedule";
+    }
+
+    @Override
+    public void onDisable() {
+        timeSchedule.clear();
+        dateSchedule.clear();
+        timeScheduleDescriptions.clear();
+        dateScheduleDescriptions.clear();
+    }
 }

@@ -5,6 +5,7 @@
 package me.pauzen.alphacore.players.data;
 
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.players.data.trackers.Tracker;
 
 public abstract class Milestone {
 

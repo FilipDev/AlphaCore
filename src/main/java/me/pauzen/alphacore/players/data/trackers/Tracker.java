@@ -2,9 +2,10 @@
  *  Created by Filip P. on 2/7/15 11:08 PM.
  */
 
-package me.pauzen.alphacore.players.data;
+package me.pauzen.alphacore.players.data.trackers;
 
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.players.data.Milestone;
 import me.pauzen.alphacore.players.data.events.TrackerValueChangeEvent;
 import me.pauzen.alphacore.points.TrackerDisplayer;
 
@@ -18,7 +19,7 @@ public class Tracker {
     private int value = 0;
     private String     id;
     private CorePlayer corePlayer;
-    
+
     private boolean persistant = true;
 
     private Map<Integer, List<Milestone>> mileStones = new HashMap<>();

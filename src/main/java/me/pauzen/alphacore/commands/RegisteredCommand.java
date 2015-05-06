@@ -42,9 +42,9 @@ public enum RegisteredCommand {
     }
 
     public static void registerCommand(Command command, Plugin plugin) {
-        
+
         Core.registerModule((JavaPlugin) plugin, command);
-        
+
         if (commandMap == null) {
             commandMap = new HashMap<>();
         }
@@ -62,7 +62,7 @@ public enum RegisteredCommand {
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
                 PluginCommand pluginCommand = constructor.newInstance(name, plugin);
-                
+
                 pluginCommand.setDescription(command.getDescription().replace("%default%", Help.DEFAULT_DESCRIPTION));
 
                 pluginCommand.setTabCompleter((commandSender, c, s, strings) -> {
@@ -75,10 +75,10 @@ public enum RegisteredCommand {
                     Command command1 = CommandManager.getManager().getCommand(combined);
 
                     command1.defaultListener().getSubCommands()
-                           .keySet()
-                           .stream()
-                           .filter(subCommandName -> subCommandName.toLowerCase().startsWith(lastToken.toLowerCase()))
-                           .forEach(completions::add);
+                            .keySet()
+                            .stream()
+                            .filter(subCommandName -> subCommandName.toLowerCase().startsWith(lastToken.toLowerCase()))
+                            .forEach(completions::add);
 
                     if (command1.shouldSuggestPlayerNames()) {
                         Bukkit.getOnlinePlayers()
@@ -88,7 +88,7 @@ public enum RegisteredCommand {
                     }
                     return completions;
                 });
-                
+
                 commandMap.register(name, pluginCommand);
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
@@ -100,25 +100,24 @@ public enum RegisteredCommand {
         return commandMap;
     }
 
-    public Command getCommand() {
-        return command;
-    }
-    
     private static String combine(String string, String[] strings) {
         StringBuilder stringBuilder = new StringBuilder();
-        
+
         stringBuilder.append(string);
 
         for (int i = 0; i < strings.length; i++) {
             stringBuilder.append(" ");
             stringBuilder.append(strings[i]);
         }
-        
+
         return stringBuilder.toString();
     }
 
-
     public static void unregisterCommand(Command command) {
         command.getNames().forEach(commandMap::remove);
+    }
+
+    public Command getCommand() {
+        return command;
     }
 }

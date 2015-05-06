@@ -1,51 +1,87 @@
 /*
- *  Created by Filip P. on 2/27/15 11:25 PM.
+ *  Created by Filip P. on 5/5/15 10:23 PM.
  */
 
 package me.pauzen.alphacore.tools;
 
+import me.pauzen.alphacore.inventory.items.ItemBuilder;
 import me.pauzen.alphacore.inventory.misc.ClickType;
-import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.utils.Interactable;
+import me.pauzen.alphacore.utils.InvisibleEncoder;
+import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class Tool {
+public class Tool implements ManagerModule {
 
-    public static Tool EMPTY_TOOL = new Tool(null, null);
-
-    private long cooldown = 0;
+    public static final Tool EMPTY_TOOL = new Tool("");
+    private final String                            type;
+    private       Interactable<PlayerInteractEvent> listener;
+    private long coolDown = 0;
     private long lastInteract;
 
-    private Interactable<PlayerInteractEvent> listener;
-    private ItemStack                         itemStack;
+    public Tool(String type) {
+        this.type = type;
+    }
 
-    public Tool(Interactable<PlayerInteractEvent> listener, ItemStack itemStack) {
-        this.listener = listener;
-        this.itemStack = itemStack;
+    public void makeTool(ItemStack itemStack) {
+
+        if (itemStack == null) {
+            return;
+        }
+
+        if (itemStack.getType() == Material.AIR) {
+            return;
+        }
+
+        if (ToolManager.getManager().isTool(itemStack)) {
+            return;
+        }
+
+        ItemBuilder itemBuilder = ItemBuilder.from(itemStack);
+        itemBuilder.name(itemBuilder.getName() + InvisibleEncoder.encode("-tool-" + "type:" + type));
+        itemBuilder.build();
+    }
+
+    public void register() {
+        ToolManager.getManager().registerModule(this);
+    }
+
+    public long getCoolDown() {
+        return coolDown;
+    }
+
+    public void setCoolDown(long coolDown) {
+        this.coolDown = coolDown;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void onInteract(PlayerInteractEvent event, ClickType clickType) {
+
+        if (getListener() != null) {
+
+            if (System.currentTimeMillis() / 50 - lastInteract < coolDown) {
+                lastInteract = System.currentTimeMillis() / 50;
+            }
+
+            getListener().onInteract(event, clickType);
+        }
     }
 
     public Interactable<PlayerInteractEvent> getListener() {
         return listener;
     }
 
-    public void onInteract(PlayerInteractEvent event, ClickType clickType) {
-        if (System.currentTimeMillis() / 50 - lastInteract < cooldown) {
-            lastInteract = System.currentTimeMillis() / 50;
-        }
-
-        getListener().onInteract(event, clickType);
+    public void setListener(Interactable<PlayerInteractEvent> listener) {
+        this.listener = listener;
     }
 
-    public ItemStack getItemStack() {
-        return itemStack;
-    }
+    @Override
+    public void unload() {
 
-    public void give(CorePlayer corePlayer, int slot) {
-        corePlayer.getPlayer().getInventory().setItem(slot, itemStack);
-    }
-
-    public void setCooldown(long cooldown) {
-        this.cooldown = cooldown;
     }
 }

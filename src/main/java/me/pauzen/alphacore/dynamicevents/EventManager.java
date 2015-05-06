@@ -5,18 +5,18 @@
 package me.pauzen.alphacore.dynamicevents;
 
 import me.pauzen.alphacore.Core;
+import me.pauzen.alphacore.core.managers.Manager;
 import me.pauzen.alphacore.dynamicevents.events.CallEventEvent;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 @Priority(LoadPriority.FIRST)
-public class EventManager implements Listener, Registrable {
+public class EventManager implements Listener, Manager {
 
     @Nullify
     private static EventManager manager;
@@ -39,5 +39,10 @@ public class EventManager implements Listener, Registrable {
         }
 
         new CallEventEvent<>(event).call();
+    }
+
+    @Override
+    public String getName() {
+        return "dynamic_events";
     }
 }

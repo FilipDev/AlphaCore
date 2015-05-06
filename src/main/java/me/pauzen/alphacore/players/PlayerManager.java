@@ -4,9 +4,9 @@
 
 package me.pauzen.alphacore.players;
 
+import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.utils.reflection.Nullify;
-import me.pauzen.alphacore.utils.reflection.Registrable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerManager extends ListenerImplementation implements Registrable {
+public class PlayerManager extends ListenerImplementation implements ModuleManager<CorePlayer> {
 
     @Nullify
     private static PlayerManager manager;
@@ -48,24 +48,45 @@ public class PlayerManager extends ListenerImplementation implements Registrable
         destroyWrapper(e.getPlayer());
     }
 
+    public CorePlayer getWrapper(Player player) {
+        return players.get(player.getUniqueId());
+    }
+
     public void registerPlayer(Player player) {
         this.players.put(player.getUniqueId(), new CorePlayer(player));
         CorePlayer.get(player).load();
-    }
-
-    public CorePlayer getWrapper(Player player) {
-        return players.get(player.getUniqueId());
     }
 
     public void destroyWrapper(Player player) {
         CorePlayer.get(player).unload();
         this.players.remove(player.getUniqueId());
     }
-    
+
     @Override
     public void nullify() {
         getCorePlayers().forEach(player -> destroyWrapper(player.getPlayer()));
-        Registrable.super.nullify();
+        ModuleManager.super.nullify();
     }
-    
+
+    @Override
+    public String getName() {
+        return "players";
+    }
+
+    @Override
+    public Collection<CorePlayer> getModules() {
+        return players.values();
+    }
+
+    @Deprecated
+    @Override
+    public void registerModule(CorePlayer module) {
+        players.put(module.uuid(), module);
+    }
+
+    @Deprecated
+    @Override
+    public void unregisterModule(CorePlayer module) {
+        players.remove(module.uuid());
+    }
 }

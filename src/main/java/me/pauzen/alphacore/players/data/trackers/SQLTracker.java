@@ -4,7 +4,6 @@
 
 package me.pauzen.alphacore.players.data.trackers;
 
-import me.pauzen.alphacore.players.data.Tracker;
 import me.pauzen.alphacore.utils.sql.SQLConnection;
 import me.pauzen.alphacore.utils.sql.Table;
 

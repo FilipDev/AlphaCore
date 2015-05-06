@@ -4,17 +4,17 @@
 
 package me.pauzen.alphacore.commands;
 
-import me.pauzen.alphacore.AlphaCoreModule;
 import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.messages.ErrorMessage;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-public abstract class Command extends ListenerImplementation implements AlphaCoreModule {
+public abstract class Command extends ListenerImplementation implements ManagerModule {
 
     private List<CommandListener> commandListeners = new ArrayList<>();
 
@@ -125,7 +125,7 @@ public abstract class Command extends ListenerImplementation implements AlphaCor
     public String getDescription() {
         return description;
     }
-    
+
     public boolean shouldSuggestPlayerNames() {
         return false;
     }
@@ -155,13 +155,9 @@ public abstract class Command extends ListenerImplementation implements AlphaCor
         return false;
     }
 
-    public void register(Plugin plugin) {
-        CommandManager.getManager().registerCommand(this, plugin);
-    }
-    
     @Deprecated
     public void register() {
-        CommandManager.getManager().registerCommand(this, Core.getCore());
+        CommandManager.getManager().registerCommand(this);
     }
 
     public Command getParent() {
@@ -171,9 +167,13 @@ public abstract class Command extends ListenerImplementation implements AlphaCor
     public void setParent(Command parent) {
         this.parent = parent;
     }
-    
+
     @Override
     public void unload() {
         RegisteredCommand.unregisterCommand(this);
+    }
+
+    public JavaPlugin getOwner() {
+        return Core.getCore();
     }
 }
