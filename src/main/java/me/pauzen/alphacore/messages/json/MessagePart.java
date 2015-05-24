@@ -60,4 +60,7 @@ public class MessagePart {
         return part.append("\n    }").toString().replace("%message%", message);
     }
 
+    public String getMessage() {
+        return message;
+    }
 }

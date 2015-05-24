@@ -10,6 +10,7 @@ import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.misc.Tuple;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.worlds.WorldManager;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -31,7 +32,7 @@ public class PlaceManager extends ListenerImplementation implements ModuleManage
     public static void register() {
         manager = new PlaceManager();
     }
-    
+
     @Override
     public void onEnable() {
         PlaceAction.values();
@@ -45,7 +46,10 @@ public class PlaceManager extends ListenerImplementation implements ModuleManage
 
             Place place = null;
             try {
-                place = PlaceAction.getPlace(placeAction.getPlayerGetter().getPlayer(new EventContainer<>(e.getClass(), e)));
+                Player player = placeAction.getPlayerGetter().getPlayer(new EventContainer<>(e.getClass(), e));
+                if (player != null) {
+                    place = PlaceAction.getPlace(player);
+                }
             } catch (ClassCastException ignored) {
             }
 

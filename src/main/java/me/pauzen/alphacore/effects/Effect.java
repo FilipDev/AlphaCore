@@ -5,8 +5,8 @@
 package me.pauzen.alphacore.effects;
 
 import me.pauzen.alphacore.applicable.Applicable;
-import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.core.modules.ManagerModule;
+import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -62,7 +62,7 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
     public abstract void onRemove(CorePlayer corePlayer);
 
     public abstract void perSecond(CorePlayer corePlayer);
-
+   
     public void apply(CorePlayer corePlayer, long effectLength) {
         if (new EffectGetEvent(corePlayer, this).call().isCancelled()) {
             return;

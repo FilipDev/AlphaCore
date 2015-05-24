@@ -87,11 +87,13 @@ public class ToggleableElement extends Element {
         return state ? ON_ELEMENT.getRepresentation().clone() : OFF_ELEMENT.getRepresentation().clone();
     }
 
-    public void testPredicate(CorePlayer corePlayer, Inventory inventory) {
+    public ItemStack testPredicate(CorePlayer corePlayer, Inventory inventory) {
         if (predicate != null) {
             currentState = predicate.test(new Tuple<>(corePlayer, inventory));
-            setRepresentation(toState(currentState));
+            return toState(currentState);
         }
+        
+        return new ItemStack(Material.AIR);
     }
 
     /**

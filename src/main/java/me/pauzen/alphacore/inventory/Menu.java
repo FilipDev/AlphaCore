@@ -13,8 +13,27 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface Menu {
+
+    public static Menu createInventoryMenu(String name, int rows, Consumer<Menu> onRegister) {
+        return new InventoryMenu(name, rows) {
+            @Override
+            public void registerElements() {
+                onRegister.accept(this);
+            }
+        };
+    }
+
+    public static Menu createHopperMenu(String name, Consumer<Menu> onRegister) {
+        return new HopperMenu(name) {
+            @Override
+            public void registerElements() {
+                onRegister.accept(this);
+            }
+        };
+    }
 
     public boolean shouldAllowClick(InventoryClickEvent e);
 
@@ -41,6 +60,5 @@ public interface Menu {
     public Selection getMenuArea();
 
     public Selection getMenuBorder();
-
 
 }

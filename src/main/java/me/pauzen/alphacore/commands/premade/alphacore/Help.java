@@ -26,19 +26,18 @@ public class Help extends Command {
     private       JSONMessage jsonMessage         = new JSONMessage("help");
 
     @Override
-    public CommandListener defaultListener() {
+    public CommandListener getDefaultListener() {
         return new CommandListener(true) {
             @Override
             public void onRun() {
-
                 if (args.length < 2) {
                     for (Map.Entry<String, Command> command : CommandManager.getManager().getCommands().entrySet()) {
-                        if (hasPermissions(commandSender, command.getValue().defaultListener().getPermissions())) {
+                        if (hasPermissions(sender, command.getValue().getDefaultListener().getPermissions())) {
                             if (ArrayUtils.contains(command.getValue().getAliases(), command.getKey())) {
-                                send(commandSender, command.getKey(), ChatColor.RED + "" + ChatColor.BOLD + "[ALIAS] " + ChatColor.RESET + getDescription(command.getValue()));
+                                send(sender, command.getKey(), ChatColor.RED + "" + ChatColor.BOLD + "[ALIAS] " + ChatColor.RESET + getDescription(command.getValue()));
                             }
                             else {
-                                send(commandSender, command.getKey(), getDescription(command.getValue()));
+                                send(sender, command.getKey(), getDescription(command.getValue()));
 
                             }
                         }
@@ -58,24 +57,20 @@ public class Help extends Command {
                     Command command = CommandManager.getManager().getCommand(restArgs);
 
                     if (command == null) {
-                        ErrorMessage.COMMAND_NOT_FOUND.send(commandSender, ChatColor.RED + "\"" + restArgs + "\"" + ChatColor.DARK_RED);
+                        ErrorMessage.COMMAND_NOT_FOUND.send(sender, ChatColor.RED + "\"" + restArgs + "\"" + ChatColor.DARK_RED);
                         return;
                     }
 
                     boolean foundAny = false;
-                    for (CommandListener commandListener : command.getListeners()) {
-                        if (hasPermissions(commandSender, commandListener.getPermissions())) {
-                            for (Map.Entry<String, Command> entry : commandListener.getSubCommands().entrySet()) {
-                                if (hasPermissions(commandSender, entry.getValue().defaultListener().getPermissions())) {
-                                    foundAny = true;
-                                    send(commandSender, command.getName() + " " + entry.getKey(), getDescription(entry.getValue()));
-                                }
-                            }
+                    for (Map.Entry<String, Command> entry : getOwner().getSubCommands().entrySet()) {
+                        if (hasPermissions(sender, entry.getValue().getDefaultListener().getPermissions())) {
+                            foundAny = true;
+                            send(sender, command.getName() + " " + entry.getKey(), getDescription(entry.getValue()));
                         }
                     }
 
                     if (!foundAny) {
-                        commandSender.sendMessage(ChatColor.RED + "No subcommands found for this command chain (" + ChatColor.DARK_RED + restArgs + ChatColor.RED + ").");
+                        sender.sendMessage(ChatColor.RED + "No subcommands found for this command chain (" + ChatColor.DARK_RED + restArgs + ChatColor.RED + ").");
                     }
 
                 }

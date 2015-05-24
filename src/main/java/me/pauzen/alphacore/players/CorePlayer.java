@@ -5,9 +5,9 @@
 package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.abilities.Ability;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.messages.JSONMessage;
-import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.places.PlaceManager;
 import me.pauzen.alphacore.places.events.PlaceMoveEvent;
@@ -150,6 +150,7 @@ public class CorePlayer implements ManagerModule {
 
     @Deprecated
     public boolean activateAbility(Ability ability, int level) {
+        ability.addAffected(getPlayer().getUniqueId());
         ability.onApply(this, level);
         activatedAbilities.put(ability, level);
         return true;
@@ -157,10 +158,7 @@ public class CorePlayer implements ManagerModule {
 
     @Deprecated
     public boolean activateAbility(Ability ability) {
-        ability.addAffected(getPlayer().getUniqueId());
-        ability.onApply(this, 1);
-        activatedAbilities.put(ability, 1);
-        return true;
+        return activateAbility(ability, 1);
     }
 
     public boolean hasActivated(Ability ability) {
@@ -218,7 +216,7 @@ public class CorePlayer implements ManagerModule {
         List<Tracker> trackers = getPlayerData().getYamlReader().getTrackers();
         PlayerLoadEvent playerLoadEvent = new PlayerLoadEvent(this);
         playerLoadEvent.call();
-        playerLoadEvent.getDefaultAbilities().forEach(this::activateAbility);
+        playerLoadEvent.getDefaultAbilities().forEach((ability) -> ability.apply(this));
         if (trackers != null) {
             trackers.forEach(tracker -> tracker.addTracker(this));
         }
@@ -282,9 +280,13 @@ public class CorePlayer implements ManagerModule {
     }
 
     public void setPlace(Place place) {
-        this.place.removePlayer(this);
+        if (this.place != null) {
+            this.place.removePlayer(this);
+        }
         place.addPlayer(this);
-        new PlaceMoveEvent(this, this.place, place);
+        if (this.place != null) {
+            new PlaceMoveEvent(this, this.place, place).call();
+        }
         this.place = place;
     }
 

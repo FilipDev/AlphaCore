@@ -9,9 +9,10 @@ import me.pauzen.alphacore.utils.reflection.Nullifiable;
 public interface Manager extends Nullifiable {
 
     public String getName();
-    
-    public default void onEnable() {}
-    
-    public default void onDisable() {}
 
+    public default void onEnable() {
+    }
+
+    public default void onDisable() {
+    }
 }

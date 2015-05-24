@@ -4,7 +4,9 @@
 
 package me.pauzen.alphacore.combat;
 
+import me.pauzen.alphacore.combat.fight.Fight;
 import me.pauzen.alphacore.events.CallableEvent;
+import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -29,6 +31,20 @@ public class AttackEvent extends CallableEvent {
         this.damage = damage;
         this.attackType = attackType;
         this.event = event;
+        
+        createFight(this);
+    }
+    
+    private static Fight createFight(AttackEvent attackEvent) {
+        CorePlayer attacker = CorePlayer.get(attackEvent.getAttacker());
+        CorePlayer defender = CorePlayer.get(attackEvent.getDefender());
+
+        Fight fight = new Fight(attacker, defender, attackEvent, System.currentTimeMillis());
+        
+        attacker.addAttribute("fight", fight);
+        defender.addAttribute("fight", fight);
+
+        return fight;
     }
 
     public AttackEvent(Player thrower, Player defender, PotionEffect potionEffect, Event event) {

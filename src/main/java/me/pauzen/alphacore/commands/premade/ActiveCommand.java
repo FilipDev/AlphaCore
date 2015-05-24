@@ -33,23 +33,23 @@ public class ActiveCommand extends Command {
     private static ErrorMessage NO_TARGET = new ErrorMessage("Must specify a target when running from console.");
 
     @Override
-    public CommandListener defaultListener() {
+    public CommandListener getDefaultListener() {
         return new CommandListener() {
             @Override
             public void onRun() {
 
                 Player target = Bukkit.getPlayerExact(modifiers.getOrDefault("target", ""));
 
-                if (!commandSender.hasPermission("ac.active.other")) {
-                    if (target != commandSender) {
-                        ErrorMessage.PERMISSIONS.send(commandSender, "observing active abilities of other players");
+                if (!sender.hasPermission("alphacore.active.other")) {
+                    if (target != sender) {
+                        ErrorMessage.PERMISSIONS.send(sender, "observing active abilities of other players");
                         return;
                     }
                 }
 
                 if (target == null) {
-                    if (commandSender instanceof Player) {
-                        target = (Player) commandSender;
+                    if (sender instanceof Player) {
+                        target = (Player) sender;
                     }
                     else {
                         NO_TARGET.sendConsole();
@@ -59,18 +59,23 @@ public class ActiveCommand extends Command {
 
                 CorePlayer corePlayer = CorePlayer.get(target);
 
-                ChatMessage.SPACER.sendRawMessage(commandSender, ChatColor.DARK_GREEN + target.getName() + "'s Active Abilities");
-                ChatMessage.LINE_SPACER.sendRawMessage(commandSender);
+                ChatMessage.SPACER.sendRawMessage(sender, ChatColor.DARK_GREEN + target.getName() + "'s Active Abilities");
+                ChatMessage.LINE_SPACER.sendRawMessage(sender);
 
                 Set<Ability> totalAbilities = new HashSet<>();
                 totalAbilities.addAll(corePlayer.getActivatedAbilities());
                 totalAbilities.addAll(corePlayer.getCurrentPlace().getActiveAbilities());
 
-                totalAbilities.stream().filter((ability) -> !ability.isInvisible()).forEach((ability) -> ChatMessage.LIST_ELEMENT.sendRawMessage(commandSender, "Ability", getString(ability, corePlayer)));
+                totalAbilities.stream().filter((ability) -> !ability.isInvisible()).forEach((ability) -> ChatMessage.LIST_ELEMENT.sendRawMessage(sender, "Ability", getString(ability, corePlayer)));
 
-                corePlayer.getActiveEffects().stream().filter((effect) -> !effect.isInvisible()).forEach((effect) -> ChatMessage.LIST_ELEMENT.sendRawMessage(commandSender, "Effect", getString(effect, corePlayer)));
+                corePlayer.getActiveEffects().stream().filter((effect) -> !effect.isInvisible()).forEach((effect) -> ChatMessage.LIST_ELEMENT.sendRawMessage(sender, "Effect", getString(effect, corePlayer)));
             }
         };
+    }
+
+    @Override
+    public boolean getSuggestPlayers() {
+        return true;
     }
 
     private String getString(Ability ability, CorePlayer corePlayer) {

@@ -6,6 +6,7 @@ package me.pauzen.alphacore.core.managers;
 
 import me.pauzen.alphacore.core.modules.ManagerModule;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public interface ModuleManager<T extends ManagerModule> extends Manager {
@@ -17,6 +18,8 @@ public interface ModuleManager<T extends ManagerModule> extends Manager {
     public void unregisterModule(T module);
 
     public default void unregister() {
-        getModules().forEach(T::unload);
+        Collection<T> collection = new ArrayList<>();
+        collection.addAll(getModules());
+        collection.forEach(this::unregisterModule);
     }
 }

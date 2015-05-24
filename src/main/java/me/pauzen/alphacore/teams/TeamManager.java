@@ -5,6 +5,7 @@
 package me.pauzen.alphacore.teams;
 
 import me.pauzen.alphacore.core.managers.ModuleManager;
+import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 
@@ -12,13 +13,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TeamManager implements ModuleManager<Team> {
+public class TeamManager extends ListenerImplementation implements ModuleManager<Team> {
 
     private static final Team DEFAULT_TEAM = new DefaultTeam();
     @Nullify
     private static TeamManager manager;
-    private Map<String, Team> teams                 = new HashMap<>();
-    private boolean           defaultTeamPreventPVP = false;
+
+    private Map<String, Team> teams = new HashMap<>();
+    private TeamSettings settings;
 
     public static void register() {
         manager = new TeamManager();
@@ -37,6 +39,7 @@ public class TeamManager implements ModuleManager<Team> {
     }
 
     public void deleteTeam(Team team) {
+        team.getMembers().forEach(team::removePlayer);
         this.teams.remove(team.getName());
     }
 
@@ -53,8 +56,13 @@ public class TeamManager implements ModuleManager<Team> {
         manager.teams.values().forEach(Team::clean);
     }
 
-    public boolean getDefaultTeamPreventPVP() {
-        return defaultTeamPreventPVP;
+    @Override
+    public void onEnable() {
+        settings = new TeamSettings();
+    }
+
+    public TeamSettings getSettings() {
+        return settings;
     }
 
     @Override
@@ -74,6 +82,6 @@ public class TeamManager implements ModuleManager<Team> {
 
     @Override
     public String getName() {
-        return null;
+        return "teams";
     }
 }

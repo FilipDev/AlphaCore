@@ -43,6 +43,8 @@ public enum RegisteredCommand {
 
     public static void registerCommand(Command command, Plugin plugin) {
 
+        command.onRegister();
+
         Core.registerModule((JavaPlugin) plugin, command);
 
         if (commandMap == null) {
@@ -74,13 +76,13 @@ public enum RegisteredCommand {
 
                     Command command1 = CommandManager.getManager().getCommand(combined);
 
-                    command1.defaultListener().getSubCommands()
+                    command1.getSubCommands()
                             .keySet()
                             .stream()
                             .filter(subCommandName -> subCommandName.toLowerCase().startsWith(lastToken.toLowerCase()))
                             .forEach(completions::add);
 
-                    if (command1.shouldSuggestPlayerNames()) {
+                    if (command1.getSuggestPlayers()) {
                         Bukkit.getOnlinePlayers()
                               .stream()
                               .filter(player -> player.getName().toLowerCase().startsWith(lastToken.toLowerCase()))
@@ -115,6 +117,15 @@ public enum RegisteredCommand {
 
     public static void unregisterCommand(Command command) {
         command.getNames().forEach(commandMap::remove);
+        Reflection<Server> serverReflection = new Reflection<>(Bukkit.getServer());
+
+        SimpleCommandMap commandMap = (SimpleCommandMap) serverReflection.getValue("commandMap");
+
+        Reflection<SimpleCommandMap> simpleCommandMapReflection = new Reflection<>(commandMap);
+        Map<String, Command> knownCommands = (Map<String, Command>) simpleCommandMapReflection.getValue("knownCommands");
+        for (String name : command.getNames()) {
+            knownCommands.remove(name);
+        }
     }
 
     public Command getCommand() {

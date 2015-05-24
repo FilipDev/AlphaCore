@@ -7,38 +7,61 @@ package me.pauzen.alphacore.commands;
 import me.pauzen.alphacore.abilities.RestrictionBypass;
 import me.pauzen.alphacore.messages.ErrorMessage;
 import me.pauzen.alphacore.players.CorePlayer;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public abstract class CommandListener {
+public class CommandListener {
 
-    private static ErrorMessage NOT_COOLEDDOWN = new ErrorMessage("Command is still on cooldown." + ChatColor.RED + " (%s remaining)");
     public Map<String, String> modifiers;
-    public CommandSender       commandSender;
+    public CommandSender       sender;
     public String[]            args;
     private List<String> testForPermissions = new ArrayList<>();
+    private Command owner;
     private boolean canConsoleSend;
-    private Map<String, Command> subCommands = new HashMap<>();
-    private Map<UUID, Long>      cooldowns   = new HashMap<>();
+    private Map<UUID, Long> cooldowns = new HashMap<>();
+    
+    private ICommandListener listener;
+
+    public CommandListener(ICommandListener listener, Command owner, boolean canConsoleSend, String... testForPermissions) {
+        this.owner = owner;
+        this.canConsoleSend = canConsoleSend;
+        this.listener = listener;
+        testForPermissions(testForPermissions);
+    }
+    
+    public CommandListener(ICommandListener listener, Command owner, String... testForPermissions) {
+        this(listener, owner, false, testForPermissions);
+    }
+
+    public CommandListener(ICommandListener listener, boolean canConsoleSend, String... testForPermissions) {
+        this(listener, null, canConsoleSend, testForPermissions);
+    }
+    
+    public CommandListener(ICommandListener listener, String... testForPermissions) {
+        this(listener, null, false, testForPermissions);
+    }
+
+
+    public CommandListener(Command owner, boolean canConsoleSend, String... testForPermissions) {
+        this(null, owner, canConsoleSend, testForPermissions);
+    }
+    
+    public CommandListener(Command owner, String... testForPermissions) {
+        this(null, owner, false, testForPermissions);
+    }
 
     public CommandListener(boolean canConsoleSend, String... testForPermissions) {
-        this.canConsoleSend = canConsoleSend;
-        testForPermissions(testForPermissions);
+        this(null, null, canConsoleSend, testForPermissions);
     }
 
     public CommandListener(String... testForPermissions) {
-        this(true, testForPermissions);
+        this(null, null, false, testForPermissions);
     }
 
     public void testForPermissions(String... permissions) {
         Collections.addAll(testForPermissions, permissions);
-    }
-
-    public Map<String, Command> getSubCommands() {
-        return subCommands;
     }
 
     public boolean preRun(Command command, CommandSender commandSender, String[] args, Map<String, String> modifiers) {
@@ -46,7 +69,7 @@ public abstract class CommandListener {
 
             UUID uniqueId = ((Player) commandSender).getUniqueId();
             if (!cooledDown(uniqueId)) {
-                NOT_COOLEDDOWN.send(commandSender, getRemaining(uniqueId) + "ms");
+                ErrorMessage.COOLDOWN.send(commandSender, "Command", getRemaining(uniqueId) + "ms");
                 return false;
             }
 
@@ -65,14 +88,6 @@ public abstract class CommandListener {
             }
         }
 
-        if (args.length != 0) {
-            Command subCommand = subCommands.get(args[0]);
-            if (subCommand != null) {
-                CommandManager.getManager().executeCommand(subCommand, commandSender, args);
-                return true;
-            }
-        }
-
         setValues(commandSender, args, modifiers);
         onRun();
         clearValues();
@@ -80,21 +95,19 @@ public abstract class CommandListener {
     }
 
     private void setValues(CommandSender commandSender, String[] args, Map<String, String> modifiers) {
-        this.commandSender = commandSender;
+        this.sender = commandSender;
         this.args = args;
         this.modifiers = modifiers;
     }
 
     public void sub(Command... commands) {
-        for (Command command : commands) {
-            for (String name : command.getNames()) {
-                subCommands.put(name, command);
-            }
+        if (owner != null) {
+            owner.addSubCommands(commands);
         }
     }
 
     private void clearValues() {
-        this.commandSender = null;
+        this.sender = null;
         this.args = null;
         this.modifiers = null;
     }
@@ -103,7 +116,11 @@ public abstract class CommandListener {
         return this.canConsoleSend;
     }
 
-    public abstract void onRun();
+    public void onRun() {
+        if (listener != null) {
+            listener.onRun(sender, modifiers, args);
+        }
+    }
 
     public List<String> getPermissions() {
         return testForPermissions;
@@ -132,5 +149,15 @@ public abstract class CommandListener {
         return cooldowns.getOrDefault(uuid, 0L) - System.currentTimeMillis();
     }
 
+    public Command getOwner() {
+        return owner;
+    }
 
+    public void setOwner(Command owner) {
+        this.owner = owner;
+    }
+
+    public Map<String, Command> getSubCommands() {
+        return getOwner().getSubCommands();
+    }
 }

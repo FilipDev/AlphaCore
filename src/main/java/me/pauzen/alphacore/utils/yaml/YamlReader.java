@@ -23,10 +23,12 @@ public class YamlReader {
     }
 
     public Location getLocation(String location) {
-        double x = getDouble(location, "x"), y = getDouble(location, "y"), z = getDouble(location, "z");
-        int pitch = getInt(location, "pitch"), yaw = getInt(location, "yaw");
+        double x = getDouble(location, "x"), y = getDouble(location, "y"), z = getDouble(location, "z"), pitch = getDouble(location, "pitch"), yaw = getDouble(location, "yaw");
         World world = Bukkit.getWorld(yamlConfiguration.getString(location + "." + "world"));
-        return new Location(world, x, y, z, pitch, yaw);
+        Location location1 = new Location(world, x, y, z);
+        location1.setPitch((float) pitch);
+        location1.setYaw((float) yaw);
+        return location1;
     }
 
     public Tracker getTracker(String trackerName) {

@@ -5,8 +5,8 @@
 package me.pauzen.alphacore.inventory;
 
 public abstract class HopperMenu extends InventoryMenu {
-    
-    public HopperMenu(String name) {
+
+    protected HopperMenu(String name) {
         super(name, 0);
         super.size = 5;
     }

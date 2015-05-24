@@ -4,9 +4,9 @@
 
 package me.pauzen.alphacore.tools;
 
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.inventory.items.ItemBuilder;
 import me.pauzen.alphacore.inventory.misc.ClickType;
-import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.utils.Interactable;
 import me.pauzen.alphacore.utils.InvisibleEncoder;
 import org.bukkit.Material;
@@ -82,6 +82,6 @@ public class Tool implements ManagerModule {
 
     @Override
     public void unload() {
-
+        ToolManager.getManager().unregisterModule(this);
     }
 }

@@ -11,7 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ItemBuilder {
 
@@ -59,8 +61,10 @@ public class ItemBuilder {
         return this;
     }
 
+    private Map<Enchantment, Integer> enchantments = new HashMap<>();
+
     public ItemBuilder enchant(Enchantment enchantment, int level) {
-        itemStack.addUnsafeEnchantment(enchantment, level);
+        enchantments.put(enchantment, level);
         return this;
     }
 
@@ -111,6 +115,7 @@ public class ItemBuilder {
     public ItemStack build() {
         this.itemMeta.setLore(lore);
         this.itemStack.setItemMeta(itemMeta);
+        this.itemStack.addUnsafeEnchantments(enchantments);
         return itemStack;
     }
 }

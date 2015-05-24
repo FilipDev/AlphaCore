@@ -11,21 +11,21 @@ import me.pauzen.alphacore.utils.Interactable;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class InteractableElement extends Element implements Interactable<ElementInteraction> {
+public class ClickableElement extends Element implements Interactable<ElementInteraction> {
 
     private ClickListener clickListener;
 
-    public InteractableElement(ClickListener clickListener, Material material) {
+    public ClickableElement(ClickListener clickListener, Material material) {
         super(material);
         this.clickListener = clickListener;
     }
 
-    public InteractableElement(ClickListener clickListener, ItemStack item) {
+    public ClickableElement(ClickListener clickListener, ItemStack item) {
         super(item);
         this.clickListener = clickListener;
     }
 
-    public InteractableElement(ItemStack itemStack) {
+    public ClickableElement(ItemStack itemStack) {
         super(itemStack);
     }
 

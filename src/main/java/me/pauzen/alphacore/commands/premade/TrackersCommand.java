@@ -17,11 +17,11 @@ import java.util.Map;
 public class TrackersCommand extends Command {
 
     @Override
-    public CommandListener defaultListener() {
-        return new CommandListener(false, "ac.trackers") {
+    public CommandListener getDefaultListener() {
+        return new CommandListener(false, "alphacore.trackers") {
             @Override
             public void onRun() {
-                CorePlayer corePlayer = CorePlayer.get((Player) commandSender);
+                CorePlayer corePlayer = CorePlayer.get((Player) sender);
 
                 for (Map.Entry<String, Tracker> trackerEntry : corePlayer.getTrackers().entrySet()) {
                     corePlayer.getPlayer().sendMessage(trackerEntry.getKey() + ": " + trackerEntry.getValue().getValue());

@@ -8,29 +8,23 @@ import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
 import me.pauzen.alphacore.commands.CommandMeta;
+import me.pauzen.alphacore.commands.premade.alphacore.modules.Load;
+import me.pauzen.alphacore.commands.premade.alphacore.modules.Reload;
+import me.pauzen.alphacore.commands.premade.alphacore.modules.Unload;
 import org.bukkit.ChatColor;
 
 @CommandMeta("modules")
 public class Modules extends Command {
 
     @Override
-    public CommandListener defaultListener() {
-        return new CommandListener(true, "alphacore.admin") {
+    public void onRegister() {
+        addSubCommands(new Unload(), new Reload(), new Load());
+    }
 
-            {
-                sub(new Command("unload") {
-                    @Override
-                    public CommandListener defaultListener() {
-                        return new CommandListener("alphacore.admin") {
-                            @Override
-                            public void onRun() {
-                                //TODO: Make this work.
-                            }
-                        };
-                    }
-                });
-            }
-            
+    @Override
+    public CommandListener getDefaultListener() {
+        return new CommandListener(true, "alphacore.modules") {
+
             @Override
             public void onRun() {
                 String managersHeader = ChatColor.GREEN + "" + ChatColor.BOLD + "Managers: ";
@@ -41,7 +35,8 @@ public class Modules extends Command {
                     }
                     managers.append(name);
                 }
-                commandSender.sendMessage(managersHeader + ChatColor.WHITE + managers.toString());
+
+                sender.sendMessage(managersHeader + ChatColor.WHITE + managers.toString());
             }
         };
     }

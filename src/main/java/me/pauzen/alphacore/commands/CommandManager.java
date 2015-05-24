@@ -15,19 +15,25 @@ public class CommandManager implements ModuleManager<Command> {
 
     @Nullify
     private static CommandManager manager;
+    private CommandRunner commandRunner;
 
     public static void register() {
         manager = new CommandManager();
     }
-    
-    @Override
-    public void onEnable() {
-        new CommandRunner();
-        RegisteredCommand.values();
-    }
 
     public static CommandManager getManager() {
         return manager;
+    }
+
+    @Override
+    public void onEnable() {
+        commandRunner = new CommandRunner();
+        RegisteredCommand.values();
+    }
+
+    @Override
+    public void onDisable() {
+        commandRunner.unload();
     }
 
     public Command getCommand(String commandName) {
@@ -37,9 +43,10 @@ public class CommandManager implements ModuleManager<Command> {
             for (int i = 1; i < names.length; i++) {
                 String name = names[i];
 
-                command = command.defaultListener().getSubCommands().get(name);
+                command = command.getSubCommands().get(name);
             }
         }
+
         return command;
     }
 

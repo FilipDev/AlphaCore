@@ -6,8 +6,10 @@ package me.pauzen.alphacore;
 
 import me.pauzen.alphacore.core.managers.Manager;
 import me.pauzen.alphacore.core.managers.ModuleManager;
+import me.pauzen.alphacore.core.modules.Module;
 import me.pauzen.alphacore.core.modules.PluginModule;
 import me.pauzen.alphacore.effects.PremadeEffects;
+import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.listeners.ListenerRegisterer;
 import me.pauzen.alphacore.players.PlayerManager;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
@@ -15,7 +17,10 @@ import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
 import me.pauzen.alphacore.utils.reflection.jar.JAREntryFile;
+import me.pauzen.alphacore.utils.yaml.YamlBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,11 +36,14 @@ import java.util.jar.JarFile;
 
 public class Core extends JavaPlugin implements Listener {
 
-    private static Core core;
-    private Map<String, Manager>         managers         = new HashMap<>();
-    private EnumMap<LoadPriority, List<Class>> loadPriorityList = new EnumMap<>(LoadPriority.class);
+    private static Core              core;
+    private static YamlConfiguration settings;
+    private static YamlBuilder       yamlBuilder;
+    private Map<String, Manager>                managers         = new HashMap<>();
+    private EnumMap<LoadPriority, List<Class>>  loadPriorityList = new EnumMap<>(LoadPriority.class);
+    private Map<JavaPlugin, List<PluginModule>> elements         = new HashMap<>();
 
-    private Map<JavaPlugin, List<PluginModule>> elements = new HashMap<>();
+    private Map<String, Class<Manager>> managerClassMap = new HashMap<>();
 
     public static Core getCore() {
         return core;
@@ -46,23 +54,26 @@ public class Core extends JavaPlugin implements Listener {
     }
 
     public static void registerManager(Manager manager) {
-        manager.onEnable();
-        getCore().managers.put(manager.getName(), manager);
+        getCore().registerManager(manager.getClass());
     }
+
+    //MANAGERS
 
     public static void unregisterManager(Manager manager) {
         if (manager instanceof ModuleManager) {
             ((ModuleManager) manager).unregister();
         }
+        if (manager instanceof ListenerImplementation) {
+            ((ListenerImplementation) manager).unload();
+        }
         manager.onDisable();
+        manager.nullify();
         getCore().managers.remove(manager.getName());
     }
 
     public static JAREntryFile getZipped(String name) {
         return new JAREntryFile(name);
     }
-
-    //MANAGERS
 
     @Deprecated
     public static void registerModule(JavaPlugin javaPlugin, PluginModule module) {
@@ -74,10 +85,45 @@ public class Core extends JavaPlugin implements Listener {
         return JavaPlugin.getProvidingPlugin(ReflectionFactory.getCallerClasses()[1]);
     }
 
+    //DYNAMIC LOADING
+
+    //UTILITY METHODS
+    public static Optional<JavaPlugin> getOwner(Object object) {
+        return Optional.ofNullable(JavaPlugin.getProvidingPlugin(object.getClass()));
+    }
+
+    public static Optional<JavaPlugin> getOwner() {
+        return Optional.ofNullable(JavaPlugin.getProvidingPlugin(ReflectionFactory.getCallerClasses()[1]));
+    }
+
+    public static void print(String message) {
+        Bukkit.getConsoleSender().sendMessage(message);
+    }
+
+    public static YamlConfiguration getSettings() {
+        if (settings == null) {
+            yamlBuilder = new YamlBuilder(new File(getData(), "settings.yml"));
+            settings = yamlBuilder.getConfiguration();
+        }
+        return settings;
+    }
+
+    public Map<String, Class<Manager>> getManagerClassMap() {
+        return managerClassMap;
+    }
+
+    public static void saveSettings() {
+        yamlBuilder.save();
+    }
+
+    //MODULES (BACKWARDS COMPAT.)
+
     @Todo("Fix support for reloading")
     @Override
     public void onEnable() {
         core = this;
+
+        persistent = new YamlBuilder(new File(getDataFolder(), "persistent.yml"));
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
@@ -94,21 +140,46 @@ public class Core extends JavaPlugin implements Listener {
             PlayerManager.getManager().registerPlayer(player);
         }
     }
+    
+    private YamlBuilder persistent;
+    
+    public static YamlBuilder getPersistent() {
+        return core.getPersistentData();
+    }
+    
+    public YamlBuilder getPersistentData() {
+        return persistent;
+    }
 
     @EventHandler
     public void onPluginDisable(PluginDisableEvent event) {
         getModules().getOrDefault(event.getPlugin(), new ArrayList<>()).forEach(PluginModule::unload);
-
+        for (Manager manager : getManagers().values()) {
+            if (manager instanceof ModuleManager) {
+                ModuleManager moduleManager = (ModuleManager) manager;
+                for (Object object : moduleManager.getModules()) {
+                    Module module = (Module) object;
+                    Optional<JavaPlugin> owner = Core.getOwner(module);
+                    if (owner.isPresent()) {
+                        JavaPlugin javaPlugin = owner.get();
+                        if (javaPlugin == event.getPlugin()) {
+                            module.unload();
+                        }
+                    }
+                }
+            }
+        }
     }
-
-    //DYNAMIC LOADING
 
     @Override
     public void onDisable() {
-        managers.entrySet().iterator().forEachRemaining(entry -> {
-            entry.getValue().nullify();
-            managers.remove(entry.getKey());
+        Set<Map.Entry<String, Manager>> entries = new HashSet<>();
+        entries.addAll(managers.entrySet());
+        entries.forEach(entry -> {
+            Manager manager = entry.getValue();
+            unregisterManager(manager);
         });
+        saveSettings();
         core = null;
     }
 
@@ -129,8 +200,6 @@ public class Core extends JavaPlugin implements Listener {
     public void registerManagers() {
         loadPriorityList.entrySet().forEach((entry) -> entry.getValue().forEach(this::registerManager));
     }
-
-    //MODULES (BACKWARDS COMPAT.)
 
     public void computeRegisterables() {
 
@@ -188,12 +257,15 @@ public class Core extends JavaPlugin implements Listener {
 
     public void registerManager(Class clazz) {
         try {
-            System.out.println("Loaded module " + clazz.getName());
+            print("Loading module " + clazz.getName() + "...");
             ReflectionFactory.getMethod(clazz, "register").invoke(null);
             Manager manager = (Manager) ReflectionFactory.getField(clazz, "manager").get(null);
             if (manager != null) {
+                manager.onEnable();
                 managers.put(manager.getName(), manager);
+                managerClassMap.put(manager.getName(), (Class<Manager>) manager.getClass());
             }
+            print(ChatColor.GREEN + "Loaded module " + clazz.getName());
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -202,14 +274,5 @@ public class Core extends JavaPlugin implements Listener {
     @Deprecated
     public Map<JavaPlugin, List<PluginModule>> getModules() {
         return elements;
-    }
-
-    //UTILITY METHODS
-    public static Optional<JavaPlugin> getOwner(Object object) {
-        return Optional.ofNullable(JavaPlugin.getProvidingPlugin(object.getClass()));
-    }
-    
-    public static Optional<JavaPlugin> getOwner() {
-        return Optional.ofNullable(JavaPlugin.getProvidingPlugin(ReflectionFactory.getCallerClasses()[1]));
     }
 }

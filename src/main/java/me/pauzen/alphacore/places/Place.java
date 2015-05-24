@@ -6,8 +6,8 @@ package me.pauzen.alphacore.places;
 
 import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.commands.Command;
-import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.core.modules.ManagerModule;
+import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.places.events.PlaceJoinEvent;
 import me.pauzen.alphacore.places.events.PlaceLeaveEvent;
 import me.pauzen.alphacore.players.CorePlayer;

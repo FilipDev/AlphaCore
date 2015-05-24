@@ -7,10 +7,16 @@ package me.pauzen.alphacore.worlds;
 import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.updater.UpdateEvent;
+import me.pauzen.alphacore.updater.UpdateType;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,10 +61,43 @@ public class WorldManager extends ListenerImplementation implements ModuleManage
         return worldMap.get(world);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
-        CorePlayer corePlayer = CorePlayer.get(event.getPlayer());
+
+        Player player = event.getPlayer();
+        CoreWorld world = CoreWorld.get(player.getWorld());
+        
+        if (world.isApplied(WorldProperty.PREVENT_JOINING)) {
+            player.teleport(event.getFrom().getSpawnLocation());
+        }
+        
+        CorePlayer corePlayer = CorePlayer.get(player);
 
         corePlayer.setPlace(getCoreWorld(corePlayer.getPlayer().getWorld()).getWorldPlace());
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onWeatherChange(WeatherChangeEvent event) {
+        
+        CoreWorld world = CoreWorld.get(event.getWorld());
+        
+        if (world.isApplied(WorldProperty.LOCK_WEATHER)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onUpdate(UpdateEvent event) {
+
+        if (event.getUpdateType() == UpdateType.TICK) {
+            for (World world : Bukkit.getWorlds()) {
+
+                CoreWorld coreWorld = CoreWorld.get(world);
+
+                if (coreWorld.isApplied(WorldProperty.LOCK_TIME)) {
+                    coreWorld.getWorld().setTime(coreWorld.getLockTime());
+                }
+            }
+        }
     }
 }

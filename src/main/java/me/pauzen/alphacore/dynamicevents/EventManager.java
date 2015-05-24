@@ -7,6 +7,7 @@ package me.pauzen.alphacore.dynamicevents;
 import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.core.managers.Manager;
 import me.pauzen.alphacore.dynamicevents.events.CallEventEvent;
+import me.pauzen.alphacore.dynamicevents.events.EventListener;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Nullify;
@@ -25,12 +26,24 @@ public class EventManager implements Listener, Manager {
         manager = new EventManager();
     }
 
+    public static EventManager getManager() {
+        return manager;
+    }
+    
     public static <E extends Event> void registerEvent(Class<E> eventClass) {
         manager.registerEventClass(eventClass);
+    }
+    
+    public static <E extends Event> void registerEvent(Class<E> eventClass, EventListener<E> listener) {
+        manager.registerEventClass(eventClass, listener);
     }
 
     public <E extends Event> void registerEventClass(Class<E> eventClass) {
         Bukkit.getPluginManager().registerEvent(eventClass, this, EventPriority.HIGHEST, (listener, event) -> this.onEvent(event), Core.getCore());
+    }
+    
+    public <E extends Event> void registerEventClass(Class<E> eventClass, EventListener<E> listener) {
+        Bukkit.getPluginManager().registerEvent(eventClass, listener, EventPriority.HIGHEST, (listener1, event) -> listener.onCall((E) event), Core.getCallerPlugin());
     }
 
     private void onEvent(Event event) {

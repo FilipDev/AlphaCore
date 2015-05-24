@@ -44,8 +44,8 @@ public class JSONMessageBuilder {
         return stringBuilder.toString();
     }
 
-    public void send(Player player) {
-        CorePlayer.get(player).sendJSON(build());
+    public void send(Player player, String... values) {
+        CorePlayer.get(player).sendJSON(String.format(build(), values));
     }
 
 }

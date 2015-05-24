@@ -8,39 +8,34 @@ import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.group.Group;
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.Attributable;
 import me.pauzen.alphacore.utils.misc.Todo;
 import org.bukkit.ChatColor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @Todo("Load teams from file.")
-public abstract class Team extends Group implements ManagerModule {
+public abstract class Team extends Group implements ManagerModule, Attributable {
 
     private String    name;
     private ChatColor chatColor;
+
+    private Map<String, Object> attributes = new HashMap<>();
 
     public Team(String name, ChatColor chatColor) {
         this.name = name;
         this.chatColor = chatColor;
     }
 
-    public Set<CorePlayer> getAND(CorePlayer... corePlayers) {
-        Set<CorePlayer> containing = new HashSet<>();
-        for (CorePlayer corePlayer : corePlayers) {
-            if (isMember(corePlayer)) {
-                containing.add(corePlayer);
-            }
-        }
-
-        return containing;
-    }
-
     public void addPlayer(CorePlayer corePlayer) {
         super.addPlayer(corePlayer);
-        ChatMessage.JOINED_TEAM.send(corePlayer, this.getName());
+        
+        if (informJoin) {
+            ChatMessage.JOINED_TEAM.send(corePlayer, this.getName());
+        }
     }
-
+    
     public String getName() {
         return this.name;
     }
@@ -49,6 +44,7 @@ public abstract class Team extends Group implements ManagerModule {
         return this.chatColor;
     }
 
+    //TODO
     public void save() {
     }
 
@@ -74,9 +70,20 @@ public abstract class Team extends Group implements ManagerModule {
         result = 31 * result + (chatColor != null ? chatColor.hashCode() : 0);
         return result;
     }
-    
+
     @Override
     public void unload() {
         TeamManager.getManager().unregisterModule(this);
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+    
+    private boolean informJoin;
+    
+    public void setInformJoin(boolean flag) {
+        informJoin = flag;
     }
 }

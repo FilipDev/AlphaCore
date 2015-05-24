@@ -6,8 +6,8 @@ package me.pauzen.alphacore.blocks;
 
 import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.inventory.misc.ClickType;
+import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -18,16 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ClickableBlockManager implements ModuleManager<ClickableBlock> {
+public class ClickableBlockManager extends ListenerImplementation implements ModuleManager<ClickableBlock> {
 
     @Nullify
     private static ClickableBlockManager manager;
     private Map<Location, ClickableBlock> clickableBlockMap = new HashMap<>();
-    private Map<UUID, Long>               clickTimeMap      = new HashMap<>();
-    
-    @Todo("OOPify")
-    private long                          cooldown          = 200; //4 ticks
-    private boolean                       alwaysReset       = true;
 
     public static void register() {
         manager = new ClickableBlockManager();
@@ -37,30 +32,24 @@ public class ClickableBlockManager implements ModuleManager<ClickableBlock> {
         return manager;
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
 
         if (!e.getClickedBlock().getType().isSolid()) {
             return;
         }
 
-        clickTimeMap.putIfAbsent(e.getPlayer().getUniqueId(), System.currentTimeMillis());
+        ClickableBlock clickableBlock = clickableBlockMap.get(e.getClickedBlock().getLocation());
 
-        boolean ran = false;
+        if (clickableBlock != null) {
 
-        if (System.currentTimeMillis() - clickTimeMap.get(e.getPlayer().getUniqueId()) < cooldown) {
+            e.setCancelled(true);
 
-            ClickableBlock clickableBlock = clickableBlockMap.get(e.getClickedBlock().getLocation());
-
-            if (clickableBlock != null) {
+            UUID uniqueId = e.getPlayer().getUniqueId();
+            if (clickableBlock.shouldClick(uniqueId)) {
                 clickableBlock.onClick(ClickType.fromAction(e.getAction()), CorePlayer.get(e.getPlayer()));
+                clickableBlock.addClickTime(uniqueId);
             }
-
-            ran = true;
-        }
-
-        if (alwaysReset || ran) {
-            clickTimeMap.put(e.getPlayer().getUniqueId(), System.currentTimeMillis());
         }
     }
 

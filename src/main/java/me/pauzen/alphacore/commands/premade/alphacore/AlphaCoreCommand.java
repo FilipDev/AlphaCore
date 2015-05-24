@@ -13,18 +13,19 @@ import me.pauzen.alphacore.messages.ChatMessage;
 public class AlphaCoreCommand extends Command {
 
     @Override
-    public CommandListener defaultListener() {
+    public void onRegister() {
+        Modules modules = new Modules();
+        Help help = new Help();
+        addSubCommands(modules, help);
+    }
+
+    @Override
+    public CommandListener getDefaultListener() {
         return new CommandListener(true) {
             @Override
             public void onRun() {
-                ChatMessage.ABOUT.send(commandSender);
+                ChatMessage.ABOUT.send(sender);
             }
-
-            {
-                sub(new Modules(), new Help());
-            }
-
-
         };
     }
 }

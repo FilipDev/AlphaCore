@@ -28,6 +28,23 @@ public class Selection {
         this.coordinates = new ArrayList<>();
         Collections.addAll(this.coordinates, coordinates);
     }
+    
+    public static Selection radius(Coordinate coordinate, int radius) {
+
+        List<Coordinate> coordinates = new ArrayList<>();
+
+        for (int i = 0; i < 360; i++) {
+            double radians = Math.toRadians(i);
+            int x = coordinate.getX() + (int) Math.sin(radians) * radius;
+            int y = coordinate.getY() + (int) Math.cos(radians) * radius;
+
+            Coordinate coord = Coordinate.coordinate(x, y);
+
+            coordinates.add(coord);
+        }
+        
+        return new Selection(coordinates);
+    }
 
     public static Selection area(Coordinate pos1, Coordinate pos2) {
         int minX = Math.min(pos1.getX(), pos2.getX());
@@ -44,6 +61,10 @@ public class Selection {
         }
 
         return new Selection(coordinates);
+    }
+    
+    public static Selection area(Menu menu) {
+        return area(Coordinate.coordinate(0, 0), menu.getLastCoordinate());
     }
 
     public static Selection border(Coordinate pos1, Coordinate pos2) {
@@ -65,6 +86,10 @@ public class Selection {
 
         return new Selection(coordinates);
     }
+    
+    public static Selection border(Menu menu) {
+        return border(Coordinate.coordinate(0, 0), menu.getLastCoordinate());
+    }
 
     public void replace(Menu menu, Predicate<Element> elementPredicate, Function<Coordinate, Element> coordinateElementFunction) {
         for (Coordinate coordinate : coordinates) {
@@ -78,7 +103,7 @@ public class Selection {
 
     public void fillEmpty(Menu menu, Function<Coordinate, Element> coordinateElementFunction) {
         for (Coordinate coordinate : coordinates) {
-            if (menu.getElementAt(coordinate) == Element.BLANK_ELEMENT) {
+            if (menu.getElementAt(coordinate) == null) {
                 menu.setElementAt(coordinate, coordinateElementFunction.apply(coordinate));
             }
         }

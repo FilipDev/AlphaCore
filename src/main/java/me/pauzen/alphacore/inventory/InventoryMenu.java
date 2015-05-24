@@ -4,14 +4,15 @@
 
 package me.pauzen.alphacore.inventory;
 
+import me.pauzen.alphacore.Core;
+import me.pauzen.alphacore.core.modules.ManagerModule;
+import me.pauzen.alphacore.inventory.elements.ClickableElement;
 import me.pauzen.alphacore.inventory.elements.Element;
-import me.pauzen.alphacore.inventory.elements.InteractableElement;
 import me.pauzen.alphacore.inventory.elements.ToggleableElement;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.inventory.misc.ElementInteraction;
 import me.pauzen.alphacore.inventory.misc.Selection;
-import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.InvisibleID;
 import org.bukkit.Bukkit;
@@ -28,17 +29,12 @@ import java.util.function.Predicate;
 
 public abstract class InventoryMenu implements ManagerModule, Menu {
 
-    private Map<Coordinate, Element> elementMap = new HashMap<>();
-
+    protected int size;
+    private Map<Coordinate, Element>                        elementMap      = new HashMap<>();
     private Map<Coordinate, Predicate<InventoryClickEvent>> allowedClicking = new HashMap<>();
-
     private InvisibleID inventoryID;
-
     private Map<UUID, Inventory> openedInventories = new HashMap<>();
-
     private String name;
-
-    protected int    size;
 
     /**
      * Creates new Inventory with null holder, size and name as specified with the name getting an invisible unique ID appended to the end of it.
@@ -46,7 +42,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
      * @param name The desired name of the inventory.
      * @param rows The desired amount of rows in the inventory.
      */
-    public InventoryMenu(String name, int rows) {
+    protected InventoryMenu(String name, int rows) {
         this.name = name;
         this.size = rows * 9;
         inventoryID = InvisibleID.generate();
@@ -76,24 +72,30 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
         Inventory inventory;
 
         if (size == 5) {
-            inventory = Bukkit.createInventory(null, InventoryType.HOPPER, name + inventoryID.getId());
-        } else {
-            inventory = Bukkit.createInventory(null, size, name + inventoryID.getId());
+            inventory = Bukkit.createInventory(player, InventoryType.HOPPER, name + inventoryID.getId());
         }
+        else {
+            inventory = Bukkit.createInventory(player, size, name + inventoryID.getId());
+        }
+
+        return inventory;
+    }
+
+    public void addItems(Player player, Inventory inventory) {
 
         elementMap.entrySet().forEach(entry -> {
 
             int i = entry.getKey().toSlot();
+            ItemStack item = entry.getValue().getRepresentation();
 
             if (entry.getValue() instanceof ToggleableElement) {
                 ToggleableElement toggleableElement = (ToggleableElement) entry.getValue();
 
-                toggleableElement.testPredicate(CorePlayer.get(player), inventory);
+                item = toggleableElement.testPredicate(CorePlayer.get(player), inventory);
             }
-            inventory.setItem(i, entry.getValue().getRepresentation());
-        });
 
-        return inventory;
+            inventory.setItem(i, item.clone());
+        });
     }
 
     /**
@@ -107,10 +109,10 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
 
         Element clickedElement = elementMap.get(clicked);
 
-        if (clickedElement instanceof InteractableElement) {
-            InteractableElement interactableElement = (InteractableElement) clickedElement;
+        if (clickedElement instanceof ClickableElement) {
+            ClickableElement clickableElement = (ClickableElement) clickedElement;
 
-            interactableElement.onInteract(new ElementInteraction((Player) event.getWhoClicked(), event.getInventory()), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.LEFT :
+            clickableElement.onInteract(new ElementInteraction((Player) event.getWhoClicked(), event.getInventory()), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.LEFT :
                     event.getAction() == InventoryAction.PICKUP_HALF ? ClickType.RIGHT : ClickType.OTHER);
         }
         if (!shouldAllowClick(event)) {
@@ -173,6 +175,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
         openInventory(player, inventory);
         onOpen(CorePlayer.get(player));
         player.openInventory(inventory);
+        Bukkit.getScheduler().runTaskLater(Core.getCore(), () -> addItems(player, inventory), 1L);
         return inventory;
     }
 
@@ -273,17 +276,17 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
     }
 
     public Coordinate getLastCoordinate() {
-        return Coordinate.fromSlot(size);
+        return Coordinate.fromSlot(size - 1);
     }
-    
+
     public Selection getMenuArea() {
         return Selection.area(Coordinate.coordinate(0, 0), getLastCoordinate());
     }
-    
+
     public Selection getMenuBorder() {
         return Selection.border(Coordinate.coordinate(0, 0), getLastCoordinate());
     }
-    
+
     @Override
     public void unload() {
         InventoryManager.getManager().unregisterModule(this);

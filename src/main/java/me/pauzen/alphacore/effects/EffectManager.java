@@ -20,14 +20,14 @@ public class EffectManager implements ModuleManager<Effect> {
     public static void register() {
         manager = new EffectManager();
     }
-    
-    @Override
-    public void onEnable() {
-        new EffectUpdater();
-    }
 
     public static EffectManager getManager() {
         return manager;
+    }
+
+    @Override
+    public void onEnable() {
+        new EffectUpdater();
     }
 
     public Set<Effect> getRegisteredEffects() {

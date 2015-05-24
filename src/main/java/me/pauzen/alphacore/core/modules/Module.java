@@ -4,7 +4,7 @@
 
 package me.pauzen.alphacore.core.modules;
 
-interface Module {
+public interface Module {
 
     public void unload();
 

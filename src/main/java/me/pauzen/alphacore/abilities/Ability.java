@@ -145,7 +145,12 @@ public class Ability extends ListenerImplementation implements Applicable {
      */
     @Override
     public void apply(CorePlayer corePlayer) {
-        corePlayer.activateAbility(this);
+        apply(corePlayer, 1);
+    }
+    
+    public void apply(CorePlayer corePlayer, int level) {
+        onApply(corePlayer, level);
+        corePlayer.activateAbility(this, level);
     }
 
     /**
@@ -177,6 +182,10 @@ public class Ability extends ListenerImplementation implements Applicable {
         toggleAbilityState(this, corePlayer);
     }
 
+    /**
+     * Whether or not the Ability shows up the Ability list.
+     * @return State of invisibility.
+     */
     @Override
     public boolean isInvisible() {
         return invisible;
@@ -195,18 +204,18 @@ public class Ability extends ListenerImplementation implements Applicable {
     public Command asCommand(String name, String[] aliases, String description, String[] permissions) {
         Command command = new Command(name, aliases, description) {
             @Override
-            public CommandListener defaultListener() {
+            public CommandListener getDefaultListener() {
                 return new CommandListener(false, permissions) {
                     @Override
                     public void onRun() {
 
                         if (modifiers.containsKey("set")) {
                             boolean setState = Boolean.parseBoolean(modifiers.get("set"));
-                            set(Ability.this, CorePlayer.get((Player) commandSender), setState);
+                            set(Ability.this, CorePlayer.get((Player) sender), setState);
                             return;
                         }
 
-                        toggle(Ability.this, CorePlayer.get((Player) commandSender));
+                        toggle(Ability.this, CorePlayer.get((Player) sender));
                     }
 
                     private void set(Ability ability, CorePlayer corePlayer, boolean state) {

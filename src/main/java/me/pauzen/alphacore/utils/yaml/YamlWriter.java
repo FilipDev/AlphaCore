@@ -17,8 +17,8 @@ public class YamlWriter {
         setDouble(toYamlParsable(yamlSectionLocation, "x"), location.getX());
         setDouble(toYamlParsable(yamlSectionLocation, "y"), location.getY());
         setDouble(toYamlParsable(yamlSectionLocation, "z"), location.getZ());
-        setInt(toYamlParsable(yamlSectionLocation, "pitch"), (int) location.getPitch());
-        setInt(toYamlParsable(yamlSectionLocation, "yaw"), (int) location.getYaw());
+        setDouble(toYamlParsable(yamlSectionLocation, "yaw"), (double) location.getYaw());
+        setDouble(toYamlParsable(yamlSectionLocation, "pitch"), (double) location.getPitch());
     }
 
     public String toYamlParsable(String... strings) {

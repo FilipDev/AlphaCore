@@ -10,14 +10,15 @@ import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.misc.Tuple;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.player.*;
 
 import java.util.function.Predicate;
 
@@ -51,7 +52,18 @@ public enum PlaceAction {
     }),
 
     //CHAT
-    CHAT(AsyncPlayerChatEvent.class, e -> e.event().getPlayer()),;
+    CHAT(AsyncPlayerChatEvent.class),
+
+    DROP_ITEM(PlayerDropItemEvent.class),
+    
+    PICKUP_ITEM(PlayerPickupItemEvent.class),
+
+    USE_BUCKET(PlayerBucketEvent.class),
+
+    TARGETABLE(EntityTargetLivingEntityEvent.class, e -> {
+        LivingEntity target = e.event().getTarget();
+        return (target instanceof Player) ? (Player) target : null;
+    });
 
     private Class        eventClass;
     private PlayerGetter playerGetter;
@@ -66,7 +78,11 @@ public enum PlaceAction {
     }
 
     <E extends Event> PlaceAction(Class<E> eventClass, PlayerGetter<E> playerGetter) {
-        this(eventClass, playerGetter, (e) -> true);
+        this(eventClass, playerGetter, e -> true);
+    }
+
+    <E extends PlayerEvent> PlaceAction(Class<E> eventClass) {
+        this(eventClass, e -> e.event().getPlayer(), e -> true);
     }
 
     public static PlaceAction getPlaceAction(Class<? extends Event> eventClass) {
