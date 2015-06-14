@@ -30,6 +30,10 @@ public enum Test {
         this.experiment = experiment;
     }
 
+    public static boolean args(Object[] array, int length) {
+        return array.length >= length;
+    }
+
     public boolean test(Object object, Object... objects) {
         return experiment.test(object, objects);
     }
@@ -38,9 +42,5 @@ public enum Test {
         if (!experiment.test(object, objects)) {
             throw new IllegalStateException(falseMessage);
         }
-    }
-    
-    public static boolean args(Object[] array, int length) {
-        return array.length >= length;
     }
 }

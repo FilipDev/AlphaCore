@@ -40,7 +40,7 @@ public class Tool implements ManagerModule {
             return;
         }
 
-        ItemData.applyData(itemStack, new HashMap<String, String>(){{
+        ItemData.applyData(itemStack, new HashMap<String, String>() {{
             put("tool", type);
         }});
     }

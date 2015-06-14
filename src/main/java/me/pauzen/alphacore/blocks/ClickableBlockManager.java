@@ -34,7 +34,7 @@ public class ClickableBlockManager extends ListenerImplementation implements Mod
         if (e.getClickedBlock() == null) {
             return;
         }
-        
+
         if (!e.getClickedBlock().getType().isSolid()) {
             return;
         }

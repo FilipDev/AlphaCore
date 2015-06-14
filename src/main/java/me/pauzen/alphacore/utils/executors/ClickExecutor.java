@@ -8,7 +8,7 @@ import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.players.CorePlayer;
 
 public interface ClickExecutor<T, E> {
-    
+
     public void onClick(ClickType clickType, CorePlayer clicker, T t, E e);
-    
+
 }

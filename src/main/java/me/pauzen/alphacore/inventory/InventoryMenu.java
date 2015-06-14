@@ -302,7 +302,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
             setElementAt(firstEmpty, element);
         }
     }
-    
+
     private Coordinate getFirstEmpty() {
         for (int i = 0; i < size; i++) {
             Coordinate coordinate = Coordinate.fromSlot(i);
@@ -310,7 +310,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
                 return coordinate;
             }
         }
-        
+
         return null;
     }
 }

@@ -52,9 +52,9 @@ public interface Menu {
     public Element getElementAt(Coordinate coordinate);
 
     public void setElementAt(Coordinate coordinate, Element element);
-    
+
     public void addElement(Element element);
-    
+
     public List<Element> getElements();
 
     public Coordinate getLastCoordinate();

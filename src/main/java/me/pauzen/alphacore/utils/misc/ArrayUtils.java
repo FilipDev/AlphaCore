@@ -37,7 +37,7 @@ public final class ArrayUtils {
         if (!Test.args(array, index + 1)) {
             return Optional.empty();
         }
-        
+
         return Optional.of(array[index]);
     }
 

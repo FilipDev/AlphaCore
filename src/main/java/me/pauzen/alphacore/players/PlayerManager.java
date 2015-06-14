@@ -26,7 +26,11 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
 
     @Nullify
     private List<Class<? extends PlayerWrapper>> playerWrappers = new ArrayList<>();
-    
+
+    public static PlayerManager getManager() {
+        return manager;
+    }
+
     @Override
     public void onEnable() {
         addPlayerWrapper(CorePlayer.class);
@@ -34,15 +38,11 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
             registerModule(new CorePlayer(player));
         }
     }
-    
-    public static PlayerManager getManager() {
-        return manager;
-    }
 
     public void addPlayerWrapper(Class<? extends PlayerWrapper> playerWrapper) {
         playerWrappers.add(playerWrapper);
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent e) {
         for (Class<? extends PlayerWrapper> playerWrapper : playerWrappers) {
@@ -67,11 +67,11 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
 
     public void destroyWrapper(Player player, Class<? extends PlayerWrapper> playerClass) {
         PlayerWrapper module = players.get(player.getUniqueId()).get(playerClass);
-        if (module != null){
+        if (module != null) {
             unregisterModule(module);
         }
     }
-    
+
     @Override
     public void nullify() {
         for (Map.Entry<UUID, Map<Class<? extends PlayerWrapper>, PlayerWrapper>> uuidMapEntry : players.entrySet()) {
@@ -97,7 +97,7 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
                 wrappers.add(classPlayerWrapperEntry.getValue());
             }
         }
-        
+
         return wrappers;
     }
 

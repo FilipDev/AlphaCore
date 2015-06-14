@@ -40,7 +40,7 @@ public class ToolManager extends ListenerImplementation implements ModuleManager
         if (e.getClickedBlock() == null) {
             return;
         }
-        
+
         if (!isTool(e.getItem())) {
             return;
         }
@@ -125,7 +125,7 @@ public class ToolManager extends ListenerImplementation implements ModuleManager
         ItemMeta meta = ItemData.getMeta(itemStack);
 
         meta.setDisplayName(string);
-        
+
         itemStack.setItemMeta(meta);
     }
 }

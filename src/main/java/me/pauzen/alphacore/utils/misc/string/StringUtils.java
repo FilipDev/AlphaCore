@@ -43,7 +43,7 @@ public final class StringUtils {
         }
         return String.valueOf(n);
     }
-    
+
     public static int fromRoman(String number) {
         switch (number) {
             case "I":
@@ -69,5 +69,5 @@ public final class StringUtils {
         }
         return 0;
     }
-    
+
 }

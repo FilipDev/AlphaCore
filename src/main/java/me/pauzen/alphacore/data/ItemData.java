@@ -17,7 +17,7 @@ public final class ItemData {
 
     private ItemData() {
     }
-    
+
     public static void applyData(ItemStack itemStack, Map<String, String> dataMap) {
         String compiled = Properties.compileProperties((Map) dataMap);
 
@@ -39,10 +39,11 @@ public final class ItemData {
         String data;
         if (line == -1) {
             data = "";
-        } else {
+        }
+        else {
             data = lore.get(line);
         }
-        
+
         if (InvisibleEncoder.contains(data, "--")) {
             String[] split = data.split(InvisibleEncoder.encode("--"));
             String encodedProperties = split[1];
@@ -57,15 +58,16 @@ public final class ItemData {
             String string = split[0] + InvisibleEncoder.encode("--" + compiledProperties);
 
             ItemBuilder.from(itemStack).lore(line, string).build();
-        } else {
+        }
+        else {
             String string = InvisibleEncoder.encode("--" + compiled);
             ItemBuilder.from(itemStack).lore(line, string).build();
         }
     }
-    
+
     public static Map<String, String> getData(ItemStack itemStack) throws NoSuchElementException {
         List<String> lore = ItemBuilder.from(itemStack).getLore();
-        
+
         if (lore.size() == 0) {
             return new HashMap<>();
         }
@@ -82,10 +84,11 @@ public final class ItemData {
         String data;
         if (line == -1) {
             data = "";
-        } else {
+        }
+        else {
             data = lore.get(line);
         }
-        
+
         String[] split = data.split(InvisibleEncoder.encode("--"));
 
         if (!Test.args(split, 2)) {
@@ -93,14 +96,14 @@ public final class ItemData {
         }
 
         data = split[1];
-        
-        if (data == null){
+
+        if (data == null) {
             return new HashMap<>();
         }
-        
+
         return Properties.getProperties(InvisibleEncoder.decode(data));
     }
-    
+
     public static boolean hasData(ItemStack itemStack, String data) {
         return getData(itemStack).containsKey(data);
     }

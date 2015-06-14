@@ -36,7 +36,7 @@ public class Place implements ManagerModule {
         this.name = name;
         this.superPlace = superPlace;
     }
-    
+
     public static Place getServerPlace() {
         return CoreServer.SERVER_PLACE;
     }

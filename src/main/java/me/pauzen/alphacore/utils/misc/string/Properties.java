@@ -18,8 +18,8 @@ public final class Properties {
             String[] propertyStringArray = property.split(":");
             String key = propertyStringArray[0], value = propertyStringArray[1];
             propertyMap.put(key, value
-                    .replace("(COLON)", ":")
-                    .replace("(AND)", "&")
+                            .replace("(COLON)", ":")
+                            .replace("(AND)", "&")
             );
         }
         return propertyMap;
