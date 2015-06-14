@@ -1,5 +1,0 @@
-<<<<<<< Updated upstream
-Create Consumer based event system.
-Allow clicking within region message in InventoryMenu.
-=======
->>>>>>> Stashed changes

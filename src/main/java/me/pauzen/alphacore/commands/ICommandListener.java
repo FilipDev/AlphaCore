@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Map;
 
 public interface ICommandListener {
-    
+
     public void onRun(CommandSender sender, Map<String, String> modifers, String[] args);
-    
+
 }

@@ -17,10 +17,6 @@ public class EffectManager implements ModuleManager<Effect> {
     private static EffectManager manager;
     private Set<Effect> registeredEffects = new HashSet<>();
 
-    public static void register() {
-        manager = new EffectManager();
-    }
-
     public static EffectManager getManager() {
         return manager;
     }

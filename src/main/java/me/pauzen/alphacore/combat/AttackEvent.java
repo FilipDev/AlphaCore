@@ -31,20 +31,8 @@ public class AttackEvent extends CallableEvent {
         this.damage = damage;
         this.attackType = attackType;
         this.event = event;
-        
+
         createFight(this);
-    }
-    
-    private static Fight createFight(AttackEvent attackEvent) {
-        CorePlayer attacker = CorePlayer.get(attackEvent.getAttacker());
-        CorePlayer defender = CorePlayer.get(attackEvent.getDefender());
-
-        Fight fight = new Fight(attacker, defender, attackEvent, System.currentTimeMillis());
-        
-        attacker.addAttribute("fight", fight);
-        defender.addAttribute("fight", fight);
-
-        return fight;
     }
 
     public AttackEvent(Player thrower, Player defender, PotionEffect potionEffect, Event event) {
@@ -53,6 +41,18 @@ public class AttackEvent extends CallableEvent {
         this.potionEffect = potionEffect;
         this.event = event;
         this.attackType = AttackType.POTION;
+    }
+
+    private static Fight createFight(AttackEvent attackEvent) {
+        CorePlayer attacker = CorePlayer.get(attackEvent.getAttacker());
+        CorePlayer defender = CorePlayer.get(attackEvent.getDefender());
+
+        Fight fight = new Fight(attacker, defender, attackEvent, System.currentTimeMillis());
+
+        attacker.addAttribute("fight", fight);
+        defender.addAttribute("fight", fight);
+
+        return fight;
     }
 
     public static HandlerList getHandlerList() {

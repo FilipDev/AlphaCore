@@ -5,13 +5,14 @@
 package me.pauzen.alphacore.tools;
 
 import me.pauzen.alphacore.core.modules.ManagerModule;
-import me.pauzen.alphacore.inventory.items.ItemBuilder;
+import me.pauzen.alphacore.data.ItemData;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.utils.Interactable;
-import me.pauzen.alphacore.utils.InvisibleEncoder;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
 
 public class Tool implements ManagerModule {
 
@@ -25,7 +26,7 @@ public class Tool implements ManagerModule {
         this.type = type;
     }
 
-    public void makeTool(ItemStack itemStack) {
+    public void register(ItemStack itemStack) {
 
         if (itemStack == null) {
             return;
@@ -39,9 +40,9 @@ public class Tool implements ManagerModule {
             return;
         }
 
-        ItemBuilder itemBuilder = ItemBuilder.from(itemStack);
-        itemBuilder.name(itemBuilder.getName() + InvisibleEncoder.encode("-tool-" + "type:" + type));
-        itemBuilder.build();
+        ItemData.applyData(itemStack, new HashMap<String, String>(){{
+            put("tool", type);
+        }});
     }
 
     public void register() {

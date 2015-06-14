@@ -22,8 +22,7 @@ public enum Test {
         }
         return true;
     }),
-    VALID((object, objects) -> object != null),
-    ;
+    VALID((object, objects) -> object != null),;
 
     private Experiment experiment;
 
@@ -34,10 +33,14 @@ public enum Test {
     public boolean test(Object object, Object... objects) {
         return experiment.test(object, objects);
     }
-    
+
     public void test(String falseMessage, Object object, Object... objects) {
         if (!experiment.test(object, objects)) {
             throw new IllegalStateException(falseMessage);
         }
+    }
+    
+    public static boolean args(Object[] array, int length) {
+        return array.length >= length;
     }
 }

@@ -55,10 +55,10 @@ public enum PlaceAction {
     CHAT(AsyncPlayerChatEvent.class),
 
     DROP_ITEM(PlayerDropItemEvent.class),
-    
     PICKUP_ITEM(PlayerPickupItemEvent.class),
 
-    USE_BUCKET(PlayerBucketEvent.class),
+    FILL_BUCKET(PlayerBucketFillEvent.class),
+    EMPTY_BUCKET(PlayerBucketEmptyEvent.class),
 
     TARGETABLE(EntityTargetLivingEntityEvent.class, e -> {
         LivingEntity target = e.event().getTarget();

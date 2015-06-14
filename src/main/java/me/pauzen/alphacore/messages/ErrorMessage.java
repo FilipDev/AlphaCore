@@ -54,7 +54,8 @@ public class ErrorMessage implements Message {
     public void send(CommandSender commandSender, String... placeHolders) {
         if (commandSender instanceof Player && json != null) {
             new JSONMessageBuilder().add(json).send((Player) commandSender, placeHolders);
-        } else {
+        }
+        else {
             Message.super.send(commandSender, placeHolders);
         }
     }

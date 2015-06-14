@@ -22,6 +22,7 @@ public abstract class Team extends Group implements ManagerModule, Attributable 
     private ChatColor chatColor;
 
     private Map<String, Object> attributes = new HashMap<>();
+    private boolean informJoin;
 
     public Team(String name, ChatColor chatColor) {
         this.name = name;
@@ -30,12 +31,12 @@ public abstract class Team extends Group implements ManagerModule, Attributable 
 
     public void addPlayer(CorePlayer corePlayer) {
         super.addPlayer(corePlayer);
-        
+
         if (informJoin) {
             ChatMessage.JOINED_TEAM.send(corePlayer, this.getName());
         }
     }
-    
+
     public String getName() {
         return this.name;
     }
@@ -80,9 +81,7 @@ public abstract class Team extends Group implements ManagerModule, Attributable 
     public Map<String, Object> getAttributes() {
         return attributes;
     }
-    
-    private boolean informJoin;
-    
+
     public void setInformJoin(boolean flag) {
         informJoin = flag;
     }

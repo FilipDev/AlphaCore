@@ -9,5 +9,5 @@ import java.util.Map;
 public interface Attributable {
 
     public Map<String, Object> getAttributes();
-    
+
 }

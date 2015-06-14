@@ -7,64 +7,79 @@ package me.pauzen.alphacore.players;
 import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.utils.reflection.Nullify;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
-public class PlayerManager extends ListenerImplementation implements ModuleManager<CorePlayer> {
+public class PlayerManager extends ListenerImplementation implements ModuleManager<PlayerWrapper> {
 
     @Nullify
     private static PlayerManager manager;
-    private Map<UUID, CorePlayer> players = new HashMap<>();
 
-    public static Collection<CorePlayer> getCorePlayers() {
-        return manager.players.values();
+    @Nullify
+    private Map<UUID, Map<Class<? extends PlayerWrapper>, PlayerWrapper>> players = new HashMap<>();
+
+    @Nullify
+    private List<Class<? extends PlayerWrapper>> playerWrappers = new ArrayList<>();
+    
+    @Override
+    public void onEnable() {
+        addPlayerWrapper(CorePlayer.class);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            registerModule(new CorePlayer(player));
+        }
     }
-
-    public static void register() {
-        manager = new PlayerManager();
-    }
-
+    
     public static PlayerManager getManager() {
         return manager;
     }
 
+    public void addPlayerWrapper(Class<? extends PlayerWrapper> playerWrapper) {
+        playerWrappers.add(playerWrapper);
+    }
+    
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent e) {
-        if (getWrapper(e.getPlayer()) == null) {
-            registerPlayer(e.getPlayer());
+        for (Class<? extends PlayerWrapper> playerWrapper : playerWrappers) {
+            try {
+                registerModule(playerWrapper.newInstance());
+            } catch (InstantiationException | IllegalAccessException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent e) {
-        destroyWrapper(e.getPlayer());
+        for (Class<? extends PlayerWrapper> playerWrapper : playerWrappers) {
+            destroyWrapper(e.getPlayer(), playerWrapper);
+        }
     }
 
-    public CorePlayer getWrapper(Player player) {
-        return players.get(player.getUniqueId());
+    public <T> T getWrapper(Player player, Class<T> playerClass) {
+        return (T) players.get(player.getUniqueId()).get(playerClass);
     }
 
-    public void registerPlayer(Player player) {
-        this.players.put(player.getUniqueId(), new CorePlayer(player));
-        CorePlayer.get(player).load();
+    public void destroyWrapper(Player player, Class<? extends PlayerWrapper> playerClass) {
+        PlayerWrapper module = players.get(player.getUniqueId()).get(playerClass);
+        if (module != null){
+            unregisterModule(module);
+        }
     }
-
-    public void destroyWrapper(Player player) {
-        CorePlayer.get(player).unload();
-        this.players.remove(player.getUniqueId());
-    }
-
+    
     @Override
     public void nullify() {
-        getCorePlayers().forEach(player -> destroyWrapper(player.getPlayer()));
+        for (Map.Entry<UUID, Map<Class<? extends PlayerWrapper>, PlayerWrapper>> uuidMapEntry : players.entrySet()) {
+            for (Map.Entry<Class<? extends PlayerWrapper>, PlayerWrapper> classPlayerWrapperEntry : uuidMapEntry.getValue().entrySet()) {
+                unregisterModule(classPlayerWrapperEntry.getValue());
+            }
+        }
+        players.clear();
         ModuleManager.super.nullify();
     }
 
@@ -74,19 +89,27 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
     }
 
     @Override
-    public Collection<CorePlayer> getModules() {
-        return players.values();
+    public Collection<PlayerWrapper> getModules() {
+        List<PlayerWrapper> wrappers = new ArrayList<>(playerWrappers.size() * players.size());
+
+        for (Map.Entry<UUID, Map<Class<? extends PlayerWrapper>, PlayerWrapper>> uuidMapEntry : players.entrySet()) {
+            for (Map.Entry<Class<? extends PlayerWrapper>, PlayerWrapper> classPlayerWrapperEntry : uuidMapEntry.getValue().entrySet()) {
+                wrappers.add(classPlayerWrapperEntry.getValue());
+            }
+        }
+        
+        return wrappers;
     }
 
-    @Deprecated
     @Override
-    public void registerModule(CorePlayer module) {
-        players.put(module.uuid(), module);
+    public void registerModule(PlayerWrapper module) {
+        players.putIfAbsent(module.getUniqueId(), new HashMap<>());
+        players.get(module.getUniqueId()).put(module.getClass(), module);
     }
 
-    @Deprecated
     @Override
-    public void unregisterModule(CorePlayer module) {
-        players.remove(module.uuid());
+    public void unregisterModule(PlayerWrapper module) {
+        module.save();
+        players.get(module.getUniqueId()).remove(module.getClass());
     }
 }

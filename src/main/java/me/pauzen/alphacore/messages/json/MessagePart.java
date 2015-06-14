@@ -20,11 +20,6 @@ public class MessagePart {
     public MessagePart() {
     }
 
-    public MessagePart setMessage(String message) {
-        this.message = message;
-        return this;
-    }
-
     public MessagePart addEvent(JSONEvent event) {
         add(event.toString());
         return this;
@@ -62,5 +57,10 @@ public class MessagePart {
 
     public String getMessage() {
         return message;
+    }
+
+    public MessagePart setMessage(String message) {
+        this.message = message;
+        return this;
     }
 }

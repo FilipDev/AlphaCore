@@ -25,10 +25,6 @@ public class InteractableEntityManager extends ListenerImplementation implements
     private static InteractableEntityManager manager;
     private Map<String, InteractableEntity> interactableEntities = new HashMap<>();
 
-    public static void register() {
-        manager = new InteractableEntityManager();
-    }
-
     public static InteractableEntityManager getManager() {
         return manager;
     }

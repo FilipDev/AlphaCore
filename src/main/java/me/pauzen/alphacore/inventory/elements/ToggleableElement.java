@@ -92,7 +92,7 @@ public class ToggleableElement extends Element {
             currentState = predicate.test(new Tuple<>(corePlayer, inventory));
             return toState(currentState);
         }
-        
+
         return new ItemStack(Material.AIR);
     }
 

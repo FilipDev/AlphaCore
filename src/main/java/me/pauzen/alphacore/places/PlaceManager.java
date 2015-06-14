@@ -29,10 +29,6 @@ public class PlaceManager extends ListenerImplementation implements ModuleManage
         return manager;
     }
 
-    public static void register() {
-        manager = new PlaceManager();
-    }
-
     @Override
     public void onEnable() {
         PlaceAction.values();

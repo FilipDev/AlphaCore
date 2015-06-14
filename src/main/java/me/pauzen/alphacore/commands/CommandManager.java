@@ -15,11 +15,7 @@ public class CommandManager implements ModuleManager<Command> {
 
     @Nullify
     private static CommandManager manager;
-    private CommandRunner commandRunner;
-
-    public static void register() {
-        manager = new CommandManager();
-    }
+    private        CommandRunner  commandRunner;
 
     public static CommandManager getManager() {
         return manager;

@@ -21,7 +21,7 @@ public class CoreWorld implements ManagerModule {
     private final Place worldPlace;
 
     private Set<WorldProperty> appliedProperties = new HashSet<>();
-    
+
     private long lockTime;
 
     public CoreWorld(World world) {
@@ -32,6 +32,14 @@ public class CoreWorld implements ManagerModule {
                 return location.getWorld() == world;
             }
         };
+    }
+
+    public static CoreWorld get(World world) {
+        return WorldManager.getManager().getCoreWorld(world);
+    }
+
+    public static CoreWorld get(String worldName) {
+        return WorldManager.getManager().getCoreWorld(Bukkit.getWorld(worldName));
     }
 
     public World getWorld() {
@@ -46,25 +54,17 @@ public class CoreWorld implements ManagerModule {
     public void unload() {
         WorldManager.getManager().unregisterModule(this);
     }
-    
+
     public boolean isApplied(WorldProperty property) {
         return appliedProperties.contains(property);
     }
-    
+
     public void applyProperty(WorldProperty property) {
         appliedProperties.add(property);
     }
-    
+
     public void removeProperty(WorldProperty property) {
         appliedProperties.remove(property);
-    }
-    
-    public static CoreWorld get(World world) {
-        return WorldManager.getManager().getCoreWorld(world);
-    }
-    
-    public static CoreWorld get(String worldName) {
-        return WorldManager.getManager().getCoreWorld(Bukkit.getWorld(worldName));
     }
 
     public Set<WorldProperty> getAppliedProperties() {

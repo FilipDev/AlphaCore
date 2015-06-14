@@ -26,10 +26,6 @@ public class Scheduler extends ListenerImplementation implements Manager {
     private Map<Time, List<String>>            timeScheduleDescriptions = new HashMap<>();
     private Map<Date, List<String>>            dateScheduleDescriptions = new HashMap<>();
 
-    public static void register() {
-        manager = new Scheduler();
-    }
-
     public static Scheduler getManager() {
         return manager;
     }

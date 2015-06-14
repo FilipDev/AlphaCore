@@ -25,10 +25,6 @@ public class UpdateManager implements Manager {
         }, 1L, 1L);
     }
 
-    public static void register() {
-        manager = new UpdateManager();
-    }
-
     public static UpdateManager getManager() {
         return manager;
     }

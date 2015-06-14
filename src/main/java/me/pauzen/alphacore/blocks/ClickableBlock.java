@@ -7,19 +7,21 @@ package me.pauzen.alphacore.blocks;
 import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.utils.executors.ClickExecutor;
+import me.pauzen.alphacore.utils.misc.test.Test;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class ClickableBlock implements ManagerModule {
+public class ClickableBlock implements ManagerModule {
 
     private Location location;
-    
     private long cooldown = 2000L;
-
+    private ClickExecutor<ClickableBlock, PlayerInteractEvent> clickExecutor;
     private Map<UUID, Long> clickTimes = new HashMap<>();
 
     public ClickableBlock(Location location) {
@@ -31,38 +33,50 @@ public abstract class ClickableBlock implements ManagerModule {
         this.cooldown = cooldown;
     }
 
-    public abstract void onClick(ClickType clickType, CorePlayer corePlayer);
-
-    public Location getLocation() {
-        return location;
+    public void onClick(ClickType clickType, CorePlayer corePlayer, PlayerInteractEvent event) {
+        if (Test.VALID.test(this.clickExecutor)) {
+            this.clickExecutor.onClick(clickType, corePlayer, this, event);
+        }
     }
 
-    @Override
+    public ClickExecutor<ClickableBlock, PlayerInteractEvent> getClickExecutor() {
+        return this.clickExecutor;
+    }
+
+    public void setClickExecutor(ClickExecutor<ClickableBlock, PlayerInteractEvent> clickExecutor) {
+        this.clickExecutor = clickExecutor;
+    }
+
+    public Location getLocation() {
+        return this.location;
+    }
+
     public void unload() {
         ClickableBlockManager.getManager().unregisterModule(this);
     }
 
-    @Override
     public String toString() {
-        return "ClickableBlock{" +
-                "location=" + location +
-                '}';
+        return "ClickableBlock{location=" + this.location + '}';
     }
-    
+
     public long getCooldown() {
-        return cooldown;
+        return this.cooldown;
     }
-    
+
+    public void setCooldown(long cooldown) {
+        this.cooldown = cooldown;
+    }
+
     public void addClickTime(UUID uuid) {
-        clickTimes.put(uuid, System.currentTimeMillis());
+        this.clickTimes.put(uuid, System.currentTimeMillis());
     }
-    
+
     public boolean shouldClick(UUID uuid) {
-        clickTimes.putIfAbsent(uuid, 0L);
-        return System.currentTimeMillis() - clickTimes.get(uuid) >= getCooldown();
+        this.clickTimes.putIfAbsent(uuid, 0L);
+        return System.currentTimeMillis() - this.clickTimes.get(uuid) >= this.getCooldown();
     }
-    
+
     public Block getBlock() {
-        return location.getBlock();
+        return this.location.getBlock();
     }
 }

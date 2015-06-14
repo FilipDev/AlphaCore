@@ -39,7 +39,8 @@ public class Reload extends Command {
                     Core.unregisterManager(manager1);
                     Core.registerManager(manager1);
                     RELOAD_MANAGER.send(sender, manager1.getName());
-                } else {
+                }
+                else {
                     ErrorMessage.INVALID_ARGUMENTS.send(sender, "Argument must be a valid Manager.");
                 }
             }

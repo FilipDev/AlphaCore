@@ -17,7 +17,7 @@ public final class CommandBuilder {
     private String      description = "%default%";
 
     private CommandListener commandListener;
-    private boolean         suggestNames = false;
+    private boolean suggestNames = false;
 
     public CommandBuilder(@Nonnull String name) {
         this.name = name;
@@ -47,7 +47,7 @@ public final class CommandBuilder {
         this.suggestNames = flag;
         return this;
     }
-    
+
     public Command build() {
         if (commandListener == null) {
             throw new NullPointerException("CommandListener cannot be null.");
@@ -60,12 +60,12 @@ public final class CommandBuilder {
             public CommandListener getDefaultListener() {
                 return commandListener;
             }
-            
+
             @Override
             public boolean getSuggestPlayers() {
                 return suggestNames;
             }
         };
     }
-    
+
 }

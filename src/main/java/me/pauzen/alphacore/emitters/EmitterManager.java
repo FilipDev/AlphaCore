@@ -25,10 +25,6 @@ public class EmitterManager extends ListenerImplementation implements ModuleMana
         return manager;
     }
 
-    public static void register() {
-        manager = new EmitterManager();
-    }
-
     @EventHandler
     public void onUpdate(UpdateEvent event) {
         if (event.getUpdateType() == UpdateType.TICK) {

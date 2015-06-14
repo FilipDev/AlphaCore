@@ -11,6 +11,7 @@ import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.places.events.PlaceJoinEvent;
 import me.pauzen.alphacore.places.events.PlaceLeaveEvent;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.server.CoreServer;
 import me.pauzen.alphacore.utils.AllowanceChecker;
 
 import java.util.HashSet;
@@ -34,6 +35,10 @@ public class Place implements ManagerModule {
     public Place(String name, Place superPlace) {
         this.name = name;
         this.superPlace = superPlace;
+    }
+    
+    public static Place getServerPlace() {
+        return CoreServer.SERVER_PLACE;
     }
 
     public void activateAbility(Ability ability) {

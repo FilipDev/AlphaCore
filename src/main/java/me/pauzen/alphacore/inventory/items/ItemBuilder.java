@@ -20,6 +20,7 @@ public class ItemBuilder {
     private ItemStack    itemStack;
     private ItemMeta     itemMeta;
     private List<String> lore;
+    private Map<Enchantment, Integer> enchantments = new HashMap<>();
 
     private ItemBuilder(ItemStack itemStack) {
 
@@ -61,8 +62,6 @@ public class ItemBuilder {
         return this;
     }
 
-    private Map<Enchantment, Integer> enchantments = new HashMap<>();
-
     public ItemBuilder enchant(Enchantment enchantment, int level) {
         enchantments.put(enchantment, level);
         return this;
@@ -83,6 +82,9 @@ public class ItemBuilder {
     }
 
     public List<String> getLore() {
+        if (itemMeta.getLore() == null) {
+            itemMeta.setLore(new ArrayList<>());
+        }
         return itemMeta.getLore();
     }
 
@@ -97,7 +99,7 @@ public class ItemBuilder {
             this.lore.set(index, lore);
         }
         else {
-            this.lore.add(index, lore);
+            this.lore.add(lore);
         }
 
         return this;

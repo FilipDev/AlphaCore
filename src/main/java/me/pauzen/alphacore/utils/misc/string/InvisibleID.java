@@ -2,7 +2,7 @@
  *  Created by Filip P. on 2/20/15 10:42 PM.
  */
 
-package me.pauzen.alphacore.utils;
+package me.pauzen.alphacore.utils.misc.string;
 
 import org.bukkit.ChatColor;
 

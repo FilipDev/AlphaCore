@@ -7,11 +7,11 @@ package me.pauzen.alphacore.players.data;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.players.data.trackers.Tracker;
 
-public abstract class Milestone {
+public abstract class MileStone {
 
     private int value;
 
-    public Milestone(int value) {
+    public MileStone(int value) {
         this.value = value;
     }
 

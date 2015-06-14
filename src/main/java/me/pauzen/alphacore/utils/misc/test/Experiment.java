@@ -5,6 +5,6 @@
 package me.pauzen.alphacore.utils.misc.test;
 
 public interface Experiment {
-    
+
     public abstract boolean test(Object object, Object[] objects);
 }

@@ -7,7 +7,7 @@ package me.pauzen.alphacore.emitters;
 import org.bukkit.Effect;
 
 public class EffectEmitter extends Emitter {
-    
+
     private Effect effect;
 
     public EffectEmitter(Effect effect) {

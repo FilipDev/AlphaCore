@@ -24,10 +24,6 @@ public class ClickableBlockManager extends ListenerImplementation implements Mod
     private static ClickableBlockManager manager;
     private Map<Location, ClickableBlock> clickableBlockMap = new HashMap<>();
 
-    public static void register() {
-        manager = new ClickableBlockManager();
-    }
-
     public static ClickableBlockManager getManager() {
         return manager;
     }
@@ -35,6 +31,10 @@ public class ClickableBlockManager extends ListenerImplementation implements Mod
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
 
+        if (e.getClickedBlock() == null) {
+            return;
+        }
+        
         if (!e.getClickedBlock().getType().isSolid()) {
             return;
         }
@@ -47,7 +47,7 @@ public class ClickableBlockManager extends ListenerImplementation implements Mod
 
             UUID uniqueId = e.getPlayer().getUniqueId();
             if (clickableBlock.shouldClick(uniqueId)) {
-                clickableBlock.onClick(ClickType.fromAction(e.getAction()), CorePlayer.get(e.getPlayer()));
+                clickableBlock.onClick(ClickType.fromAction(e.getAction()), CorePlayer.get(e.getPlayer()), e);
                 clickableBlock.addClickTime(uniqueId);
             }
         }

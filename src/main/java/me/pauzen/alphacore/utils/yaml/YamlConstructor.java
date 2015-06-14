@@ -5,16 +5,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class YamlBuilder {
+public class YamlConstructor {
 
     private File              file;
     private YamlConfiguration yamlConfiguration;
 
-    public YamlBuilder(String containingFolder, String name) {
+    public YamlConstructor(String containingFolder, String name) {
         this.file = new File(containingFolder + File.pathSeparator + name + ".yml");
     }
 
-    public YamlBuilder(File file) {
+    public YamlConstructor(File file) {
         this.file = file;
     }
 

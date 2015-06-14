@@ -62,7 +62,7 @@ public abstract class Effect extends ListenerImplementation implements Applicabl
     public abstract void onRemove(CorePlayer corePlayer);
 
     public abstract void perSecond(CorePlayer corePlayer);
-   
+
     public void apply(CorePlayer corePlayer, long effectLength) {
         if (new EffectGetEvent(corePlayer, this).call().isCancelled()) {
             return;

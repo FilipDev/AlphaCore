@@ -7,7 +7,7 @@ package me.pauzen.alphacore.inventory;
 import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.utils.InvisibleID;
+import me.pauzen.alphacore.utils.misc.string.InvisibleID;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Nullify;
@@ -30,10 +30,6 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
     private static InventoryManager manager;
 
     private Map<String, InventoryMenu> menus = new HashMap<>();
-
-    public static void register() {
-        manager = new InventoryManager();
-    }
 
     public static InventoryManager getManager() {
         return manager;

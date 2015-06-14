@@ -5,7 +5,7 @@
 package me.pauzen.alphacore.players.data.trackers;
 
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.players.data.Milestone;
+import me.pauzen.alphacore.players.data.MileStone;
 import me.pauzen.alphacore.players.data.events.TrackerValueChangeEvent;
 import me.pauzen.alphacore.points.TrackerDisplayer;
 
@@ -22,7 +22,7 @@ public class Tracker {
 
     private boolean persistant = true;
 
-    private Map<Integer, List<Milestone>> mileStones = new HashMap<>();
+    private Map<Integer, List<MileStone>> mileStones = new HashMap<>();
 
     public Tracker(String id, int initialValue) {
         this.id = id;
@@ -64,7 +64,7 @@ public class Tracker {
         if (new TrackerValueChangeEvent(value, newValue, this).call().isCancelled()) {
             return false;
         }
-        List<Milestone> milestones = getMilestones(newValue);
+        List<MileStone> milestones = getMilestones(newValue);
 
         if (milestones == null) {
             return true;
@@ -75,13 +75,13 @@ public class Tracker {
         return true;
     }
 
-    public List<Milestone> checkAndGetMilestones(int value) {
+    public List<MileStone> checkAndGetMilestones(int value) {
         checkMilestoneListExists(value);
 
         return getMilestones(value);
     }
 
-    public List<Milestone> getMilestones(int value) {
+    public List<MileStone> getMilestones(int value) {
         return mileStones.get(value);
     }
 
@@ -95,7 +95,7 @@ public class Tracker {
         }
     }
 
-    public void addMilestone(Milestone milestone) {
+    public void addMilestone(MileStone milestone) {
         checkAndGetMilestones(milestone.getValue()).add(milestone);
     }
 

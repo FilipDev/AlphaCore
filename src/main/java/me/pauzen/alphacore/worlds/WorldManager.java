@@ -32,10 +32,6 @@ public class WorldManager extends ListenerImplementation implements ModuleManage
         return manager;
     }
 
-    public static void register() {
-        manager = new WorldManager();
-    }
-
     @Override
     public String getName() {
         return "worlds";
@@ -66,21 +62,21 @@ public class WorldManager extends ListenerImplementation implements ModuleManage
 
         Player player = event.getPlayer();
         CoreWorld world = CoreWorld.get(player.getWorld());
-        
+
         if (world.isApplied(WorldProperty.PREVENT_JOINING)) {
             player.teleport(event.getFrom().getSpawnLocation());
         }
-        
+
         CorePlayer corePlayer = CorePlayer.get(player);
 
         corePlayer.setPlace(getCoreWorld(corePlayer.getPlayer().getWorld()).getWorldPlace());
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onWeatherChange(WeatherChangeEvent event) {
-        
+
         CoreWorld world = CoreWorld.get(event.getWorld());
-        
+
         if (world.isApplied(WorldProperty.LOCK_WEATHER)) {
             event.setCancelled(true);
         }

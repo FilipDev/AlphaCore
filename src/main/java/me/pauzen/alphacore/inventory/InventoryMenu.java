@@ -14,7 +14,7 @@ import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.inventory.misc.ElementInteraction;
 import me.pauzen.alphacore.inventory.misc.Selection;
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.utils.InvisibleID;
+import me.pauzen.alphacore.utils.misc.string.InvisibleID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -67,15 +67,15 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
         this.openedInventories.remove(player.getUniqueId());
     }
 
-    public Inventory generateInventory(Player player) {
+    public Inventory generateInventory() {
 
         Inventory inventory;
 
         if (size == 5) {
-            inventory = Bukkit.createInventory(player, InventoryType.HOPPER, name + inventoryID.getId());
+            inventory = Bukkit.createInventory(null, InventoryType.HOPPER, name + inventoryID.getId());
         }
         else {
-            inventory = Bukkit.createInventory(player, size, name + inventoryID.getId());
+            inventory = Bukkit.createInventory(null, size, name + inventoryID.getId());
         }
 
         return inventory;
@@ -171,7 +171,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
      * @param player Player to show the inventory to.
      */
     public Inventory show(Player player) {
-        Inventory inventory = generateInventory(player);
+        Inventory inventory = generateInventory();
         openInventory(player, inventory);
         onOpen(CorePlayer.get(player));
         player.openInventory(inventory);
@@ -294,5 +294,23 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
 
     public void setElementAt(Coordinate coordinate, Element element) {
         elementMap.put(coordinate, element);
+    }
+
+    public void addElement(Element element) {
+        Coordinate firstEmpty = getFirstEmpty();
+        if (firstEmpty != null) {
+            setElementAt(firstEmpty, element);
+        }
+    }
+    
+    private Coordinate getFirstEmpty() {
+        for (int i = 0; i < size; i++) {
+            Coordinate coordinate = Coordinate.fromSlot(i);
+            if (!elementMap.containsKey(coordinate)) {
+                return coordinate;
+            }
+        }
+        
+        return null;
     }
 }

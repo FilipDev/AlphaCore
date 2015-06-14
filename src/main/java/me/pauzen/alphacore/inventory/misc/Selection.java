@@ -28,7 +28,7 @@ public class Selection {
         this.coordinates = new ArrayList<>();
         Collections.addAll(this.coordinates, coordinates);
     }
-    
+
     public static Selection radius(Coordinate coordinate, int radius) {
 
         List<Coordinate> coordinates = new ArrayList<>();
@@ -42,7 +42,7 @@ public class Selection {
 
             coordinates.add(coord);
         }
-        
+
         return new Selection(coordinates);
     }
 
@@ -62,7 +62,7 @@ public class Selection {
 
         return new Selection(coordinates);
     }
-    
+
     public static Selection area(Menu menu) {
         return area(Coordinate.coordinate(0, 0), menu.getLastCoordinate());
     }
@@ -86,7 +86,7 @@ public class Selection {
 
         return new Selection(coordinates);
     }
-    
+
     public static Selection border(Menu menu) {
         return border(Coordinate.coordinate(0, 0), menu.getLastCoordinate());
     }

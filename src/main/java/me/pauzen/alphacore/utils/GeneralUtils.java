@@ -4,10 +4,6 @@
 
 package me.pauzen.alphacore.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;
@@ -69,38 +65,6 @@ public class GeneralUtils {
             map.remove(object);
         }
         return containment;
-    }
-
-    public static int firstEmpty(Object[] someArray) {
-        for (int i = someArray.length - 1; i >= 0; i--) {
-            if (someArray[i] != null) {
-                return i + 1;
-            }
-        }
-
-        return -1;
-    }
-
-    public static String addSpacing(String... strings) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < strings.length; i++) {
-            if (i != 0) {
-                builder.append(" ");
-            }
-
-            builder.append(strings[i]);
-        }
-
-        return builder.toString();
-    }
-
-    public static ItemMeta getMeta(ItemStack itemStack) {
-
-        if (!itemStack.hasItemMeta()) {
-            itemStack.setItemMeta(Bukkit.getItemFactory().getItemMeta(itemStack.getType()));
-        }
-
-        return itemStack.getItemMeta();
     }
 
 }

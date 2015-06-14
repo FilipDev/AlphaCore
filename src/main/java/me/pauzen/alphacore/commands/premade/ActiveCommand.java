@@ -16,7 +16,7 @@ import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.messages.ErrorMessage;
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.utils.Roman;
+import me.pauzen.alphacore.utils.misc.string.Roman;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

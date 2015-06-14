@@ -22,10 +22,6 @@ public class TeamManager extends ListenerImplementation implements ModuleManager
     private Map<String, Team> teams = new HashMap<>();
     private TeamSettings settings;
 
-    public static void register() {
-        manager = new TeamManager();
-    }
-
     public static TeamManager getManager() {
         return manager;
     }

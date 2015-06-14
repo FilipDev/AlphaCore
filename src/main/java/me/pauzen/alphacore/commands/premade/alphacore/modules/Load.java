@@ -38,7 +38,8 @@ public class Load extends Command {
                     Class<Manager> managerClass = manager.get();
                     Core.getCore().registerManager(managerClass);
                     LOAD_MANAGER.send(sender, Core.getCore().getManagers().get(args[0]).getName());
-                } else {
+                }
+                else {
                     ErrorMessage.INVALID_ARGUMENTS.send(sender, "Argument must be a valid Manager.");
                 }
             }

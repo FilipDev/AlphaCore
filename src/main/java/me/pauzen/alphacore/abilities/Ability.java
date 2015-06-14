@@ -147,7 +147,7 @@ public class Ability extends ListenerImplementation implements Applicable {
     public void apply(CorePlayer corePlayer) {
         apply(corePlayer, 1);
     }
-    
+
     public void apply(CorePlayer corePlayer, int level) {
         onApply(corePlayer, level);
         corePlayer.activateAbility(this, level);
@@ -184,6 +184,7 @@ public class Ability extends ListenerImplementation implements Applicable {
 
     /**
      * Whether or not the Ability shows up the Ability list.
+     *
      * @return State of invisibility.
      */
     @Override

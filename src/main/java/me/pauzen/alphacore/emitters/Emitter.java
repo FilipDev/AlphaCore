@@ -45,7 +45,7 @@ public abstract class Emitter implements ManagerModule {
     public void unload() {
         EmitterManager.getManager().unregisterModule(this);
     }
-    
+
     public void register() {
         EmitterManager.getManager().registerModule(this);
     }

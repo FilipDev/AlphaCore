@@ -31,14 +31,15 @@ public class Unload extends Command {
                     ErrorMessage.INVALID_ARGUMENTS.send(sender, "Argument must be a valid Manager.");
                     return;
                 }
-                
+
                 Optional<Manager> manager = Optional.ofNullable(core.getManagers().get(args[0]));
 
                 if (manager.isPresent()) {
                     Manager manager1 = manager.get();
                     Core.unregisterManager(manager1);
                     UNLOAD_MANAGER.send(sender, manager1.getName());
-                } else {
+                }
+                else {
                     ErrorMessage.INVALID_ARGUMENTS.send(sender, "Argument must be a valid Manager.");
                 }
             }

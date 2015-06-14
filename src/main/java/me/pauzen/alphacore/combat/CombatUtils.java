@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 
-public final class  CombatUtils {
+public final class CombatUtils {
 
     private CombatUtils() {
     }

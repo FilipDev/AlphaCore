@@ -8,11 +8,11 @@ import me.pauzen.alphacore.combat.AttackEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 
 public class Fight {
-    
+
     private CorePlayer player1, player2;
-    
+
     private AttackEvent lastAttackEvent;
-    private long lastAttackTime;
+    private long        lastAttackTime;
 
     public Fight(CorePlayer player1, CorePlayer player2, AttackEvent attackEvent, long lastAttackTime) {
         this.player1 = player1;
@@ -36,6 +36,6 @@ public class Fight {
     public long getLastAttackTime() {
         return lastAttackTime;
     }
-    
-    
+
+
 }

@@ -21,7 +21,7 @@ public class CommandListener {
     private Command owner;
     private boolean canConsoleSend;
     private Map<UUID, Long> cooldowns = new HashMap<>();
-    
+
     private ICommandListener listener;
 
     public CommandListener(ICommandListener listener, Command owner, boolean canConsoleSend, String... testForPermissions) {
@@ -30,7 +30,7 @@ public class CommandListener {
         this.listener = listener;
         testForPermissions(testForPermissions);
     }
-    
+
     public CommandListener(ICommandListener listener, Command owner, String... testForPermissions) {
         this(listener, owner, false, testForPermissions);
     }
@@ -38,7 +38,7 @@ public class CommandListener {
     public CommandListener(ICommandListener listener, boolean canConsoleSend, String... testForPermissions) {
         this(listener, null, canConsoleSend, testForPermissions);
     }
-    
+
     public CommandListener(ICommandListener listener, String... testForPermissions) {
         this(listener, null, false, testForPermissions);
     }
@@ -47,7 +47,7 @@ public class CommandListener {
     public CommandListener(Command owner, boolean canConsoleSend, String... testForPermissions) {
         this(null, owner, canConsoleSend, testForPermissions);
     }
-    
+
     public CommandListener(Command owner, String... testForPermissions) {
         this(null, owner, false, testForPermissions);
     }

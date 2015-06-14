@@ -5,7 +5,6 @@
 package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.abilities.Ability;
-import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.messages.JSONMessage;
 import me.pauzen.alphacore.places.Place;
@@ -26,7 +25,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.*;
 
-public class CorePlayer implements ManagerModule {
+public class CorePlayer implements PlayerWrapper {
 
     private final String       playerName;
     private final EntityPlayer entityPlayer;
@@ -48,7 +47,7 @@ public class CorePlayer implements ManagerModule {
     }
 
     public static CorePlayer get(Player player) {
-        return PlayerManager.getManager().getWrapper(player);
+        return PlayerManager.getManager().getWrapper(player, CorePlayer.class);
     }
 
     public void addAttribute(String attributeName, Object attribute) {
@@ -234,7 +233,7 @@ public class CorePlayer implements ManagerModule {
                 getPlayerData().getYamlWriter().saveTracker(entry.getValue());
             }
         });
-        getPlayerData().getYamlBuilder().save();
+        getPlayerData().getYamlConstructor().save();
         //TODO: Create save function that saves to YAML file. Do not save abilities.
     }
 
@@ -316,6 +315,7 @@ public class CorePlayer implements ManagerModule {
             effect.remove(this);
         }
         save();
+        PlayerManager.getManager().destroyWrapper(getPlayer(), getClass());
     }
 
     public Inventory getOpenInventory() {
