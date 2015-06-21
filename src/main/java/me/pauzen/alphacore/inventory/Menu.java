@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 public interface Menu {
 
     public static Menu createInventoryMenu(String name, int rows, Consumer<Menu> onRegister) {
-        return new InventoryMenu(name, rows) {
+        return new InventoryMenu(name, rows, 9) {
             @Override
             public void registerElements() {
                 onRegister.accept(this);
@@ -28,6 +28,15 @@ public interface Menu {
 
     public static Menu createHopperMenu(String name, Consumer<Menu> onRegister) {
         return new HopperMenu(name) {
+            @Override
+            public void registerElements() {
+                onRegister.accept(this);
+            }
+        };
+    }
+
+    public static Menu createDispenserMenu(String name, Consumer<Menu> onRegister) {
+        return new DispenserMenu(name) {
             @Override
             public void registerElements() {
                 onRegister.accept(this);
@@ -62,5 +71,4 @@ public interface Menu {
     public Selection getMenuArea();
 
     public Selection getMenuBorder();
-
 }

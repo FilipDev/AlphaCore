@@ -4,16 +4,19 @@
 
 package me.pauzen.alphacore.inventory.misc;
 
+import me.pauzen.alphacore.inventory.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public class ElementInteraction {
 
-    private Player    clicker;
+    private Player clicker;
+    private Menu   menu;
     private Inventory inventory;
 
-    public ElementInteraction(Player clicker, Inventory inventory) {
+    public ElementInteraction(Player clicker, Menu menu, Inventory inventory) {
         this.clicker = clicker;
+        this.menu = menu;
         this.inventory = inventory;
     }
 
@@ -23,5 +26,9 @@ public class ElementInteraction {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public Menu getMenu() {
+        return menu;
     }
 }

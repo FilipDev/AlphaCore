@@ -8,6 +8,7 @@ import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.data.ItemData;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.utils.Interactable;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +27,7 @@ public class Tool implements ManagerModule {
         this.type = type;
     }
 
-    public void register(ItemStack itemStack) {
+    public void register(ItemStack itemStack, String description) {
 
         if (itemStack == null) {
             return;
@@ -40,9 +41,13 @@ public class Tool implements ManagerModule {
             return;
         }
 
-        ItemData.applyData(itemStack, new HashMap<String, String>() {{
+        ItemData.applyData(itemStack, description, new HashMap<String, String>() {{
             put("tool", type);
         }});
+    }
+
+    public void register(ItemStack itemStack) {
+        register(itemStack, ChatColor.DARK_PURPLE + "Usable Tool");
     }
 
     public void register() {

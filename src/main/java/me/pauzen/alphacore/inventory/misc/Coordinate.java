@@ -17,14 +17,14 @@ public class Coordinate {
         return new Coordinate(x, y);
     }
 
-    public static Coordinate fromSlot(int inventorySlot) {
-        int x = Math.max(0, (inventorySlot) % 9);
-        int y = Math.max(0, inventorySlot / 9);
+    public static Coordinate fromSlot(int inventorySlot, int width) {
+        int x = Math.max(0, (inventorySlot) % width);
+        int y = Math.max(0, inventorySlot / width);
         return new Coordinate(x, y);
     }
 
-    public static int asSlot(int x, int y) {
-        return y * 9 + x;
+    public static int asSlot(int x, int y, int width) {
+        return y * width + x;
     }
 
     public int getX() {
@@ -55,8 +55,8 @@ public class Coordinate {
         return result;
     }
 
-    public int toSlot() {
-        return asSlot(x, y);
+    public int toSlot(int width) {
+        return asSlot(x, y, width);
     }
 
     @Override

@@ -31,6 +31,6 @@ public class ClickableElement extends Element implements Interactable<ElementInt
 
     @Override
     public void onInteract(ElementInteraction value, ClickType clickType) {
-        clickListener.onClick(value.getClicker(), clickType, value.getInventory());
+        clickListener.onClick(value.getClicker(), clickType, value.getInventory(), value.getMenu());
     }
 }

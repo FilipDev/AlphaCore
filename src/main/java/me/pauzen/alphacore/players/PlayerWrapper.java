@@ -9,20 +9,23 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public interface PlayerWrapper extends ManagerModule {
+public abstract class PlayerWrapper implements ManagerModule {
 
-    public Player getPlayer();
+    public PlayerWrapper(Player player) {
+    }
+
+    public abstract Player getPlayer();
 
     @Override
-    public default void unload() {
+    public void unload() {
         PlayerManager.getManager().destroyWrapper(getPlayer(), getClass());
     }
 
-    public void load();
+    public abstract void load();
 
-    public void save();
+    public abstract void save();
 
-    public default UUID getUniqueId() {
+    public UUID getUniqueId() {
         return getPlayer().getUniqueId();
     }
 

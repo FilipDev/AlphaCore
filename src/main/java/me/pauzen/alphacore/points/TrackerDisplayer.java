@@ -7,7 +7,6 @@ package me.pauzen.alphacore.points;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.players.PlayerManager;
 import me.pauzen.alphacore.players.data.trackers.Tracker;
 import me.pauzen.alphacore.updater.UpdateEvent;
 import me.pauzen.alphacore.updater.UpdateType;
@@ -45,7 +44,7 @@ public class TrackerDisplayer extends ListenerImplementation {
     @EventHandler
     public void onUpdate(UpdateEvent e) {
         if (e.getUpdateType() == UpdateType.SECOND) {
-            PlayerManager.getCorePlayers().stream().filter(corePlayer -> corePlayer.getAttribute(TrackerDisplayer.class, "tracker_displayer") != null).forEach(corePlayer -> corePlayer.getAttribute(TrackerDisplayer.class, "tracker_displayer").update());
+            CorePlayer.getCorePlayers().stream().filter(corePlayer -> corePlayer.getAttribute(TrackerDisplayer.class, "tracker_displayer") != null).forEach(corePlayer -> corePlayer.getAttribute(TrackerDisplayer.class, "tracker_displayer").update());
         }
     }
 }

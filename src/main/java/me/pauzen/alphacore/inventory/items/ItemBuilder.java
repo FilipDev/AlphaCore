@@ -82,10 +82,7 @@ public class ItemBuilder {
     }
 
     public List<String> getLore() {
-        if (itemMeta.getLore() == null) {
-            itemMeta.setLore(new ArrayList<>());
-        }
-        return itemMeta.getLore();
+        return lore;
     }
 
     public ItemBuilder lore(String lore) {

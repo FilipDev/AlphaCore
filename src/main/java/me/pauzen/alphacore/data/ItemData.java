@@ -15,37 +15,36 @@ import java.util.NoSuchElementException;
 
 public final class ItemData {
 
+    private static final String DELIMITER = InvisibleEncoder.encode("--");
+
     private ItemData() {
     }
 
-    public static void applyData(ItemStack itemStack, Map<String, String> dataMap) {
+    public static void applyData(ItemStack itemStack, String visiblePart, Map<String, String> dataMap) {
+
+        if (visiblePart == null || visiblePart.equals("")) visiblePart = " ";
+
         String compiled = Properties.compileProperties((Map) dataMap);
 
-        List<String> lore = ItemBuilder.from(itemStack).getLore();
+        ItemBuilder itemBuilder = ItemBuilder.from(itemStack);
+        List<String> lore = itemBuilder.getLore();
 
-        if (lore.size() == 0) {
-            lore.add("");
-        }
+        if (lore.size() == 0) lore.add("");
 
         int line = -1;
 
         for (int i = 0; i < lore.size(); i++) {
-            if (lore.get(line).startsWith(InvisibleEncoder.encode("--"))) {
+            if (InvisibleEncoder.contains(lore.get(i), "--")) {
                 line = i;
                 break;
             }
         }
 
-        String data;
-        if (line == -1) {
-            data = "";
-        }
-        else {
-            data = lore.get(line);
-        }
+        String data = line == -1 ? "" : lore.get(line);
 
-        if (InvisibleEncoder.contains(data, "--")) {
-            String[] split = data.split(InvisibleEncoder.encode("--"));
+        if (line != -1) {
+            String[] split = data.split(DELIMITER);
+
             String encodedProperties = split[1];
             String decoded = InvisibleEncoder.decode(encodedProperties);
 
@@ -53,16 +52,21 @@ public final class ItemData {
 
             properties.putAll(dataMap);
 
-            String compiledProperties = Properties.compileProperties((Map) properties);
-
-            String string = split[0] + InvisibleEncoder.encode("--" + compiledProperties);
-
-            ItemBuilder.from(itemStack).lore(line, string).build();
+            data = split[0] + DELIMITER + InvisibleEncoder.encode(Properties.compileProperties((Map) properties));
         }
         else {
-            String string = InvisibleEncoder.encode("--" + compiled);
-            ItemBuilder.from(itemStack).lore(line, string).build();
+            data = visiblePart + DELIMITER + InvisibleEncoder.encode(compiled);
         }
+        if (line == -1) { 
+            if (lore.size() == 0) {
+                line = 0;
+            } else {
+                line = lore.size();
+                lore.add("");
+            }
+        }
+        lore.set(line, data);
+        itemBuilder.build();
     }
 
     public static Map<String, String> getData(ItemStack itemStack) throws NoSuchElementException {
@@ -75,19 +79,13 @@ public final class ItemData {
         int line = -1;
 
         for (int i = 0; i < lore.size(); i++) {
-            if (lore.get(line).startsWith(InvisibleEncoder.encode("--"))) {
+            if (lore.get(i).contains(InvisibleEncoder.encode("--"))) {
                 line = i;
                 break;
             }
         }
 
-        String data;
-        if (line == -1) {
-            data = "";
-        }
-        else {
-            data = lore.get(line);
-        }
+        String data = line == -1 ? "" : lore.get(line);
 
         String[] split = data.split(InvisibleEncoder.encode("--"));
 
@@ -96,10 +94,6 @@ public final class ItemData {
         }
 
         data = split[1];
-
-        if (data == null) {
-            return new HashMap<>();
-        }
 
         return Properties.getProperties(InvisibleEncoder.decode(data));
     }

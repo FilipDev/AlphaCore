@@ -6,6 +6,8 @@ package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.utils.loading.LoadPriority;
+import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,6 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.*;
 
+@Priority(LoadPriority.FIRST)
 public class PlayerManager extends ListenerImplementation implements ModuleManager<PlayerWrapper> {
 
     @Nullify
@@ -47,8 +50,10 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
     public void onPlayerJoin(PlayerJoinEvent e) {
         for (Class<? extends PlayerWrapper> playerWrapper : playerWrappers) {
             try {
-                registerModule(playerWrapper.newInstance());
-            } catch (InstantiationException | IllegalAccessException e1) {
+                PlayerWrapper wrapper = playerWrapper.getConstructor(Player.class).newInstance(e.getPlayer());
+                registerModule(wrapper);
+                wrapper.load();
+            } catch (ReflectiveOperationException e1) {
                 e1.printStackTrace();
             }
         }
@@ -66,7 +71,7 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
     }
 
     public void destroyWrapper(Player player, Class<? extends PlayerWrapper> playerClass) {
-        PlayerWrapper module = players.get(player.getUniqueId()).get(playerClass);
+        PlayerWrapper module = getWrapper(player, playerClass);
         if (module != null) {
             unregisterModule(module);
         }

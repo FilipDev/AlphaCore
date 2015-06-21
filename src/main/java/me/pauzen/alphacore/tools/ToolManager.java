@@ -73,7 +73,7 @@ public class ToolManager extends ListenerImplementation implements ModuleManager
     }
 
     public boolean isTool(ItemStack itemStack) {
-        return ItemData.hasData(itemStack, "tool");
+        return itemStack != null && itemStack.getType() != Material.AIR && ItemData.hasData(itemStack, "tool");
     }
 
     public Tool registerTool(String type) {

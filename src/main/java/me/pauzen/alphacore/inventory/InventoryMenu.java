@@ -30,6 +30,7 @@ import java.util.function.Predicate;
 public abstract class InventoryMenu implements ManagerModule, Menu {
 
     protected int size;
+    protected int width = 9;
     private Map<Coordinate, Element>                        elementMap      = new HashMap<>();
     private Map<Coordinate, Predicate<InventoryClickEvent>> allowedClicking = new HashMap<>();
     private InvisibleID inventoryID;
@@ -42,41 +43,36 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
      * @param name The desired name of the inventory.
      * @param rows The desired amount of rows in the inventory.
      */
-    protected InventoryMenu(String name, int rows) {
+    protected InventoryMenu(String name, int rows, int width) {
         this.name = name;
-        this.size = rows * 9;
+        this.width = width;
+        this.size = rows * width;
         inventoryID = InvisibleID.generate();
         registerElements();
         fillRemaining();
         InventoryManager.getManager().registerModule(this);
     }
 
-    private static Coordinate toCoordinate(int x, int y) {
+    private static Coordinate coordinate(int x, int y) {
         return Coordinate.coordinate(x, y);
     }
 
-    private static Coordinate toCoordinate(int inventorySlot) {
-        return Coordinate.fromSlot(inventorySlot);
+    private static Coordinate toCoordinate(int inventorySlot, int width) {
+        return Coordinate.fromSlot(inventorySlot, width);
     }
 
     public void openInventory(Player player, Inventory inventory) {
         this.openedInventories.put(player.getUniqueId(), inventory);
     }
 
+    @SuppressWarnings({"unchecked"})
     public void closeInventory(Player player) {
         this.openedInventories.remove(player.getUniqueId());
     }
 
     public Inventory generateInventory() {
 
-        Inventory inventory;
-
-        if (size == 5) {
-            inventory = Bukkit.createInventory(null, InventoryType.HOPPER, name + inventoryID.getId());
-        }
-        else {
-            inventory = Bukkit.createInventory(null, size, name + inventoryID.getId());
-        }
+        Inventory inventory = width != 9 ? Bukkit.createInventory(null, (width == 5 ? InventoryType.HOPPER : InventoryType.DISPENSER), name + inventoryID.getId()) : Bukkit.createInventory(null, size, name + inventoryID.getId());
 
         return inventory;
     }
@@ -85,7 +81,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
 
         elementMap.entrySet().forEach(entry -> {
 
-            int i = entry.getKey().toSlot();
+            int i = entry.getKey().toSlot(width);
             ItemStack item = entry.getValue().getRepresentation();
 
             if (entry.getValue() instanceof ToggleableElement) {
@@ -105,14 +101,14 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
      */
     public final void process(InventoryClickEvent event) {
 
-        Coordinate clicked = toCoordinate(event.getRawSlot());
+        Coordinate clicked = toCoordinate(event.getRawSlot(), width);
 
         Element clickedElement = elementMap.get(clicked);
 
         if (clickedElement instanceof ClickableElement) {
             ClickableElement clickableElement = (ClickableElement) clickedElement;
 
-            clickableElement.onInteract(new ElementInteraction((Player) event.getWhoClicked(), event.getInventory()), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.LEFT :
+            clickableElement.onInteract(new ElementInteraction((Player) event.getWhoClicked(), this, event.getInventory()), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.LEFT :
                     event.getAction() == InventoryAction.PICKUP_HALF ? ClickType.RIGHT : ClickType.OTHER);
         }
         if (!shouldAllowClick(event)) {
@@ -133,7 +129,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
             return true;
         }
 
-        Coordinate inventoryCoordinate = toCoordinate(e.getRawSlot());
+        Coordinate inventoryCoordinate = toCoordinate(e.getRawSlot(), width);
 
         Predicate<InventoryClickEvent> inventoryClickEventPredicate = allowedClicking.get(inventoryCoordinate);
 
@@ -159,7 +155,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
     public void fillRemaining() {
         for (int i = 0; i < size; i++) {
 
-            Coordinate coordinate = toCoordinate(i);
+            Coordinate coordinate = toCoordinate(i, width);
 
             elementMap.putIfAbsent(coordinate, Element.BLANK_ELEMENT);
         }
@@ -171,6 +167,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
      * @param player Player to show the inventory to.
      */
     public Inventory show(Player player) {
+        player.closeInventory();
         Inventory inventory = generateInventory();
         openInventory(player, inventory);
         onOpen(CorePlayer.get(player));
@@ -195,7 +192,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
      * @param item       What to update the item to.
      */
     public void updateElement(Inventory inventory, Coordinate coordinate, ItemStack item) {
-        inventory.setItem(coordinate.toSlot(), item);
+        inventory.setItem(coordinate.toSlot(width), item);
     }
 
     /**
@@ -276,7 +273,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
     }
 
     public Coordinate getLastCoordinate() {
-        return Coordinate.fromSlot(size - 1);
+        return Coordinate.fromSlot(size - 1, width);
     }
 
     public Selection getMenuArea() {
@@ -304,13 +301,21 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
     }
 
     private Coordinate getFirstEmpty() {
-        for (int i = 0; i < size; i++) {
-            Coordinate coordinate = Coordinate.fromSlot(i);
+        for (int i = 0; i < getSize(); i++) {
+            Coordinate coordinate = Coordinate.fromSlot(i, width);
             if (!elementMap.containsKey(coordinate)) {
                 return coordinate;
             }
         }
 
         return null;
+    }
+
+    public int getSize() {
+        return size;
+    }
+    
+    public int getWidth() {
+        return width;
     }
 }

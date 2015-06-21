@@ -44,7 +44,7 @@ public class AnimatedElement extends Element {
     }
 
     public void startUpdating(long delay) {
-        Bukkit.getScheduler().runTaskTimer(Core.getCore(), () -> menu.getOpen().forEach((inventory) -> getListener().onUpdate(menu, inventory, inventory.getItem(location.toSlot()))), 0L, delay);
+        Bukkit.getScheduler().runTaskTimer(Core.getCore(), () -> menu.getOpen().forEach((inventory) -> getListener().onUpdate(menu, inventory, inventory.getItem(location.toSlot(menu.getWidth())))), 0L, delay);
     }
 
     public UpdateListener getListener() {

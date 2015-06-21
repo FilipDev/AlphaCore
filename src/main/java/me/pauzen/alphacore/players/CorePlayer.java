@@ -25,7 +25,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.*;
 
-public class CorePlayer implements PlayerWrapper {
+public class CorePlayer extends PlayerWrapper {
 
     private final String       playerName;
     private final EntityPlayer entityPlayer;
@@ -42,12 +42,20 @@ public class CorePlayer implements PlayerWrapper {
     private Inventory  openInventory;
 
     public CorePlayer(Player player) {
+        super(player);
         this.playerName = player.getName();
         this.entityPlayer = new EntityPlayer(player);
+
     }
 
     public static CorePlayer get(Player player) {
         return PlayerManager.getManager().getWrapper(player, CorePlayer.class);
+    }
+
+    public static List<CorePlayer> getCorePlayers() {
+        ArrayList<CorePlayer> players = new ArrayList<>();
+        PlayerManager.getManager().getModules().stream().filter((playerWrapper) -> playerWrapper instanceof CorePlayer).forEach((wrapper) -> players.add((CorePlayer) wrapper));
+        return players;
     }
 
     public void addAttribute(String attributeName, Object attribute) {
@@ -324,6 +332,10 @@ public class CorePlayer implements PlayerWrapper {
 
     public void setOpenInventory(Inventory openInventory) {
         this.openInventory = openInventory;
+    }
+
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 }
 
