@@ -38,7 +38,6 @@ public class CommandManager implements ModuleManager<Command> {
         if (names.length > 1) {
             for (int i = 1; i < names.length; i++) {
                 String name = names[i];
-
                 command = command.getSubCommands().get(name);
             }
         }

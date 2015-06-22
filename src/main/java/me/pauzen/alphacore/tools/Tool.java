@@ -9,7 +9,6 @@ import me.pauzen.alphacore.data.ItemData;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.utils.Interactable;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,21 +18,25 @@ public class Tool implements ManagerModule {
 
     public static final Tool EMPTY_TOOL = new Tool("");
     private final String                            type;
+    private String description = ChatColor.BLUE + "A Very Useful Tool";
     private       Interactable<PlayerInteractEvent> listener;
     private long coolDown = 0;
     private long lastInteract;
+    
+    private boolean droppable = true;
 
     public Tool(String type) {
         this.type = type;
     }
+    
+    public Tool(String type, String description) {
+        this.type = type;
+        this.description = description;
+    }
 
     public void register(ItemStack itemStack, String description) {
 
-        if (itemStack == null) {
-            return;
-        }
-
-        if (itemStack.getType() == Material.AIR) {
+        if (!ToolManager.getManager().isRealItem(itemStack)) {
             return;
         }
 
@@ -47,11 +50,19 @@ public class Tool implements ManagerModule {
     }
 
     public void register(ItemStack itemStack) {
-        register(itemStack, ChatColor.DARK_PURPLE + "Usable Tool");
+        register(itemStack, description);
     }
 
     public void register() {
         ToolManager.getManager().registerModule(this);
+    }
+
+    public boolean isDroppable() {
+        return droppable;
+    }
+
+    public void setDroppable(boolean droppable) {
+        this.droppable = droppable;
     }
 
     public long getCoolDown() {

@@ -30,7 +30,7 @@ public class Help extends Command {
         return new CommandListener(true) {
             @Override
             public void onRun() {
-                if (args.length < 2) {
+                if (args.length == 0) {
                     for (Map.Entry<String, Command> command : CommandManager.getManager().getCommands().entrySet()) {
                         if (hasPermissions(sender, command.getValue().getDefaultListener().getPermissions())) {
                             if (ArrayUtils.contains(command.getValue().getAliases(), command.getKey())) {
@@ -47,7 +47,7 @@ public class Help extends Command {
                 else {
                     StringBuilder rest = new StringBuilder();
 
-                    for (int i = 1; i < args.length; i++) {
+                    for (int i = 0; i < args.length; i++) {
                         rest.append(args[i]);
                         rest.append(" ");
                     }
@@ -62,10 +62,10 @@ public class Help extends Command {
                     }
 
                     boolean foundAny = false;
-                    for (Map.Entry<String, Command> entry : getOwner().getSubCommands().entrySet()) {
+                    for (Map.Entry<String, Command> entry : command.getSubCommands().entrySet()) {
                         if (hasPermissions(sender, entry.getValue().getDefaultListener().getPermissions())) {
                             foundAny = true;
-                            send(sender, command.getName() + " " + entry.getKey(), getDescription(entry.getValue()));
+                            send(sender, "/" + rest + entry.getKey(), getDescription(entry.getValue()));
                         }
                     }
 

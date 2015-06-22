@@ -15,6 +15,7 @@ import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,15 +38,15 @@ public class ToolManager extends ListenerImplementation implements ModuleManager
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
 
-        if (e.getClickedBlock() == null) {
-            return;
-        }
-
-        if (!isTool(e.getItem())) {
+        if (!isRealItem(e.getItem())) {
             return;
         }
 
         Map<String, String> properties = ItemData.getData(e.getItem());
+        
+        if (!properties.containsKey("tool")) {
+            return;
+        }
 
         String type = properties.get("tool");
 
@@ -71,9 +72,34 @@ public class ToolManager extends ListenerImplementation implements ModuleManager
 
         tool.onInteract(e, ClickType.fromAction(action));
     }
+    
+    @EventHandler(ignoreCancelled = true)
+    public void onItemDrop(PlayerDropItemEvent event) {
+        ItemStack itemStack = event.getItemDrop().getItemStack();
+        
+        if (!isRealItem(itemStack)) {
+            return;
+        }
+
+        Map<String, String> properties = ItemData.getData(itemStack);
+
+        if (!properties.containsKey("tool")) {
+            return;
+        }
+
+        String type = properties.get("tool");
+
+        Tool tool = tools.get(type);
+        
+        event.setCancelled(!tool.isDroppable());
+    }
 
     public boolean isTool(ItemStack itemStack) {
         return itemStack != null && itemStack.getType() != Material.AIR && ItemData.hasData(itemStack, "tool");
+    }
+    
+    public boolean isRealItem(ItemStack itemStack) {
+        return itemStack != null && itemStack.getType() != Material.AIR;
     }
 
     public Tool registerTool(String type) {

@@ -46,7 +46,7 @@ public interface Menu {
 
     public boolean shouldAllowClick(InventoryClickEvent e);
 
-    public void process(InventoryClickEvent event);
+    public void processClick(InventoryClickEvent event);
 
     public Inventory show(Player player);
 

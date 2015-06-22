@@ -99,7 +99,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
      *
      * @param event InventoryClickEvent to process.
      */
-    public final void process(InventoryClickEvent event) {
+    public final void processClick(InventoryClickEvent event) {
 
         Coordinate clicked = toCoordinate(event.getRawSlot(), width);
 

@@ -7,6 +7,8 @@ package me.pauzen.alphacore.inventory;
 import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.updater.UpdateEvent;
+import me.pauzen.alphacore.updater.UpdateType;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
 import me.pauzen.alphacore.utils.misc.string.InvisibleID;
@@ -65,10 +67,28 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
+        if (e.getRawSlot() == -999) {
+            return;
+        }
+        
         Menu menu = getMenu(e.getInventory());
 
         if (menu != null) {
-            menu.process(e);
+            menu.processClick(e);
+        }
+    }
+    
+    private boolean skip = false;
+    @EventHandler
+    public void onUpdate(UpdateEvent event) {
+        if (event.getUpdateType() == UpdateType.TICK) {
+            if (!(skip = !skip)) {
+                for (CorePlayer corePlayer : CorePlayer.getCorePlayers()) {
+                    if (corePlayer.getOpenInventory() == null) {
+                        corePlayer.removeAttribute("previous_menus");
+                    }
+                }
+            }
         }
     }
 

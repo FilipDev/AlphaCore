@@ -5,7 +5,7 @@
       "text": "%s: ",
       "clickEvent": {
         "action": "suggest_command",
-        "value": "/%s"
+        "value": "%s"
       },
       "color": "red"
     },
