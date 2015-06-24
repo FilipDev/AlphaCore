@@ -90,6 +90,7 @@ public class SQLConnection {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet ret = preparedStatement.executeQuery();
+            preparedStatement.close();
             return ret;
         } catch (SQLException e) {
             e.printStackTrace();

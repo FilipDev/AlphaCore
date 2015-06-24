@@ -7,13 +7,8 @@ package me.pauzen.alphacore.server;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.places.Place;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class CoreServer extends ListenerImplementation {
 
-    public static Place SERVER_PLACE = new Place("Server", null);
-
-    public Set<Mode> activeModes = new HashSet<>();
+    public static final Place SERVER_PLACE = new Place("Server", null);
 
 }

@@ -89,10 +89,8 @@ public class WorldManager extends ListenerImplementation implements ModuleManage
             for (World world : Bukkit.getWorlds()) {
 
                 CoreWorld coreWorld = CoreWorld.get(world);
-
-                if (coreWorld.isApplied(WorldProperty.LOCK_TIME)) {
-                    coreWorld.getWorld().setTime(coreWorld.getLockTime());
-                }
+                
+                coreWorld.tick();
             }
         }
     }

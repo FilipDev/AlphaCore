@@ -1,9 +1,6 @@
 package me.pauzen.alphacore.utils.yaml;
 
-import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.players.data.trackers.Tracker;
-import me.pauzen.alphacore.teams.Team;
-import me.pauzen.alphacore.teams.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -33,10 +30,6 @@ public class YamlReader {
 
     public Tracker getTracker(String trackerName) {
         return new Tracker(trackerName, getInt("trackers", trackerName));
-    }
-
-    public Team getTeam(CorePlayer corePlayer) {
-        return TeamManager.getManager().getTeam(getString(corePlayer.getUUID(), "team"));
     }
 
     //TODO: Add more premade getter methods for Bukkit API parts.

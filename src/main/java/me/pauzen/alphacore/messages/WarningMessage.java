@@ -6,13 +6,13 @@ package me.pauzen.alphacore.messages;
 
 import org.bukkit.ChatColor;
 
-public enum WarningMessage implements Message {
+public class WarningMessage implements Message {
 
-    EXAMPLE("Example warning message."),;
+    public static final WarningMessage BORDER_BROSSED = new WarningMessage("Cannot cross world border.");
 
-    String warningMessage;
+    private String warningMessage;
 
-    WarningMessage(String warningMessage) {
+    public WarningMessage(String warningMessage) {
         this.warningMessage = warningMessage;
     }
 

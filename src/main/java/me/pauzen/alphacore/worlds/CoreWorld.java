@@ -8,6 +8,8 @@ import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.places.PhysicalPlace;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.server.CoreServer;
+import me.pauzen.alphacore.utils.misc.Tickable;
+import me.pauzen.alphacore.worlds.border.Border;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -15,11 +17,11 @@ import org.bukkit.World;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CoreWorld implements ManagerModule {
+public class CoreWorld implements ManagerModule, Tickable {
 
     private final World world;
     private final Place worldPlace;
-
+    
     private Set<WorldProperty> appliedProperties = new HashSet<>();
 
     private long lockTime;
@@ -77,5 +79,20 @@ public class CoreWorld implements ManagerModule {
 
     public void setLockTime(long lockTime) {
         this.lockTime = lockTime;
+    }
+    
+    @Override
+    public void tick() {
+        if (isApplied(WorldProperty.LOCK_TIME)) {
+            getWorld().setTime(getLockTime());
+        }
+    }
+
+    public void setBorder(Border border) {
+        worldPlace.setBorder(border);
+    }
+    
+    public Border getBorder() {
+        return worldPlace.getBorder();
     }
 }

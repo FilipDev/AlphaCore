@@ -242,6 +242,12 @@ public class Core extends JavaPlugin implements Listener {
 
             loadPriorityList.get(loadPriority).add(clazz);
         });
+
+        try {
+            jarFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void registerManager(Class clazz) {

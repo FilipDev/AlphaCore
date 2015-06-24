@@ -10,7 +10,6 @@ public enum WorldProperty {
 
     LOCK_TIME,
     LOCK_WEATHER,
-
     PREVENT_JOINING,;
 
     private Consumer<CoreWorld> onApply  = (world) -> {

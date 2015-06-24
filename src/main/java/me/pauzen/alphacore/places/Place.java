@@ -13,6 +13,7 @@ import me.pauzen.alphacore.places.events.PlaceLeaveEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.server.CoreServer;
 import me.pauzen.alphacore.utils.AllowanceChecker;
+import me.pauzen.alphacore.worlds.border.Border;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +31,8 @@ public class Place implements ManagerModule {
     private AllowanceChecker<PlaceAction> placeActionChecker = new AllowanceChecker<>();
 
     private Set<Ability> placeAbilities = new HashSet<>();
-    private Set<Effect>  placeEffects   = new HashSet<>();
+    private Set<Effect> placeEffects = new HashSet<>();
+    private Border border;
 
     public Place(String name, Place superPlace) {
         this.name = name;
@@ -147,5 +149,13 @@ public class Place implements ManagerModule {
 
     public Place getSuperPlace() {
         return superPlace;
+    }
+
+    public Border getBorder() {
+        return border;
+    }
+
+    public void setBorder(Border border) {
+        this.border = border;
     }
 }

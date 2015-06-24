@@ -13,11 +13,11 @@ import me.pauzen.alphacore.places.events.PlaceMoveEvent;
 import me.pauzen.alphacore.players.data.PlayerData;
 import me.pauzen.alphacore.players.data.events.PlayerLoadEvent;
 import me.pauzen.alphacore.players.data.trackers.Tracker;
-import me.pauzen.alphacore.teams.Team;
-import me.pauzen.alphacore.teams.TeamManager;
 import me.pauzen.alphacore.utils.GeneralUtils;
 import me.pauzen.alphacore.utils.commonnms.ClientVersion;
 import me.pauzen.alphacore.utils.commonnms.EntityPlayer;
+import me.pauzen.alphacore.utils.misc.Tickable;
+import me.pauzen.alphacore.worlds.border.Border;
 import net.minecraft.util.io.netty.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.*;
 
-public class CorePlayer extends PlayerWrapper {
+public class CorePlayer extends PlayerWrapper implements Tickable {
 
     private final String       playerName;
     private final EntityPlayer entityPlayer;
@@ -36,7 +36,6 @@ public class CorePlayer extends PlayerWrapper {
     private final Map<String, Tracker>  trackers           = new HashMap<>();
     private final Map<Effect, Integer>  activeEffects      = new HashMap<>();
     private final Map<Ability, Integer> activatedAbilities = new HashMap<>();
-    private Team       team;
     private Place      place;
     private PlayerData playerData;
     private Inventory  openInventory;
@@ -139,10 +138,6 @@ public class CorePlayer extends PlayerWrapper {
         return level == null ? 0 : level;
     }
 
-    public void assignTeam(Team team) {
-        this.team = team;
-    }
-
     public Player getPlayer() {
         return Bukkit.getPlayer(playerName);
     }
@@ -216,10 +211,6 @@ public class CorePlayer extends PlayerWrapper {
 
     public void load() {
         this.playerData = new PlayerData(this);
-        this.team = playerData.getYamlReader().getTeam(this);
-        if (this.team == null) {
-            this.team = TeamManager.getDefaultTeam();
-        }
         List<Tracker> trackers = getPlayerData().getYamlReader().getTrackers();
         PlayerLoadEvent playerLoadEvent = new PlayerLoadEvent(this);
         playerLoadEvent.call();
@@ -251,10 +242,6 @@ public class CorePlayer extends PlayerWrapper {
 
     public Channel getNettyChannel() {
         return this.getEntityPlayer().getPlayerConnection().getNettyChannel();
-    }
-
-    public Team getTeam() {
-        return team;
     }
 
     public void setHealthPercentage(double percentage) {
@@ -336,6 +323,19 @@ public class CorePlayer extends PlayerWrapper {
 
     public Map<String, Object> getAttributes() {
         return attributes;
+    }
+
+    @Override
+    public void tick() {
+        Border border = getCurrentPlace().getBorder();
+        
+        if (border == null) {
+            return;
+        }
+        
+        if (!border.isWithin(getPlayer())) {
+            border.revert(getPlayer());
+        }
     }
 }
 

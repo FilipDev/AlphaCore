@@ -6,8 +6,11 @@ package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.updater.UpdateEvent;
+import me.pauzen.alphacore.updater.UpdateType;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
+import me.pauzen.alphacore.utils.misc.Tickable;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -65,7 +68,18 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
             destroyWrapper(e.getPlayer(), playerWrapper);
         }
     }
-
+    
+    @EventHandler
+    public void onUpdate(UpdateEvent e) {
+        if (e.getUpdateType() == UpdateType.TICK) {
+            for (PlayerWrapper playerWrapper : getModules()) {
+                if (playerWrapper instanceof Tickable) {
+                    ((Tickable) playerWrapper).tick();
+                }
+            }
+        }
+    }
+    
     public <T> T getWrapper(Player player, Class<T> playerClass) {
         return (T) players.get(player.getUniqueId()).get(playerClass);
     }
