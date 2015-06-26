@@ -13,22 +13,24 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Tool implements ManagerModule {
 
     public static final Tool EMPTY_TOOL = new Tool("");
-    private final String                            type;
+    private final String type;
     private String description = ChatColor.BLUE + "A Very Useful Tool";
-    private       Interactable<PlayerInteractEvent> listener;
-    private long coolDown = 0;
-    private long lastInteract;
-    
+    private Interactable<PlayerInteractEvent> listener;
+    private long            coolDown     = 0;
+    private Map<UUID, Long> lastInteract = new HashMap<>();
+
     private boolean droppable = true;
 
     public Tool(String type) {
         this.type = type;
     }
-    
+
     public Tool(String type, String description) {
         this.type = type;
         this.description = description;
@@ -81,11 +83,10 @@ public class Tool implements ManagerModule {
 
         if (getListener() != null) {
 
-            if (System.currentTimeMillis() / 50 - lastInteract < coolDown) {
-                lastInteract = System.currentTimeMillis() / 50;
+            if (System.currentTimeMillis() / 50 - lastInteract.getOrDefault(event.getPlayer().getUniqueId(), 0L) > coolDown) {
+                lastInteract.put(event.getPlayer().getUniqueId(), System.currentTimeMillis() / 50);
+                getListener().onInteract(event, clickType);
             }
-
-            getListener().onInteract(event, clickType);
         }
     }
 
