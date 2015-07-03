@@ -5,7 +5,7 @@
 package me.pauzen.alphacore.utils.misc;
 
 public interface Tickable {
-    
+
     void tick();
-    
+
 }

@@ -18,7 +18,7 @@ public class TrackersCommand extends Command {
 
     @Override
     public CommandListener getDefaultListener() {
-        return new CommandListener(false, "alphacore.trackers") {
+        return new CommandListener(null, false, "alphacore.trackers") {
             @Override
             public void onRun() {
                 CorePlayer corePlayer = CorePlayer.get((Player) sender);

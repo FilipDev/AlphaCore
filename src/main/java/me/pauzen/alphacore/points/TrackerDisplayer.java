@@ -16,7 +16,7 @@ public class TrackerDisplayer extends ListenerImplementation {
 
     private CorePlayer corePlayer;
     private Tracker    tracker;
-    private Place      place;
+    private Place  place;
     private int        oldLevel;
 
     @Deprecated()

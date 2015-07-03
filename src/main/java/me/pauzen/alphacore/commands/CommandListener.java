@@ -4,8 +4,10 @@
 
 package me.pauzen.alphacore.commands;
 
-import me.pauzen.alphacore.abilities.RestrictionBypass;
-import me.pauzen.alphacore.messages.ErrorMessage;
+import me.pauzen.alphacore.commands.events.CommandRunEvent;
+import me.pauzen.alphacore.commands.exceptions.NoPermissionException;
+import me.pauzen.alphacore.commands.exceptions.NotCooledDownException;
+import me.pauzen.alphacore.commands.exceptions.PermissionType;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,7 +22,7 @@ public class CommandListener {
     private List<String> testForPermissions = new ArrayList<>();
     private Command owner;
     private boolean canConsoleSend;
-    private Map<UUID, Long> cooldowns = new HashMap<>();
+    private Map<CommandSender, Long> cooldowns = new HashMap<>();
 
     private ICommandListener listener;
 
@@ -43,54 +45,40 @@ public class CommandListener {
         this(listener, null, false, testForPermissions);
     }
 
-
-    public CommandListener(Command owner, boolean canConsoleSend, String... testForPermissions) {
-        this(null, owner, canConsoleSend, testForPermissions);
-    }
-
-    public CommandListener(Command owner, String... testForPermissions) {
-        this(null, owner, false, testForPermissions);
-    }
-
-    public CommandListener(boolean canConsoleSend, String... testForPermissions) {
-        this(null, null, canConsoleSend, testForPermissions);
-    }
-
-    public CommandListener(String... testForPermissions) {
-        this(null, null, false, testForPermissions);
-    }
-
     public void testForPermissions(String... permissions) {
         Collections.addAll(testForPermissions, permissions);
     }
 
-    public boolean preRun(Command command, CommandSender commandSender, String[] args, Map<String, String> modifiers) {
+    public boolean preRun(Command command, CommandSender commandSender, String[] args, Map<String, String> modifiers) throws NoPermissionException, NotCooledDownException {
         if (commandSender instanceof Player) {
 
-            UUID uniqueId = ((Player) commandSender).getUniqueId();
-            if (!cooledDown(uniqueId)) {
-                ErrorMessage.COOLDOWN.send(commandSender, "Command", getRemaining(uniqueId) + "ms");
-                return false;
+            if (!isCooledDown(commandSender)) {
+                throw new NotCooledDownException();
             }
 
             CorePlayer corePlayer = CorePlayer.get((Player) commandSender);
-            if (!corePlayer.hasActivated(RestrictionBypass.class)) {
-                if (corePlayer.getCurrentPlace().shouldRun(command)) {
-                    if (testForPermissions != null) {
-                        for (String testForPermission : testForPermissions) {
-                            if (!commandSender.hasPermission(testForPermission)) {
-                                ErrorMessage.PERMISSIONS.send(commandSender, "this command");
-                                return false;
-                            }
-                        }
+            
+            if (!corePlayer.getCurrentPlace().isAllowed(command)) {
+                throw new NoPermissionException(PermissionType.PLACE);
+            }
+            
+            if (testForPermissions != null) {
+                for (String testForPermission : testForPermissions) {
+                    if (!commandSender.hasPermission(testForPermission)) {
+                        throw new NoPermissionException(PermissionType.PERMISSION);
                     }
                 }
+            }
+
+            CommandRunEvent commandRunEvent = new CommandRunEvent(corePlayer, command);
+            if (commandRunEvent.call().isCancelled()) {
+                throw new NoPermissionException(PermissionType.SERVER);
             }
         }
 
         setValues(commandSender, args, modifiers);
         onRun();
-        clearValues();
+        clean();
         return true;
     }
 
@@ -100,13 +88,7 @@ public class CommandListener {
         this.modifiers = modifiers;
     }
 
-    public void sub(Command... commands) {
-        if (owner != null) {
-            owner.addSubCommands(commands);
-        }
-    }
-
-    private void clearValues() {
+    private void clean() {
         this.sender = null;
         this.args = null;
         this.modifiers = null;
@@ -126,27 +108,20 @@ public class CommandListener {
         return testForPermissions;
     }
 
-    public void addCooldown(UUID uuid, long length) {
-        cooldowns.put(uuid, System.currentTimeMillis() + length);
-    }
-
     public void addCooldown(CommandSender commandSender, long length) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            addCooldown(player.getUniqueId(), length);
-        }
+        cooldowns.put(commandSender, System.currentTimeMillis() + length);
     }
 
-    public boolean cooledDown(UUID uuid) {
-        boolean cooledDown = cooldowns.getOrDefault(uuid, 0L) - System.currentTimeMillis() <= 0;
+    public boolean isCooledDown(CommandSender commandSender) {
+        boolean cooledDown = getRemaining(commandSender) - System.currentTimeMillis() <= 0;
         if (cooledDown) {
-            cooldowns.remove(uuid);
+            cooldowns.remove(commandSender);
         }
         return cooledDown;
     }
 
-    public long getRemaining(UUID uuid) {
-        return cooldowns.getOrDefault(uuid, 0L) - System.currentTimeMillis();
+    public long getRemaining(CommandSender commandSender) {
+        return cooldowns.getOrDefault(commandSender, 0L) - System.currentTimeMillis();
     }
 
     public Command getOwner() {
@@ -157,7 +132,11 @@ public class CommandListener {
         this.owner = owner;
     }
 
-    public Map<String, Command> getSubCommands() {
-        return getOwner().getSubCommands();
+    public ICommandListener getListener() {
+        return listener;
+    }
+
+    public void setListener(ICommandListener listener) {
+        this.listener = listener;
     }
 }

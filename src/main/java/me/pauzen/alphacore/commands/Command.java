@@ -5,6 +5,8 @@
 package me.pauzen.alphacore.commands;
 
 import me.pauzen.alphacore.Core;
+import me.pauzen.alphacore.commands.exceptions.NoPermissionException;
+import me.pauzen.alphacore.commands.exceptions.NotCooledDownException;
 import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.messages.ErrorMessage;
@@ -108,7 +110,13 @@ public abstract class Command extends ListenerImplementation implements ManagerM
                 }
             }
 
-            commandListener.preRun(this, commandSender, args, modifiers);
+            try {
+                commandListener.preRun(this, commandSender, args, modifiers);
+            } catch (NotCooledDownException e) {
+                ErrorMessage.COOLDOWN.send(commandSender, "Command", commandListener.getRemaining(commandSender) + "ms");
+            } catch (NoPermissionException e) {
+                ErrorMessage.PERMISSIONS.send(commandSender, "this command");
+            }
         }
     }
 

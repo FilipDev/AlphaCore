@@ -20,7 +20,7 @@ public class ErrorMessage implements Message {
         }
     });
     public static final ErrorMessage CONSOLESENDER     = new ErrorMessage("Command can only be sent by a player.");
-    public static final ErrorMessage PERMISSIONS       = new ErrorMessage("No permissions for %s.");
+    public static final ErrorMessage PERMISSIONS       = new ErrorMessage("Not permitted to use %s.");
     public static final ErrorMessage SQL               = new ErrorMessage("Could not connect to SQL database.");
     public static final ErrorMessage COMMAND_NOT_FOUND = new ErrorMessage("Command chain %s non-existent.");
     public static final ErrorMessage COOLDOWN          = new ErrorMessage("%s is still on cooldown." + ChatColor.RED + " (%s remaining)");

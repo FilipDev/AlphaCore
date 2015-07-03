@@ -89,7 +89,7 @@ public class WorldManager extends ListenerImplementation implements ModuleManage
             for (World world : Bukkit.getWorlds()) {
 
                 CoreWorld coreWorld = CoreWorld.get(world);
-                
+
                 coreWorld.tick();
             }
         }

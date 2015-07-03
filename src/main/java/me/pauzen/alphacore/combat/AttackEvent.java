@@ -16,20 +16,20 @@ import org.bukkit.potion.PotionEffect;
 public class AttackEvent extends CallableEvent {
 
     private static final HandlerList handlers = new HandlerList();
-    private AttackType attackType;
-    private Player     attacker, defender;
+    private AttackMethod attackMethod;
+    private Player       attacker, defender;
     private EntityDamageEvent.DamageCause damageCause;
     private double                        damage;
     private PotionEffect                  potionEffect;
 
     private Event event;
 
-    public AttackEvent(AttackType attackType, double damage, EntityDamageEvent.DamageCause damageCause, Player attacker, Player defender, Event event) {
+    public AttackEvent(AttackMethod attackMethod, double damage, EntityDamageEvent.DamageCause damageCause, Player attacker, Player defender, Event event) {
         this.damageCause = damageCause;
         this.attacker = attacker;
         this.defender = defender;
         this.damage = damage;
-        this.attackType = attackType;
+        this.attackMethod = attackMethod;
         this.event = event;
 
         createFight(this);
@@ -40,7 +40,7 @@ public class AttackEvent extends CallableEvent {
         this.defender = defender;
         this.potionEffect = potionEffect;
         this.event = event;
-        this.attackType = AttackType.POTION;
+        this.attackMethod = AttackMethod.POTION;
     }
 
     private static Fight createFight(AttackEvent attackEvent) {
@@ -87,7 +87,7 @@ public class AttackEvent extends CallableEvent {
         return potionEffect;
     }
 
-    public AttackType getAttackType() {
-        return attackType;
+    public AttackMethod getAttackMethod() {
+        return attackMethod;
     }
 }

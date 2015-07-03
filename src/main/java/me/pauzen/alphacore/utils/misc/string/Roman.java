@@ -32,7 +32,7 @@ public final class Roman {
             case 10:
                 return "X";
             default:
-                return "";
+                return String.valueOf(n);
         }
     }
 }

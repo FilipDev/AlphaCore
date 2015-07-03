@@ -8,7 +8,6 @@ import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
 import me.pauzen.alphacore.commands.CommandMeta;
-import me.pauzen.alphacore.commands.premade.alphacore.modules.Load;
 import me.pauzen.alphacore.commands.premade.alphacore.modules.Reload;
 import me.pauzen.alphacore.commands.premade.alphacore.modules.Unload;
 import org.bukkit.ChatColor;
@@ -18,18 +17,18 @@ public class Modules extends Command {
 
     @Override
     public void onRegister() {
-        addSubCommands(new Unload(), new Reload(), new Load());
+        addSubCommands(new Unload(), new Reload());
     }
 
     @Override
     public CommandListener getDefaultListener() {
-        return new CommandListener(true, "alphacore.modules") {
+        return new CommandListener(null, true, "alphacore.modules") {
 
             @Override
             public void onRun() {
                 String managersHeader = ChatColor.GREEN + "" + ChatColor.BOLD + "Managers: ";
                 StringBuilder managers = new StringBuilder();
-                for (String name : Core.getCore().getManagers().keySet()) {
+                for (String name : Core.getManagerHandler().getManagers().keySet()) {
                     if (!managers.toString().isEmpty()) {
                         managers.append(", ");
                     }

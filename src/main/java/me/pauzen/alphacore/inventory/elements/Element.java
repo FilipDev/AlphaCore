@@ -12,7 +12,7 @@ import java.util.Collections;
 
 public class Element {
 
-    public static Element BLANK_ELEMENT = new Element(Material.AIR);
+    public static final Element BLANK_ELEMENT = new Element(Material.AIR);
 
     private ItemStack representation;
 

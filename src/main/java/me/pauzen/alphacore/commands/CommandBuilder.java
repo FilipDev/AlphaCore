@@ -27,6 +27,10 @@ public final class CommandBuilder {
         this.commandListener = listener;
         return this;
     }
+    
+    public CommandBuilder onRun(@Nonnull ICommandListener listener, boolean canConsoleExecute) {
+        return onRun(new CommandListener(listener, canConsoleExecute));
+    }
 
     public CommandBuilder alias(String... aliases) {
         Collections.addAll(this.aliases, aliases);

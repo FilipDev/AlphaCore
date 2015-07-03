@@ -68,7 +68,7 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
             destroyWrapper(e.getPlayer(), playerWrapper);
         }
     }
-    
+
     @EventHandler
     public void onUpdate(UpdateEvent e) {
         if (e.getUpdateType() == UpdateType.TICK) {
@@ -79,7 +79,7 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
             }
         }
     }
-    
+
     public <T> T getWrapper(Player player, Class<T> playerClass) {
         return (T) players.get(player.getUniqueId()).get(playerClass);
     }

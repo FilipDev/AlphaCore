@@ -54,13 +54,7 @@ public final class ReflectionFactory {
      * @param field Field to remove modifier from.
      */
     public static void removeFinal(Field field) {
-        try {
-            Field modifier = Field.class.getDeclaredField("modifiers");
-            modifier.setAccessible(true);
-            modifier.set(field, field.getModifiers() & ~Modifier.FINAL);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        setFinal(field, false);
     }
 
     /**
@@ -290,5 +284,20 @@ public final class ReflectionFactory {
             }
         }
         return false;
+    }
+
+    public static void setFinal(Field field, boolean flag) {
+        try {
+            Field modifier = Field.class.getDeclaredField("modifiers");
+            modifier.setAccessible(true);
+            if (flag) {
+                modifier.set(field, field.getModifiers() & ~Modifier.FINAL);
+            }
+            else {
+                modifier.set(field, field.getModifiers() & Modifier.FINAL);
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }

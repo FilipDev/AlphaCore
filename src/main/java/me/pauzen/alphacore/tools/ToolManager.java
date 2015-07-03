@@ -43,7 +43,7 @@ public class ToolManager extends ListenerImplementation implements ModuleManager
         }
 
         Map<String, String> properties = ItemData.getData(e.getItem());
-        
+
         if (!properties.containsKey("tool")) {
             return;
         }
@@ -72,11 +72,11 @@ public class ToolManager extends ListenerImplementation implements ModuleManager
 
         tool.onInteract(e, ClickType.fromAction(action));
     }
-    
+
     @EventHandler(ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent event) {
         ItemStack itemStack = event.getItemDrop().getItemStack();
-        
+
         if (!isRealItem(itemStack)) {
             return;
         }
@@ -90,14 +90,14 @@ public class ToolManager extends ListenerImplementation implements ModuleManager
         String type = properties.get("tool");
 
         Tool tool = tools.get(type);
-        
+
         event.setCancelled(!tool.isDroppable());
     }
 
     public boolean isTool(ItemStack itemStack) {
         return itemStack != null && itemStack.getType() != Material.AIR && ItemData.hasData(itemStack, "tool");
     }
-    
+
     public boolean isRealItem(ItemStack itemStack) {
         return itemStack != null && itemStack.getType() != Material.AIR;
     }

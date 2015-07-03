@@ -4,8 +4,7 @@
 
 package me.pauzen.alphacore.listeners;
 
-import me.pauzen.alphacore.Core;
-import me.pauzen.alphacore.core.modules.PluginModule;
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -17,11 +16,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public abstract class ListenerImplementation implements Listener, PluginModule {
+public abstract class ListenerImplementation implements Listener, ManagerModule {
 
     public ListenerImplementation() {
         JavaPlugin providingPlugin = JavaPlugin.getProvidingPlugin(getClass());
-        Core.registerModule(providingPlugin, this);
         Bukkit.getPluginManager().registerEvents(this, providingPlugin);
     }
 

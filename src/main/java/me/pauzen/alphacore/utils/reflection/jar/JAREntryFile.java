@@ -30,9 +30,8 @@ public class JAREntryFile {
 
         JAREntryFile that = (JAREntryFile) o;
 
-        if (!path.equals(that.path)) return false;
+        return path.equals(that.path);
 
-        return true;
     }
 
     @Override

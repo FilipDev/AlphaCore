@@ -8,20 +8,23 @@
 
 package me.pauzen.alphacore.commands.premade;
 
-import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.commands.Command;
 import me.pauzen.alphacore.commands.CommandListener;
 import me.pauzen.alphacore.commands.CommandMeta;
+import me.pauzen.alphacore.effects.AppliedEffect;
 import me.pauzen.alphacore.effects.Effect;
+import me.pauzen.alphacore.effects.Property;
 import me.pauzen.alphacore.messages.ChatMessage;
 import me.pauzen.alphacore.messages.ErrorMessage;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.misc.string.Roman;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @CommandMeta(
@@ -34,43 +37,36 @@ public class ActiveCommand extends Command {
 
     @Override
     public CommandListener getDefaultListener() {
-        return new CommandListener() {
-            @Override
-            public void onRun() {
+        return new CommandListener((CommandSender sender, Map<String, String> modifiers, String[] args) -> {
+            Player target = Bukkit.getPlayerExact(modifiers.getOrDefault("target", ""));
 
-                Player target = Bukkit.getPlayerExact(modifiers.getOrDefault("target", ""));
-
-                if (!sender.hasPermission("alphacore.active.other")) {
-                    if (target != sender) {
-                        ErrorMessage.PERMISSIONS.send(sender, "observing active abilities of other players");
-                        return;
-                    }
+            if (!sender.hasPermission("alphacore.active.other")) {
+                if (target != sender) {
+                    ErrorMessage.PERMISSIONS.send(sender, "observing active abilities of other players");
+                    return;
                 }
-
-                if (target == null) {
-                    if (sender instanceof Player) {
-                        target = (Player) sender;
-                    }
-                    else {
-                        NO_TARGET.sendConsole();
-                        return;
-                    }
-                }
-
-                CorePlayer corePlayer = CorePlayer.get(target);
-
-                ChatMessage.SPACER.sendRawMessage(sender, ChatColor.DARK_GREEN + target.getName() + "'s Active Abilities");
-                ChatMessage.LINE_SPACER.sendRawMessage(sender);
-
-                Set<Ability> totalAbilities = new HashSet<>();
-                totalAbilities.addAll(corePlayer.getActivatedAbilities());
-                totalAbilities.addAll(corePlayer.getCurrentPlace().getActiveAbilities());
-
-                totalAbilities.stream().filter((ability) -> !ability.isInvisible()).forEach((ability) -> ChatMessage.LIST_ELEMENT.sendRawMessage(sender, "Ability", getString(ability, corePlayer)));
-
-                corePlayer.getActiveEffects().stream().filter((effect) -> !effect.isInvisible()).forEach((effect) -> ChatMessage.LIST_ELEMENT.sendRawMessage(sender, "Effect", getString(effect, corePlayer)));
             }
-        };
+
+            if (target == null) {
+                if (sender instanceof Player) {
+                    target = (Player) sender;
+                }
+                else {
+                    NO_TARGET.sendConsole();
+                    return;
+                }
+            }
+
+            CorePlayer corePlayer = CorePlayer.get(target);
+
+            ChatMessage.SPACER.sendRawMessage(sender, ChatColor.DARK_GREEN + target.getName() + "'s Active Abilities");
+            ChatMessage.LINE_SPACER.sendRawMessage(sender);
+
+            Set<AppliedEffect> totalEffects = new HashSet<>();
+            totalEffects.addAll(corePlayer.getEffects().getApplied().values());
+
+            totalEffects.stream().filter((appliedEffect) -> !appliedEffect.hasProperty(Property.INVISIBLE)).forEach((appliedEffect) -> ChatMessage.LIST_ELEMENT.sendRawMessage(sender, "Effect", getString(appliedEffect)));
+        });
     }
 
     @Override
@@ -78,34 +74,26 @@ public class ActiveCommand extends Command {
         return true;
     }
 
-    private String getString(Ability ability, CorePlayer corePlayer) {
-        ChatColor color = corePlayer.getActivatedAbilities().contains(ability) ? ChatColor.GREEN : ChatColor.YELLOW;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(color);
-        stringBuilder.append(ability.getName());
-        stringBuilder.append(" ");
-        int level = corePlayer.getLevel(ability);
-        if (level != 1) {
-            stringBuilder.append(Roman.toRoman(level));
-        }
-        return stringBuilder.toString();
-    }
+    private String getString(AppliedEffect appliedEffect) {
 
-    private String getString(Effect effect, CorePlayer corePlayer) {
+        Effect effect = appliedEffect.getEffect();
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(ChatColor.WHITE);
         stringBuilder.append(effect.getName());
         stringBuilder.append(" ");
-        int level = corePlayer.getLevel(effect);
+        int level = appliedEffect.getLevel();
         if (level != 1) {
             stringBuilder.append(Roman.toRoman(level));
         }
-        stringBuilder.append(" ");
-        stringBuilder.append(ChatColor.LIGHT_PURPLE);
-        stringBuilder.append("(");
-        stringBuilder.append(effect.getTimeLeft(corePlayer));
-        stringBuilder.append("ms");
-        stringBuilder.append(")");
+        if (appliedEffect.hasProperty(Property.TEMPORARY)) {
+            stringBuilder.append(" ");
+            stringBuilder.append(ChatColor.LIGHT_PURPLE);
+            stringBuilder.append("(");
+            stringBuilder.append((System.currentTimeMillis() - appliedEffect.getTimestamp()) / 50);
+            stringBuilder.append(" ticks");
+            stringBuilder.append(")");
+        }
         return stringBuilder.toString();
     }
 }

@@ -14,6 +14,7 @@ public class AlphaCoreCommand extends Command {
 
     @Override
     public void onRegister() {
+        System.out.println("asdfasdfasdf");
         Modules modules = new Modules();
         Help help = new Help();
         addSubCommands(modules, help);
@@ -21,7 +22,7 @@ public class AlphaCoreCommand extends Command {
 
     @Override
     public CommandListener getDefaultListener() {
-        return new CommandListener(true) {
+        return new CommandListener(null, true) {
             @Override
             public void onRun() {
                 ChatMessage.ABOUT.send(sender);

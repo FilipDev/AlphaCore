@@ -2,19 +2,22 @@
  *  Created by Filip P. on 2/6/15 6:31 PM.
  */
 
-package me.pauzen.alphacore.effects;
+package me.pauzen.alphacore.effects.events;
 
+import me.pauzen.alphacore.effects.AppliedEffect;
+import me.pauzen.alphacore.effects.Effect;
 import me.pauzen.alphacore.events.CallablePlayerEvent;
-import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.HandlerList;
 
 public class EffectRemoveEvent extends CallablePlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
-    private Effect effect;
+    private final AppliedEffect appliedEffect;
+    private final Effect        effect;
 
-    public EffectRemoveEvent(CorePlayer CorePlayer, Effect effect) {
-        super(CorePlayer);
+    public EffectRemoveEvent(AppliedEffect appliedEffect, Effect effect) {
+        super(appliedEffect.getCorePlayer());
+        this.appliedEffect = appliedEffect;
         this.effect = effect;
     }
 
@@ -28,5 +31,9 @@ public class EffectRemoveEvent extends CallablePlayerEvent {
 
     public Effect getEffect() {
         return effect;
+    }
+
+    public AppliedEffect getAppliedEffect() {
+        return appliedEffect;
     }
 }

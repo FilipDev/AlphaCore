@@ -4,7 +4,6 @@
 
 package me.pauzen.alphacore.players.data.events;
 
-import me.pauzen.alphacore.abilities.Ability;
 import me.pauzen.alphacore.events.CallablePlayerEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.players.data.trackers.Tracker;
@@ -15,9 +14,8 @@ import java.util.List;
 
 public class PlayerLoadEvent extends CallablePlayerEvent {
 
-    private static final HandlerList   handlers         = new HandlerList();
-    private              List<Tracker> defaultTrackers  = new ArrayList<>();
-    private              List<Ability> defaultAbilities = new ArrayList<>();
+    private static final HandlerList   handlers        = new HandlerList();
+    private              List<Tracker> defaultTrackers = new ArrayList<>();
 
     public PlayerLoadEvent(CorePlayer corePlayer) {
         super(corePlayer);
@@ -35,15 +33,7 @@ public class PlayerLoadEvent extends CallablePlayerEvent {
         return defaultTrackers.add(tracker);
     }
 
-    public boolean addDefault(Ability ability) {
-        return defaultAbilities.add(ability);
-    }
-
     public List<Tracker> getDefaultTrackers() {
         return defaultTrackers;
-    }
-
-    public List<Ability> getDefaultAbilities() {
-        return defaultAbilities;
     }
 }

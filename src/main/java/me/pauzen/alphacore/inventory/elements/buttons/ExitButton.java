@@ -17,5 +17,5 @@ public class ExitButton extends ClickableElement {
             clicker.closeInventory();
         }, ItemBuilder.from(new ItemStack(Material.INK_SACK)).durability(1).name(ChatColor.DARK_RED + "Exit").lore(ChatColor.RED + "Exits the menu").build());
     }
-    
+
 }

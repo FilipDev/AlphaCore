@@ -10,6 +10,6 @@ import java.util.Map;
 
 public interface ICommandListener {
 
-    public void onRun(CommandSender sender, Map<String, String> modifers, String[] args);
+    public void onRun(CommandSender sender, Map<String, String> modifiers, String[] args);
 
 }

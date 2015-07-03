@@ -6,8 +6,8 @@ package me.pauzen.alphacore.places;
 
 import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.combat.AttackEvent;
+import me.pauzen.alphacore.commands.events.CommandRunEvent;
 import me.pauzen.alphacore.players.CorePlayer;
-import me.pauzen.alphacore.utils.misc.Todo;
 import me.pauzen.alphacore.utils.misc.Tuple;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -22,7 +22,6 @@ import org.bukkit.event.player.*;
 
 import java.util.function.Predicate;
 
-@Todo("Add more values.")
 public enum PlaceAction {
 
     //COMBAT
@@ -35,7 +34,7 @@ public enum PlaceAction {
 
     //TELEPORTATION
     TELEPORT_IN(PlayerTeleportEvent.class, e -> e.event().getPlayer(), t -> {
-        Place place = t.getSecond();
+        CorePlace place = t.getSecond();
         if (place instanceof PhysicalPlace) {
             PhysicalPlace physicalPlace = (PhysicalPlace) place;
             return physicalPlace.contains(t.getFirst().getTo());
@@ -43,7 +42,7 @@ public enum PlaceAction {
         return false;
     }),
     TELEPORT_OUT(PlayerTeleportEvent.class, e -> e.event().getPlayer(), t -> {
-        Place place = t.getSecond();
+        CorePlace place = t.getSecond();
         if (place instanceof PhysicalPlace) {
             PhysicalPlace physicalPlace = (PhysicalPlace) place;
             return physicalPlace.contains(t.getFirst().getFrom());
@@ -53,6 +52,7 @@ public enum PlaceAction {
 
     //CHAT
     CHAT(AsyncPlayerChatEvent.class),
+    COMMAND(CommandRunEvent.class, e -> e.event().getPlayer().getPlayer()),
 
     DROP_ITEM(PlayerDropItemEvent.class),
     PICKUP_ITEM(PlayerPickupItemEvent.class),
@@ -68,7 +68,7 @@ public enum PlaceAction {
     private Class        eventClass;
     private PlayerGetter playerGetter;
 
-    <E extends Event> PlaceAction(Class<E> eventClass, PlayerGetter<E> playerGetter, Predicate<Tuple<E, Place>> shouldRun) {
+    <E extends Event> PlaceAction(Class<E> eventClass, PlayerGetter<E> playerGetter, Predicate<Tuple<E, CorePlace>> shouldRun) {
         this.eventClass = eventClass;
         this.playerGetter = playerGetter;
         Bukkit.getPluginManager().registerEvent(eventClass, PlaceManager.getManager(), EventPriority.HIGHEST, (listener, event) -> {

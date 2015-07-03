@@ -7,6 +7,7 @@ package me.pauzen.alphacore.places;
 import me.pauzen.alphacore.core.managers.ModuleManager;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.players.CorePlayer;
+import me.pauzen.alphacore.server.CoreServer;
 import me.pauzen.alphacore.utils.misc.Tuple;
 import me.pauzen.alphacore.utils.reflection.Nullify;
 import me.pauzen.alphacore.worlds.WorldManager;
@@ -17,13 +18,16 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class PlaceManager extends ListenerImplementation implements ModuleManager<Place> {
 
     @Nullify
     private static PlaceManager manager;
+
+    private Map<String, Place> places = new HashMap<>();
 
     public static PlaceManager getManager() {
         return manager;
@@ -40,6 +44,10 @@ public class PlaceManager extends ListenerImplementation implements ModuleManage
                 return;
             }
 
+            if (CoreServer.getCoreServer().isDisallowed(placeAction)) {
+                ((Cancellable) e).setCancelled(true);
+            }
+            
             Place place = null;
             try {
                 Player player = placeAction.getPlayerGetter().getPlayer(new EventContainer<>(e.getClass(), e));
@@ -52,7 +60,7 @@ public class PlaceManager extends ListenerImplementation implements ModuleManage
             if (place == null) {
                 return;
             }
-
+            
             if (shouldRun.test(new Tuple<>(e, place))) {
                 if (!place.isAllowed(placeAction)) {
                     ((Cancellable) e).setCancelled(true);
@@ -68,15 +76,17 @@ public class PlaceManager extends ListenerImplementation implements ModuleManage
 
     @Override
     public Collection<Place> getModules() {
-        return Collections.emptyList();
+        return places.values();
     }
 
     @Override
     public void registerModule(Place module) {
+        places.put(module.getName(), module);
     }
 
     @Override
     public void unregisterModule(Place module) {
+        places.remove(module.getName());
     }
 
     public Place getPlace(CorePlayer corePlayer) {

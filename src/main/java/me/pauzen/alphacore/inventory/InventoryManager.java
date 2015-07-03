@@ -32,6 +32,7 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
     private static InventoryManager manager;
 
     private Map<String, InventoryMenu> menus = new HashMap<>();
+    private boolean                    skip  = false;
 
     public static InventoryManager getManager() {
         return manager;
@@ -42,7 +43,7 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
 
         CorePlayer corePlayer = CorePlayer.get((Player) event.getPlayer());
 
-        corePlayer.setOpenInventory(event.getInventory());
+        corePlayer.addAttribute("open_inventory", event.getInventory());
 
         InventoryMenu menu = (InventoryMenu) getMenu(event.getInventory());
 
@@ -56,7 +57,7 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
 
         CorePlayer corePlayer = CorePlayer.get((Player) event.getPlayer());
 
-        corePlayer.setOpenInventory(null);
+        corePlayer.removeAttribute("open_inventory");
 
         InventoryMenu menu = (InventoryMenu) getMenu(event.getInventory());
 
@@ -70,21 +71,20 @@ public class InventoryManager extends ListenerImplementation implements ModuleMa
         if (e.getRawSlot() == -999) {
             return;
         }
-        
+
         Menu menu = getMenu(e.getInventory());
 
         if (menu != null) {
             menu.processClick(e);
         }
     }
-    
-    private boolean skip = false;
+
     @EventHandler
     public void onUpdate(UpdateEvent event) {
         if (event.getUpdateType() == UpdateType.TICK) {
             if (!(skip = !skip)) {
                 for (CorePlayer corePlayer : CorePlayer.getCorePlayers()) {
-                    if (corePlayer.getOpenInventory() == null) {
+                    if (!corePlayer.hasAttribute("open_inventory")) {
                         corePlayer.removeAttribute("previous_menus");
                     }
                 }

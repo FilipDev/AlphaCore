@@ -6,7 +6,7 @@ package me.pauzen.alphacore.places;
 
 import org.bukkit.Location;
 
-public abstract class PhysicalPlace extends Place {
+public abstract class PhysicalPlace extends CorePlace {
 
     public PhysicalPlace(String name, Place superPlace) {
         super(name, superPlace);

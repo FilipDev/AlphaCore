@@ -57,10 +57,11 @@ public final class ItemData {
         else {
             data = visiblePart + DELIMITER + InvisibleEncoder.encode(compiled);
         }
-        if (line == -1) { 
+        if (line == -1) {
             if (lore.size() == 0) {
                 line = 0;
-            } else {
+            }
+            else {
                 line = lore.size();
                 lore.add("");
             }

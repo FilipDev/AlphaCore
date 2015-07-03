@@ -22,21 +22,20 @@ public class Unload extends Command {
 
     @Override
     public CommandListener getDefaultListener() {
-        return new CommandListener("alphacore.modules.unload") {
+        return new CommandListener(null, "alphacore.modules.unload") {
             @Override
             public void onRun() {
-                Core core = Core.getCore();
 
                 if (args.length == 0) {
                     ErrorMessage.INVALID_ARGUMENTS.send(sender, "Argument must be a valid Manager.");
                     return;
                 }
 
-                Optional<Manager> manager = Optional.ofNullable(core.getManagers().get(args[0]));
+                Optional<Manager> manager = Optional.ofNullable(Core.getManagerHandler().getManagers().get(args[0]));
 
                 if (manager.isPresent()) {
                     Manager manager1 = manager.get();
-                    Core.unregisterManager(manager1);
+                    Core.getManagerHandler().unloadManager(manager1);
                     UNLOAD_MANAGER.send(sender, manager1.getName());
                 }
                 else {

@@ -2,15 +2,15 @@
  *  Created by Filip P. on 6/22/15 2:23 AM.
  */
 
-package me.pauzen.alphacore.worlds.border;
+package me.pauzen.alphacore.border;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class SquareBorder extends Border {
-    
+
     private int reversionDistance = 5;
-    
+
     public SquareBorder(int size, Location centre) {
         super(size, centre);
     }

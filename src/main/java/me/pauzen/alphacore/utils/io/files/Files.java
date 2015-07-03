@@ -53,7 +53,7 @@ public final class Files {
             String line2 = lines2.get(lineNum);
             if (line1.equals(line2)) difference.set(lineNum, new String[]{line1, line2});
         }
-        
+
         reader1.close();
         reader2.close();
 

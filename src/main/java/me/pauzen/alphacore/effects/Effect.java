@@ -1,123 +1,98 @@
 /*
- *  Created by Filip P. on 2/2/15 11:29 PM.
+ *  Created by Filip P. on 6/28/15 12:50 AM.
  */
 
 package me.pauzen.alphacore.effects;
 
-import me.pauzen.alphacore.applicable.Applicable;
-import me.pauzen.alphacore.core.modules.ManagerModule;
-import me.pauzen.alphacore.listeners.ListenerImplementation;
+import me.pauzen.alphacore.dynamicevents.Events;
+import me.pauzen.alphacore.effects.events.EffectApplyEvent;
+import me.pauzen.alphacore.effects.events.EffectRemoveEvent;
+import me.pauzen.alphacore.effects.exceptions.ApplicationCancellationException;
+import me.pauzen.alphacore.effects.exceptions.RemovalCancellationException;
 import me.pauzen.alphacore.players.CorePlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import me.pauzen.alphacore.updater.UpdateEvent;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Effect extends ListenerImplementation implements Applicable, ManagerModule {
+public abstract class Effect {
 
-    private Map<CorePlayer, Long> affectedPlayers = new HashMap<>();
+    private final String name;
+    private final long   defaultDuration;
 
-    private long   effectLength;
-    private String name;
+    private Map<CorePlayer, AppliedEffect> applications = new HashMap<>();
 
-    private boolean invisible = false;
-
-    /**
-     * Define amount of ticks the effect lasts.
-     *
-     * @param effectLength Ticks until the effect wears off after application.
-     */
-    public Effect(String name, long effectLength) {
+    public Effect(String name, long defaultDuration) {
         this.name = name;
-        this.effectLength = effectLength == -1 ? -1 : effectLength * 50;
-        Player development = Bukkit.getPlayer("Development");
-        if (development != null) {
-            development.sendMessage(this.effectLength + "");
-        }
-        EffectManager.getManager().registerModule(this);
+        this.defaultDuration = defaultDuration;
+
+        Events.addExecutor(UpdateEvent.class, (event) -> {
+            for (AppliedEffect appliedEffect : getApplications()) {
+                update(event, appliedEffect.getCorePlayer());
+            }
+        });
     }
 
     public Effect(String name) {
-        this.name = name;
-        this.effectLength = -1;
-        EffectManager.getManager().registerModule(this);
+        this(name, Long.MAX_VALUE);
     }
 
-    public Effect(String name, boolean invisible) {
-        this(name);
-        this.invisible = invisible;
+    protected void apply(AppliedEffect appliedEffect) throws ApplicationCancellationException {
+        EffectApplyEvent effectApplyEvent = new EffectApplyEvent(appliedEffect, this);
+
+        if (effectApplyEvent.call().isCancelled()) {
+            throw new ApplicationCancellationException();
+        }
+
+        onApply(appliedEffect);
+
+        applications.put(appliedEffect.getCorePlayer(), appliedEffect);
     }
 
-    public long getEffectLength() {
-        return this.effectLength;
+    protected void remove(AppliedEffect appliedEffect) throws RemovalCancellationException {
+        EffectRemoveEvent effectRemoveEvent = new EffectRemoveEvent(appliedEffect, this);
+
+        if (effectRemoveEvent.call().isCancelled()) {
+            throw new RemovalCancellationException();
+        }
+
+        onRemove(appliedEffect);
+
+        applications.remove(appliedEffect.getCorePlayer());
     }
 
-    public boolean isForever(CorePlayer corePlayer) {
-        return affectedPlayers.get(corePlayer) == -1;
-    }
+    protected void update(UpdateEvent update, CorePlayer corePlayer) {
+        AppliedEffect appliedEffect = getAppliedEffect(corePlayer);
 
-    public abstract void onApply(CorePlayer corePlayer);
-
-    public abstract void onRemove(CorePlayer corePlayer);
-
-    public abstract void perSecond(CorePlayer corePlayer);
-
-    public void apply(CorePlayer corePlayer, long effectLength) {
-        if (new EffectGetEvent(corePlayer, this).call().isCancelled()) {
+        if (appliedEffect.elapsed()) {
+            corePlayer.getEffects().deactivate(this);
             return;
         }
-        corePlayer.activateEffect(this);
-        affectedPlayers.put(corePlayer, effectLength == -1 ? -1 : System.currentTimeMillis() + effectLength);
-        onApply(corePlayer);
+
+        onUpdate(update, appliedEffect);
     }
 
-    @Override
-    public void apply(CorePlayer corePlayer) {
-        apply(corePlayer, this.effectLength);
-    }
+    public abstract void onApply(AppliedEffect applied);
 
-    @Override
-    public void remove(CorePlayer corePlayer) {
-        corePlayer.deactivateEffect(this);
-        affectedPlayers.remove(corePlayer);
-        new EffectRemoveEvent(corePlayer, this).call();
-        onRemove(corePlayer);
-    }
+    public abstract void onUpdate(UpdateEvent update, AppliedEffect applied);
 
-    @Override
-    public boolean hasActivated(CorePlayer corePlayer) {
-        return corePlayer.hasActivated(this);
-    }
+    public abstract void onRemove(AppliedEffect applied);
 
-    public void update() {
-        for (Map.Entry<CorePlayer, Long> entry : this.affectedPlayers.entrySet()) {
-            perSecond(entry.getKey());
-            if (getTimeLeft(entry.getKey()) <= 0) {
-                remove(entry.getKey());
-            }
-        }
-    }
-
-    public long getTimeLeft(CorePlayer corePlayer) {
-        return isForever(corePlayer) ? 1 : getEffectLength() - (System.currentTimeMillis() - affectedPlayers.get(corePlayer));
-    }
-
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
-    public boolean isInvisible() {
-        return invisible;
+    public long getDefaultDuration() {
+        return defaultDuration;
     }
 
-    @Override
-    public void unload() {
-        for (Map.Entry<CorePlayer, Long> applicationEntry : affectedPlayers.entrySet()) {
-            remove(applicationEntry.getKey());
-        }
-        EffectManager.getManager().getRegisteredEffects().remove(this);
+    public AppliedEffect getAppliedEffect(CorePlayer corePlayer) {
+        return corePlayer.getEffects().get(getClass());
     }
+
+    public Collection<AppliedEffect> getApplications() {
+        return applications.values();
+    }
+
 }

@@ -2,7 +2,7 @@
  *  Created by Filip P. on 6/22/15 2:19 AM.
  */
 
-package me.pauzen.alphacore.worlds.border;
+package me.pauzen.alphacore.border;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -41,7 +41,7 @@ public class CircleBorder extends Border {
 
         player.teleport(location);
         player.setVelocity(new Vector(0, 0, 0));
-        
+
         getBorderCrossMessage().send(player);
     }
 }

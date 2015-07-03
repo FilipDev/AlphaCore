@@ -15,7 +15,6 @@ import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -44,8 +43,6 @@ public enum RegisteredCommand {
     public static void registerCommand(Command command, Plugin plugin) {
 
         command.onRegister();
-
-        Core.registerModule((JavaPlugin) plugin, command);
 
         if (commandMap == null) {
             commandMap = new HashMap<>();

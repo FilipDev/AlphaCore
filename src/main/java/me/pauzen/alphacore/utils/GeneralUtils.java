@@ -21,24 +21,24 @@ public class GeneralUtils {
         return pathBuilder.toString();
     }
 
-    public static <T> boolean toggleContainment(Collection<T> map, T object) {
-        if (map.contains(object)) {
-            map.remove(object);
-            return false;
-        }
-        else {
-            map.add(object);
-            return true;
-        }
-    }
-
-    public static <T> boolean toggleContainment(Map<T, Integer> collection, T object, int val) {
-        if (collection.containsKey(object)) {
+    public static <T> boolean toggleContainment(Collection<T> collection, T object) {
+        if (collection.contains(object)) {
             collection.remove(object);
             return false;
         }
         else {
-            collection.put(object, val);
+            collection.add(object);
+            return true;
+        }
+    }
+
+    public static <T, O> boolean toggleContainment(Map<T, O> map, T object, O val) {
+        if (map.containsKey(object)) {
+            map.remove(object);
+            return false;
+        }
+        else {
+            map.put(object, val);
             return true;
         }
     }
@@ -55,7 +55,7 @@ public class GeneralUtils {
         return containment;
     }
 
-    public static <T> boolean setContainment(Map<T, Integer> map, T object, boolean containment, int val) {
+    public static <T, O> boolean setContainment(Map<T, O> map, T object, boolean containment, O val) {
         if (containment) {
             if (!map.containsKey(object)) {
                 map.put(object, val);

@@ -4,7 +4,7 @@
 
 package me.pauzen.alphacore.combat;
 
-public enum AttackType {
+public enum AttackMethod {
 
     ARROW, MELEE, POTION;
 

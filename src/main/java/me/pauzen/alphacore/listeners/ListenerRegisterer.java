@@ -10,7 +10,6 @@ public class ListenerRegisterer {
 
     public static void register() {
         new DamageByEntityListener();
-        new BlockListener();
         new PlayerMoveListener();
         new EntitySpawnListener();
         new AutoSaver();

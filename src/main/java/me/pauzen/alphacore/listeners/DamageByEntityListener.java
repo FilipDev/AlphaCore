@@ -5,7 +5,7 @@
 package me.pauzen.alphacore.listeners;
 
 import me.pauzen.alphacore.combat.AttackEvent;
-import me.pauzen.alphacore.combat.AttackType;
+import me.pauzen.alphacore.combat.AttackMethod;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,7 +46,7 @@ public class DamageByEntityListener extends ListenerImplementation {
     }
 
     private boolean playerAttack(EntityDamageByEntityEvent e) {
-        return new AttackEvent(AttackType.MELEE, e.getDamage(), e.getCause(), (Player) e.getDamager(), (Player) e.getEntity(), e).call().isCancelled();
+        return new AttackEvent(AttackMethod.MELEE, e.getDamage(), e.getCause(), (Player) e.getDamager(), (Player) e.getEntity(), e).call().isCancelled();
     }
 
     private boolean arrowAttack(EntityDamageByEntityEvent e) {
@@ -56,7 +56,7 @@ public class DamageByEntityListener extends ListenerImplementation {
             return false;
         }
 
-        return new AttackEvent(AttackType.ARROW, e.getDamage(), e.getCause(), (Player) attackingArrow.getShooter(), (Player) e.getEntity(), e).call().isCancelled();
+        return new AttackEvent(AttackMethod.ARROW, e.getDamage(), e.getCause(), (Player) attackingArrow.getShooter(), (Player) e.getEntity(), e).call().isCancelled();
     }
 
     private boolean potionAttack(PotionSplashEvent e) {

@@ -4,12 +4,12 @@
 
 package me.pauzen.alphacore.worlds;
 
+import me.pauzen.alphacore.border.Border;
 import me.pauzen.alphacore.core.modules.ManagerModule;
+import me.pauzen.alphacore.places.CorePlace;
 import me.pauzen.alphacore.places.PhysicalPlace;
 import me.pauzen.alphacore.places.Place;
-import me.pauzen.alphacore.server.CoreServer;
 import me.pauzen.alphacore.utils.misc.Tickable;
-import me.pauzen.alphacore.worlds.border.Border;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,16 +19,16 @@ import java.util.Set;
 
 public class CoreWorld implements ManagerModule, Tickable {
 
-    private final World world;
-    private final Place worldPlace;
-    
+    private final World     world;
+    private final CorePlace worldPlace;
+
     private Set<WorldProperty> appliedProperties = new HashSet<>();
 
     private long lockTime;
 
     public CoreWorld(World world) {
         this.world = world;
-        worldPlace = new PhysicalPlace(world.getName(), CoreServer.SERVER_PLACE) {
+        worldPlace = new PhysicalPlace(world.getName(), Place.getServerPlace()) {
             @Override
             public boolean contains(Location location) {
                 return location.getWorld() == world;
@@ -48,7 +48,7 @@ public class CoreWorld implements ManagerModule, Tickable {
         return world;
     }
 
-    public Place getWorldPlace() {
+    public CorePlace getWorldPlace() {
         return worldPlace;
     }
 
@@ -80,7 +80,7 @@ public class CoreWorld implements ManagerModule, Tickable {
     public void setLockTime(long lockTime) {
         this.lockTime = lockTime;
     }
-    
+
     @Override
     public void tick() {
         if (isApplied(WorldProperty.LOCK_TIME)) {
@@ -88,11 +88,11 @@ public class CoreWorld implements ManagerModule, Tickable {
         }
     }
 
-    public void setBorder(Border border) {
-        worldPlace.setBorder(border);
-    }
-    
     public Border getBorder() {
         return worldPlace.getBorder();
+    }
+
+    public void setBorder(Border border) {
+        worldPlace.setBorder(border);
     }
 }

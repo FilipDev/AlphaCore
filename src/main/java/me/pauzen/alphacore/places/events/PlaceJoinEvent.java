@@ -5,16 +5,16 @@
 package me.pauzen.alphacore.places.events;
 
 import me.pauzen.alphacore.events.CallablePlayerEvent;
-import me.pauzen.alphacore.places.Place;
+import me.pauzen.alphacore.places.CorePlace;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.HandlerList;
 
 public class PlaceJoinEvent extends CallablePlayerEvent {
 
     private static final HandlerList handlers = new HandlerList();
-    private Place place;
+    private CorePlace place;
 
-    public PlaceJoinEvent(CorePlayer corePlayer, Place place) {
+    public PlaceJoinEvent(CorePlayer corePlayer, CorePlace place) {
         super(corePlayer);
         this.place = place;
     }
@@ -27,7 +27,7 @@ public class PlaceJoinEvent extends CallablePlayerEvent {
         return handlers;
     }
 
-    public Place getPlace() {
+    public CorePlace getPlace() {
         return place;
     }
 }

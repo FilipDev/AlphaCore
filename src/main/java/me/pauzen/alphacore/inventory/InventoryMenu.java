@@ -9,6 +9,8 @@ import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.inventory.elements.ClickableElement;
 import me.pauzen.alphacore.inventory.elements.Element;
 import me.pauzen.alphacore.inventory.elements.ToggleableElement;
+import me.pauzen.alphacore.inventory.events.ElementClickEvent;
+import me.pauzen.alphacore.inventory.events.MenuOpenEvent;
 import me.pauzen.alphacore.inventory.misc.ClickType;
 import me.pauzen.alphacore.inventory.misc.Coordinate;
 import me.pauzen.alphacore.inventory.misc.ElementInteraction;
@@ -30,9 +32,9 @@ import java.util.function.Predicate;
 public abstract class InventoryMenu implements ManagerModule, Menu {
 
     protected int size;
-    protected int width = 9;
-    private Map<Coordinate, Element>                        elementMap      = new HashMap<>();
-    private Map<Coordinate, Predicate<InventoryClickEvent>> allowedClicking = new HashMap<>();
+    protected int                                             width           = 9;
+    private   Map<Coordinate, Element>                        elementMap      = new HashMap<>();
+    private   Map<Coordinate, Predicate<InventoryClickEvent>> allowedClicking = new HashMap<>();
     private InvisibleID inventoryID;
     private Map<UUID, Inventory> openedInventories = new HashMap<>();
     private String name;
@@ -105,16 +107,30 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
 
         Element clickedElement = elementMap.get(clicked);
 
+        Player player = (Player) event.getWhoClicked();
+
+        ElementClickEvent elementClickEvent = new ElementClickEvent(clickedElement, player, this);
+
+        if (elementClickEvent.call().isCancelled()) {
+            cancelEvent(event);
+            return;
+        }
+
         if (clickedElement instanceof ClickableElement) {
             ClickableElement clickableElement = (ClickableElement) clickedElement;
 
-            clickableElement.onInteract(new ElementInteraction((Player) event.getWhoClicked(), this, event.getInventory()), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.LEFT :
+            clickableElement.onInteract(new ElementInteraction(player, this, event.getInventory()), event.getAction() == InventoryAction.PICKUP_ALL ? ClickType.LEFT :
                     event.getAction() == InventoryAction.PICKUP_HALF ? ClickType.RIGHT : ClickType.OTHER);
         }
+
         if (!shouldAllowClick(event)) {
-            event.setCancelled(true);
-            event.setResult(Event.Result.DENY);
+            cancelEvent(event);
         }
+    }
+
+    private void cancelEvent(InventoryClickEvent event) {
+        event.setCancelled(true);
+        event.setResult(Event.Result.DENY);
     }
 
     /**
@@ -167,6 +183,13 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
      * @param player Player to show the inventory to.
      */
     public Inventory show(Player player) {
+
+        MenuOpenEvent menuOpenEvent = new MenuOpenEvent(player, this);
+
+        if (menuOpenEvent.call().isCancelled()) {
+            return null;
+        }
+
         player.closeInventory();
         Inventory inventory = generateInventory();
         openInventory(player, inventory);
@@ -314,7 +337,7 @@ public abstract class InventoryMenu implements ManagerModule, Menu {
     public int getSize() {
         return size;
     }
-    
+
     public int getWidth() {
         return width;
     }

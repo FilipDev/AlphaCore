@@ -15,4 +15,5 @@ public interface Manager extends Nullifiable {
 
     public default void onDisable() {
     }
+    
 }
