@@ -7,7 +7,7 @@ package me.pauzen.alphacore.players;
 import me.pauzen.alphacore.border.Border;
 import me.pauzen.alphacore.effects.Effects;
 import me.pauzen.alphacore.messages.JSONMessage;
-import me.pauzen.alphacore.places.CorePlace;
+import me.pauzen.alphacore.places.places.CorePlace;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.places.PlaceManager;
 import me.pauzen.alphacore.places.events.PlaceMoveEvent;
@@ -145,6 +145,7 @@ public class CorePlayer extends PlayerWrapper implements Tickable {
             }
         });
         getPlayerData().getYamlConstructor().save();
+        effects.removeAll();
     }
 
     @Override

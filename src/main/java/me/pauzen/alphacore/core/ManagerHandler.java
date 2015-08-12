@@ -7,7 +7,6 @@ package me.pauzen.alphacore.core;
 import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.core.managers.Manager;
 import me.pauzen.alphacore.core.managers.ModuleManager;
-import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.utils.loading.LoadPriority;
 import me.pauzen.alphacore.utils.loading.Priority;
@@ -16,7 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.PluginDisableEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -25,7 +23,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ManagerHandler {
+public class ManagerHandler extends ListenerImplementation {
 
     private Map<String, Manager>               managers         = new HashMap<>();
     private EnumMap<LoadPriority, List<Class>> loadPriorityList = new EnumMap<>(LoadPriority.class);
@@ -66,15 +64,7 @@ public class ManagerHandler {
         for (Manager manager : getManagers().values()) {
             if (manager instanceof ModuleManager) {
                 ModuleManager moduleManager = (ModuleManager) manager;
-                for (Object object : moduleManager.getModules()) {
-                    ManagerModule module = (ManagerModule) object;
-                    JavaPlugin owner = module.getOwner();
-                    if (owner != null) {
-                        if (owner == event.getPlugin()) {
-                            module.unload();
-                        }
-                    }
-                }
+                moduleManager.onDisable(event.getPlugin());
             }
         }
     }

@@ -4,6 +4,7 @@
 
 package me.pauzen.alphacore.effects;
 
+import me.pauzen.alphacore.core.modules.ManagerModule;
 import me.pauzen.alphacore.dynamicevents.Events;
 import me.pauzen.alphacore.effects.events.EffectApplyEvent;
 import me.pauzen.alphacore.effects.events.EffectRemoveEvent;
@@ -11,12 +12,14 @@ import me.pauzen.alphacore.effects.exceptions.ApplicationCancellationException;
 import me.pauzen.alphacore.effects.exceptions.RemovalCancellationException;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.updater.UpdateEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Effect {
+public abstract class Effect implements ManagerModule {
 
     private final String name;
     private final long   defaultDuration;
@@ -35,7 +38,7 @@ public abstract class Effect {
     }
 
     public Effect(String name) {
-        this(name, Long.MAX_VALUE);
+        this(name, Long.MAX_VALUE / 50);
     }
 
     protected void apply(AppliedEffect appliedEffect) throws ApplicationCancellationException {
@@ -93,6 +96,17 @@ public abstract class Effect {
 
     public Collection<AppliedEffect> getApplications() {
         return applications.values();
+    }
+    
+    @Override
+    public void unload() {
+        for (AppliedEffect appliedEffect : getApplications()) {
+            try {
+                remove(appliedEffect);
+            } catch (RemovalCancellationException e) {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Could not unload Effect " + name);
+            }
+        }
     }
 
 }

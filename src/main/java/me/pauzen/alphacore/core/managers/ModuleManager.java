@@ -5,6 +5,7 @@
 package me.pauzen.alphacore.core.managers;
 
 import me.pauzen.alphacore.core.modules.ManagerModule;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,4 +23,13 @@ public interface ModuleManager<T extends ManagerModule> extends Manager {
         collection.addAll(getModules());
         collection.forEach(this::unregisterModule);
     }
+    
+    public default void onDisable(Plugin plugin) {
+        for (T module : new ArrayList<T>() {{addAll(getModules());}}) {
+            if (module.getOwner() == plugin) {
+                module.unload();
+            }
+        }
+    }
+    
 }

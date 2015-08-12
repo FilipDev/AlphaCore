@@ -5,6 +5,9 @@
 package me.pauzen.alphacore.players;
 
 import me.pauzen.alphacore.core.managers.ModuleManager;
+import me.pauzen.alphacore.effects.AppliedEffect;
+import me.pauzen.alphacore.effects.Effect;
+import me.pauzen.alphacore.effects.Effects;
 import me.pauzen.alphacore.listeners.ListenerImplementation;
 import me.pauzen.alphacore.updater.UpdateEvent;
 import me.pauzen.alphacore.updater.UpdateType;
@@ -18,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
@@ -130,5 +134,18 @@ public class PlayerManager extends ListenerImplementation implements ModuleManag
     public void unregisterModule(PlayerWrapper module) {
         module.save();
         players.get(module.getUniqueId()).remove(module.getClass());
+    }
+
+    @Override
+    public void onDisable(Plugin plugin) {
+        for (CorePlayer corePlayer : CorePlayer.getCorePlayers()) {
+            Effects effects = corePlayer.getEffects();
+            for (AppliedEffect appliedEffect : effects.getApplied().values()) {
+                Effect effect = appliedEffect.getEffect();
+                if (effect.getOwner() == plugin) {
+                    effects.deactivate(effect);
+                }
+            }
+        }
     }
 }

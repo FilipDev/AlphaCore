@@ -2,11 +2,15 @@
  *  Created by Filip P. on 2/11/15 11:37 PM.
  */
 
-package me.pauzen.alphacore.places;
+package me.pauzen.alphacore.places.actions;
 
 import me.pauzen.alphacore.Core;
 import me.pauzen.alphacore.combat.AttackEvent;
 import me.pauzen.alphacore.commands.events.CommandRunEvent;
+import me.pauzen.alphacore.places.*;
+import me.pauzen.alphacore.places.misc.PlayerGetter;
+import me.pauzen.alphacore.places.places.CorePlace;
+import me.pauzen.alphacore.places.places.PhysicalPlace;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.misc.Tuple;
 import org.bukkit.Bukkit;
@@ -71,9 +75,10 @@ public enum PlaceAction {
     <E extends Event> PlaceAction(Class<E> eventClass, PlayerGetter<E> playerGetter, Predicate<Tuple<E, CorePlace>> shouldRun) {
         this.eventClass = eventClass;
         this.playerGetter = playerGetter;
+        
         Bukkit.getPluginManager().registerEvent(eventClass, PlaceManager.getManager(), EventPriority.HIGHEST, (listener, event) -> {
             Predicate predicate = shouldRun;
-            PlaceManager.getManager().onEvent(event, this, predicate);
+            PlaceManager.getManager().onPlayerEvent(event, this, predicate);
         }, Core.getCore());
     }
 
@@ -83,19 +88,6 @@ public enum PlaceAction {
 
     <E extends PlayerEvent> PlaceAction(Class<E> eventClass) {
         this(eventClass, e -> e.event().getPlayer(), e -> true);
-    }
-
-    public static PlaceAction getPlaceAction(Class<? extends Event> eventClass) {
-        for (PlaceAction placeAction : PlaceAction.values()) {
-            if (placeAction.getEventClass().equals(eventClass)) {
-                return placeAction;
-            }
-        }
-        return null;
-    }
-
-    public static Place getPlace(Player player) {
-        return CorePlayer.get(player).getCurrentPlace();
     }
 
     public Class getEventClass() {

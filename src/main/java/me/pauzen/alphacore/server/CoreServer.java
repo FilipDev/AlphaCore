@@ -5,9 +5,9 @@
 package me.pauzen.alphacore.server;
 
 import me.pauzen.alphacore.listeners.ListenerImplementation;
-import me.pauzen.alphacore.places.CorePlace;
+import me.pauzen.alphacore.places.places.CorePlace;
 import me.pauzen.alphacore.places.Place;
-import me.pauzen.alphacore.places.PlaceAction;
+import me.pauzen.alphacore.places.actions.PlaceAction;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -6,6 +6,7 @@ package me.pauzen.alphacore;
 
 import me.pauzen.alphacore.core.ManagerHandler;
 import me.pauzen.alphacore.core.modules.PluginModule;
+import me.pauzen.alphacore.lagwatcher.Watcher;
 import me.pauzen.alphacore.listeners.ListenerRegisterer;
 import me.pauzen.alphacore.utils.reflection.ReflectionFactory;
 import org.bukkit.Bukkit;
@@ -62,6 +63,7 @@ public class Core extends JavaPlugin implements Listener {
         }
         Bukkit.getPluginManager().registerEvents(this, this);
         ListenerRegisterer.register();
+        Watcher.register(1);
     }
 
     @Override

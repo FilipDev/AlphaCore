@@ -6,8 +6,8 @@ package me.pauzen.alphacore.worlds;
 
 import me.pauzen.alphacore.border.Border;
 import me.pauzen.alphacore.core.modules.ManagerModule;
-import me.pauzen.alphacore.places.CorePlace;
-import me.pauzen.alphacore.places.PhysicalPlace;
+import me.pauzen.alphacore.places.places.CorePlace;
+import me.pauzen.alphacore.places.places.PhysicalPlace;
 import me.pauzen.alphacore.places.Place;
 import me.pauzen.alphacore.utils.misc.Tickable;
 import org.bukkit.Bukkit;

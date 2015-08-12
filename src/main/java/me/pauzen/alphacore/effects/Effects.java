@@ -39,7 +39,7 @@ public class Effects {
     public boolean activate(Effect effect, int level, long duration) {
         AppliedEffect appliedEffect = new AppliedEffect(corePlayer, level, effect, duration);
 
-        if (appliedEffect.getDuration() == Long.MAX_VALUE) {
+        if (appliedEffect.getDuration() != Long.MAX_VALUE / 50) {
             Property.TEMPORARY.add(appliedEffect);
         }
         try {
@@ -53,6 +53,10 @@ public class Effects {
 
     public boolean activate(Effect effect, int level) {
         return activate(effect, level, effect.getDefaultDuration());
+    }
+    
+    public boolean activate(Effect effect) {
+        return activate(effect, 1);
     }
 
     /**

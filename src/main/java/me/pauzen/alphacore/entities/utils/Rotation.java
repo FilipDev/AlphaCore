@@ -6,25 +6,18 @@ package me.pauzen.alphacore.entities.utils;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.util.Vector;
 
-public final class HeadRotation {
+public final class Rotation {
 
     private final float pitch, yaw;
 
-    public HeadRotation(float pitch, float yaw) {
+    public Rotation(float pitch, float yaw) {
         this.pitch = pitch;
         this.yaw = yaw;
     }
 
-    public float getPitch() {
-        return pitch;
-    }
-
-    public float getYaw() {
-        return yaw;
-    }
-
-    public static HeadRotation calculate(Location from, Location to) {
+    public static Rotation calculate(Vector from, Vector to) {
         double x = from.getX() - to.getX();
         double z = from.getZ() - to.getZ();
 
@@ -36,9 +29,21 @@ public final class HeadRotation {
 
         float pitch = (float) (Math.toDegrees(Math.atan(c / distance)) % 180);
 
-        return new HeadRotation(pitch, yaw);
+        return new Rotation(pitch, yaw);
     }
-    
+
+    public static Rotation calculate(Location from, Location to) {
+        return calculate(from.toVector(), to.toVector());
+    }
+
+    public float getPitch() {
+        return pitch;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
     public void apply(Entity entity) {
         Location location = entity.getLocation();
         location.setPitch(pitch);
@@ -46,4 +51,11 @@ public final class HeadRotation {
         entity.teleport(location);
     }
 
+    @Override
+    public String toString() {
+        return "Rotation{" +
+                "pitch=" + pitch +
+                ", yaw=" + yaw +
+                '}';
+    }
 }

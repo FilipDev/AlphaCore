@@ -2,33 +2,42 @@
  *  Created by Filip P. on 2/10/15 6:57 PM.
  */
 
-package me.pauzen.alphacore.places;
+package me.pauzen.alphacore.places.places;
 
 import me.pauzen.alphacore.border.Border;
 import me.pauzen.alphacore.commands.Command;
+import me.pauzen.alphacore.places.Place;
+import me.pauzen.alphacore.places.PlaceManager;
+import me.pauzen.alphacore.places.actions.PlaceAction;
 import me.pauzen.alphacore.places.events.PlaceJoinEvent;
 import me.pauzen.alphacore.places.events.PlaceLeaveEvent;
 import me.pauzen.alphacore.players.CorePlayer;
 import me.pauzen.alphacore.utils.AllowanceChecker;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class CorePlace implements Place {
 
     private final String name;
-    private Place superPlace;
-    private Set<CorePlayer> players = new HashSet<>();
-    private AllowanceChecker<String>      commandChecker     = new AllowanceChecker<>();
-    private AllowanceChecker<PlaceAction> placeActionChecker = new AllowanceChecker<>();
+
+    private final Place superPlace;
+
+    private final Set<CorePlayer>               players            = new HashSet<>();
+    private final AllowanceChecker<String>      commandChecker     = new AllowanceChecker<>();
+    private final AllowanceChecker<PlaceAction> placeActionChecker = new AllowanceChecker<>();
+
     private Border border;
+
+    private List<Place> subPlaces = new ArrayList<>();
 
     public CorePlace(String name, Place superPlace) {
         if (superPlace == null) {
             if (!name.equals("Server")) {
                 superPlace = Place.getServerPlace();
             }
+        }
+        if (superPlace != null) {
+            superPlace.addSubPlace(this);
         }
         this.name = name;
         this.superPlace = superPlace;
@@ -76,7 +85,7 @@ public class CorePlace implements Place {
         boolean allowed = true;
         for (Place place : placeStack) {
             if (place.getPlaceActionChecker().allowed(placeAction)) {
-                allowed = false;
+                allowed = true;
             }
             if (place.getPlaceActionChecker().disallowed(placeAction)) {
                 allowed = false;
@@ -113,5 +122,30 @@ public class CorePlace implements Place {
     @Override
     public AllowanceChecker<String> getCommandChecker() {
         return commandChecker;
+    }
+
+    @Override
+    public boolean hasSubPlaces() {
+        return !getSubPlaces().isEmpty();
+    }
+
+    @Override
+    public void addSubPlace(Place place) {
+        getSubPlaces().add(place);
+    }
+
+    @Override
+    public void removeSubPlace(Place place) {
+        getSubPlaces().remove(place);
+    }
+
+    @Override
+    public boolean isPhysical() {
+        return false;
+    }
+
+    @Override
+    public List<Place> getSubPlaces() {
+        return subPlaces;
     }
 }

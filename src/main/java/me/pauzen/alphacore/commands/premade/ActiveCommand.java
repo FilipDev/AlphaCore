@@ -64,8 +64,13 @@ public class ActiveCommand extends Command {
 
             Set<AppliedEffect> totalEffects = new HashSet<>();
             totalEffects.addAll(corePlayer.getEffects().getApplied().values());
+            System.out.println(totalEffects);
 
-            totalEffects.stream().filter((appliedEffect) -> !appliedEffect.hasProperty(Property.INVISIBLE)).forEach((appliedEffect) -> ChatMessage.LIST_ELEMENT.sendRawMessage(sender, "Effect", getString(appliedEffect)));
+            for (AppliedEffect totalEffect : totalEffects) {
+                if (!totalEffect.hasProperty(Property.INVISIBLE)) {
+                    ChatMessage.LIST_ELEMENT.sendRawMessage(sender, "Effect", getString(totalEffect));
+                }
+            }
         });
     }
 

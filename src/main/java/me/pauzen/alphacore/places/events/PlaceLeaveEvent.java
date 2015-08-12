@@ -5,7 +5,7 @@
 package me.pauzen.alphacore.places.events;
 
 import me.pauzen.alphacore.events.CallablePlayerEvent;
-import me.pauzen.alphacore.places.CorePlace;
+import me.pauzen.alphacore.places.places.CorePlace;
 import me.pauzen.alphacore.players.CorePlayer;
 import org.bukkit.event.HandlerList;
 
