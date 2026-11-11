@@ -11,14 +11,14 @@ import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.function.Function;
 
 public enum PhysicalAction {
 
     PHYSICS(BlockPhysicsEvent.class, e -> e.getBlock().getLocation()),
-    ENTITY_SPAWN(EntitySpawnEvent.class, EntitySpawnEvent::getLocation),
+    ENTITY_SPAWN(CreatureSpawnEvent.class, CreatureSpawnEvent::getLocation),
     ;
 
     private final Class    event;

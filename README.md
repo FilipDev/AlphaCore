@@ -205,6 +205,31 @@ The resulting jar is a normal Bukkit plugin
 (`main: me.pauzen.alphacore.Core`, see `src/main/resources/plugin.yml`)
 and goes in a 1.7.10-era server's `plugins/` folder.
 
+### Build verification (November 2026)
+
+This was re-checked in 2026, because neither dependency above is
+published anywhere anymore — Maven Central, the Spigot Nexus, and
+current BuildTools all start at 1.8. Reconstructing them from official
+sources (the Bukkit API rebuilt from the official source repo's final
+1.7.10 commit; the one server-jar type AlphaCore references supplied
+from Mojang's official 1.7.10 server jar):
+
+- **195 of 196 source files compile clean on JDK 8.**
+- **As committed, the final revision does not compile.**
+  `places/actions/PhysicalAction.java`, added in the last commit
+  (August 2015), references
+  `org.bukkit.event.entity.EntitySpawnEvent` — a class that was only
+  added to the Bukkit API in December 2018.
+- Changing that one symbol to the 1.7.10-era `CreatureSpawnEvent`
+  (two lines: the import and the enum constant) makes the whole
+  project build: `BUILD SUCCESS`, producing
+  `AlphaCore-1.0-SNAPSHOT.jar` (263 KB, 215 class files, `plugin.yml`
+  included). Note the substitution is narrower than the original
+  intent — `CreatureSpawnEvent` covers creature spawns, where the
+  2018 `EntitySpawnEvent` covers all entities.
+
+Running the plugin on a server has not been tested.
+
 ## Project layout
 
 ```
