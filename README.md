@@ -214,8 +214,8 @@ sources (the Bukkit API rebuilt from the official source repo's final
 1.7.10 commit; the one server-jar type AlphaCore references supplied
 from Mojang's official 1.7.10 server jar):
 
-- **195 of 196 source files compile clean on JDK 8.**
-- **As committed, the final revision does not compile.**
+- **195 of the 196 source files in the 2015 code compile clean on JDK 8.**
+- **As left in 2015, the final revision did not compile.**
   `places/actions/PhysicalAction.java`, added in the last commit
   (August 2015), references
   `org.bukkit.event.entity.EntitySpawnEvent` — a class that was only
